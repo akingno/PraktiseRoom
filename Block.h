@@ -11,6 +11,8 @@ enum class TileType{
   Grass = 0,
   WallV = 1,
   WallH = 2,
+  FOOD = 3,
+  DOOR = 4,
 };
 
 class Block {
@@ -20,16 +22,18 @@ class Block {
       _tile_type = tileType;
   };
 
-  static inline char tile_glyph(TileType t) {
+  static char tile_glyph(TileType t) {
     switch (t) {
       case TileType::WallV:  return '|';
       case TileType::WallH: return '-';
+      case TileType::FOOD: return 'f';
+      case TileType::DOOR: return 'D';
       case TileType::Grass:
       default:             return ' ';
     }
   }
 
-  static inline TileType Int2Tile(int num){
+  static TileType Int2Tile(int num){
     switch (num) {
       case 0:
         return TileType::Grass;
@@ -37,15 +41,19 @@ class Block {
         return TileType::WallV;
       case 2:
         return TileType::WallH;
+      case 3:
+        return TileType::FOOD;
+      case 4:
+        return TileType::DOOR;
       default:
         return TileType::Grass;
     }
   }
 
-  inline TileType getTileType(){
+  TileType getTileType(){
     return _tile_type;
   }
-  inline void setTileType(TileType tile_type){
+  void setTileType(TileType tile_type){
     _tile_type = tile_type;
   }
 

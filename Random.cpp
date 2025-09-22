@@ -21,7 +21,7 @@ thread_local std::mt19937_64 grng;
 }
 
 namespace Random{
-void init(uint64_t seed) {          // << 新增
+void init(uint64_t seed) {
   gstate.base = seed;
   grng.seed(splitmix64(seed));
 }

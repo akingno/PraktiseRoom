@@ -3,13 +3,13 @@
 //
 
 #include "Room.h"
-TileType Room::getBlocksType(int x, int y) {
+TileType Room::getBlocksType(const int x, const int y) {
   if (x < 0 || x >= VIEW_W || y < 0 || y >= VIEW_H) {
     return TileType::WallH;
   }
   return _blocks[y * VIEW_W + x].getTileType();
 }
-bool Room::setBlock(TileType type, int x, int y) {
+bool Room::setBlock(const TileType type,const int x,const int y) {
   if (x < 0 || x >= VIEW_W || y < 0 || y >= VIEW_H) return false;
   _blocks[y * VIEW_W + x].setTileType(type);
   return true;
@@ -25,4 +25,6 @@ Room::Room() {
     _blocks[y * VIEW_W + 0].setTileType(TileType::WallV);
     _blocks[y * VIEW_W + (VIEW_W-1)].setTileType(TileType::WallV);
   }
+  _blocks[DOOR_X].setTileType(TileType::DOOR);
+  _blocks[VIEW_W+DOOR_X].setTileType(TileType::FOOD);
 }

@@ -19,6 +19,8 @@ enum class Dir{
   Stay = 4
 };
 
+
+
 struct DirWeights{
  const int right = 1, left = 1, down = 1, up = 1, stay = 1;
  public:
@@ -59,6 +61,12 @@ static Dir opposite(Dir d){
 
 class Character {
 
+public:
+  enum class Act {
+    Eat,
+    Wander
+  };
+
  public:
   static Dir Int2Dir(int num) {
     switch (num) {
@@ -96,18 +104,49 @@ class Character {
   //构造函数
   Character() : _loc(1,1) {
     int dir = Random::randint(0,MAX_DIR);
-    last_dir_ = Int2Dir(dir);
+    _last_dir = Int2Dir(dir);
+  }
+
+  // 关于饥饿和进食的计算
+  int  hunger() const { return _hunger; }
+  void tickNeeds(double dt_sec) {
+    _hunger = std::min(100.0, _hunger + _hunger_rate * dt_sec);
+    if (_eat_cooldown > 0.0) _eat_cooldown = std::max(0.0, _eat_cooldown - dt_sec);
+  }
+  bool eatAvailable() const { return _eat_cooldown <= 0.0; }
+  void eat(int calories) {                        // 简化：卡路里直接换成饱腹度
+    _hunger = std::max(0.0, _hunger - calories);
+    _eat_cooldown = _eat_cooldown_secs;
+  }
+
+  void  setAct(Act a) { act_ = a; }
+  Act   act() const { return act_; }
+  static const char* Act2Str(const Act a) {
+    switch (a) {
+      case Act::Eat:
+        return "Eat";
+      case Act::Wander:
+        return "Wander";
+      default:
+        return "Unknown";
+    }
   }
 
   [[nodiscard]] std::pair<int, int> getLoc() const{return _loc; }
-  [[nodiscard]] Dir getLastDir() const{return last_dir_; }
+  [[nodiscard]] Dir getLastDir() const{return _last_dir; }
 
 
+
+
+  /*
+   *
+   * 尝试随机从四个方向中移动
+   */
   template<class IsPassable>
   bool tryMove(IsPassable&& is_passable, double keep_prob = KEEP_LAST_DIR_PROB){
     Dir order[5];
 
-    order[0] = pick_biased_dir(last_dir_, keep_prob);
+    order[0] = pick_biased_dir(_last_dir, keep_prob);
     order[1] = opposite(order[0]);
 
     int oi=2;
@@ -119,7 +158,7 @@ class Character {
       auto [dx,dy] = dir_vec(d);
       int nx = _loc.first + dx;
       int ny = _loc.second + dy;
-      if (is_passable(nx, ny)) { _loc = {nx,ny}; last_dir_ = d; return true; }
+      if (is_passable(nx, ny)) { _loc = {nx,ny}; _last_dir = d; return true; }
     }
     return false; // 四个方向都不行
   }
@@ -127,15 +166,20 @@ class Character {
  private:
   Dir pick_biased_dir(Dir last, double keep_prob = KEEP_LAST_DIR_PROB) {
     if (Random::bernoulli(keep_prob)) return last;
-
-    return weights.random_dir_weights();
-
+    return _dir_weights.random_dir_weights();
   }
 
  private:
   std::pair<int, int> _loc;
-  Dir last_dir_;
-  DirWeights weights;
+  Dir _last_dir;
+  DirWeights _dir_weights;
+
+  double _hunger = 30.0;          // 0=饱 100=极饿，起点 = 30
+  double _hunger_rate = 1.0;      // 每秒 +1
+  double _eat_cooldown = 0.0;   // 当前冷却剩余秒
+  double _eat_cooldown_secs = 1.0;
+
+  Act act_ = Act::Wander;
  public:
   constexpr static double KEEP_LAST_DIR_PROB = 0.9;
 
