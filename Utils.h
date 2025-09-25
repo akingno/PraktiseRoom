@@ -11,9 +11,10 @@ inline int manhattan(std::pair<int,int> a, std::pair<int,int> b){
 }
 
 // 线性 desire
-inline double desire_from_hunger(int hunger, int enter=60){
+inline double desire_from_hunger(double hunger, int enter=60){
   if (hunger <= enter) return 0.0;
-  return clamp01(double(hunger - enter) / double(100 - enter));
+  return clamp01( (hunger - enter) / double(100 - enter) );
+
 }
 
 // scoreEat 计算

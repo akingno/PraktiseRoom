@@ -7,5 +7,9 @@ add_executable(room_temp main.cpp
         Room.h
         Room.cpp
         Random.cpp
-        AVector2d.h
-        Utils.h)
+        Utils.h
+        Directions.h
+        IRender.cpp
+        IRender.h
+        ASCIIRender.cpp
+        ASCIIRender.h)

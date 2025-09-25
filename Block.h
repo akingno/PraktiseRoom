@@ -22,7 +22,7 @@ class Block {
       _tile_type = tileType;
   };
 
-  static char tile_glyph(TileType t) {
+  static char tile_glyph(const TileType t) {
     switch (t) {
       case TileType::WallV:  return '|';
       case TileType::WallH: return '-';
@@ -50,7 +50,7 @@ class Block {
     }
   }
 
-  TileType getTileType(){
+  TileType getTileType() const {
     return _tile_type;
   }
   void setTileType(TileType tile_type){

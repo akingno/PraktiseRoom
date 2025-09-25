@@ -3,7 +3,7 @@
 //
 
 #include "Room.h"
-TileType Room::getBlocksType(const int x, const int y) {
+TileType Room::getBlocksType(const int x, const int y) const{
   if (x < 0 || x >= VIEW_W || y < 0 || y >= VIEW_H) {
     return TileType::WallH;
   }

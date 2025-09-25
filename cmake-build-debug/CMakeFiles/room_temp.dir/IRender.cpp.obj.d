@@ -1,5 +1,6 @@
-CMakeFiles/room_temp.dir/main.cpp.obj: \
- C:\Users\jacob\Desktop\PraktiseRoom\main.cpp \
+CMakeFiles/room_temp.dir/IRender.cpp.obj: \
+ C:\Users\jacob\Desktop\PraktiseRoom\IRender.cpp \
+ C:\Users\jacob\Desktop\PraktiseRoom\IRender.h \
  C:\Users\jacob\Desktop\PraktiseRoom\ASCIIRender.h \
  C:\Users\jacob\Desktop\PraktiseRoom\Character.h \
  C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/random \
@@ -432,15 +433,4 @@ CMakeFiles/room_temp.dir/main.cpp.obj: \
  C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/x86_64-w64-mingw32/include/sec_api/stralign_s.h \
  C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/x86_64-w64-mingw32/include/winsvc.h \
  C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/x86_64-w64-mingw32/include/mcx.h \
- C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/x86_64-w64-mingw32/include/imm.h \
- C:\Users\jacob\Desktop\PraktiseRoom\IRender.h \
- C:\Users\jacob\Desktop\PraktiseRoom\Utils.h \
- C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/chrono \
- C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/chrono.h \
- C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ratio \
- C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ctime \
- C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/parse_numbers.h \
- C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/thread \
- C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/std_thread.h \
- C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/unique_ptr.h \
- C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/this_thread_sleep.h
+ C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/x86_64-w64-mingw32/include/imm.h

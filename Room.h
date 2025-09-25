@@ -12,13 +12,15 @@ constexpr int VIEW_W = 120;
 constexpr int VIEW_H = 40;
 constexpr int DOOR_X = 80;
 constexpr int DOOR_Y = 0;
+constexpr int FOOD_X = 80;
+constexpr int FOOD_Y = 1;
 
 struct Pos { int x, y; };
 
 class Room {
  public:
   Room();
-  TileType getBlocksType(int x, int y);
+  [[nodiscard]] TileType getBlocksType(int x, int y) const;
   bool setBlock(TileType type, int x, int y);
 
   const Pos& doorPos()  const { return _door; }
@@ -35,7 +37,7 @@ class Room {
  private:
   std::vector<Block>  _blocks;
   Pos  _door{DOOR_X, DOOR_Y};
-  Pos  _food{80, 1};
+  Pos  _food{FOOD_X, FOOD_Y};
   bool has_food_ = true;
 
 };

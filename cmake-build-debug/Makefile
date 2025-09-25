@@ -128,6 +128,54 @@ room_temp/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/build
 .PHONY : room_temp/fast
 
+ASCIIRender.obj: ASCIIRender.cpp.obj
+.PHONY : ASCIIRender.obj
+
+# target to build an object file
+ASCIIRender.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/ASCIIRender.cpp.obj
+.PHONY : ASCIIRender.cpp.obj
+
+ASCIIRender.i: ASCIIRender.cpp.i
+.PHONY : ASCIIRender.i
+
+# target to preprocess a source file
+ASCIIRender.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/ASCIIRender.cpp.i
+.PHONY : ASCIIRender.cpp.i
+
+ASCIIRender.s: ASCIIRender.cpp.s
+.PHONY : ASCIIRender.s
+
+# target to generate assembly for a file
+ASCIIRender.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/ASCIIRender.cpp.s
+.PHONY : ASCIIRender.cpp.s
+
+IRender.obj: IRender.cpp.obj
+.PHONY : IRender.obj
+
+# target to build an object file
+IRender.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/IRender.cpp.obj
+.PHONY : IRender.cpp.obj
+
+IRender.i: IRender.cpp.i
+.PHONY : IRender.i
+
+# target to preprocess a source file
+IRender.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/IRender.cpp.i
+.PHONY : IRender.cpp.i
+
+IRender.s: IRender.cpp.s
+.PHONY : IRender.s
+
+# target to generate assembly for a file
+IRender.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/IRender.cpp.s
+.PHONY : IRender.cpp.s
+
 Random.obj: Random.cpp.obj
 .PHONY : Random.obj
 
@@ -209,6 +257,12 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... room_temp
+	@echo ... ASCIIRender.obj
+	@echo ... ASCIIRender.i
+	@echo ... ASCIIRender.s
+	@echo ... IRender.obj
+	@echo ... IRender.i
+	@echo ... IRender.s
 	@echo ... Random.obj
 	@echo ... Random.i
 	@echo ... Random.s

@@ -113,11 +113,41 @@ CMakeFiles/room_temp.dir/Random.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/room_temp.dir/Random.cpp.s"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\jacob\Desktop\PraktiseRoom\Random.cpp -o CMakeFiles\room_temp.dir\Random.cpp.s
 
+CMakeFiles/room_temp.dir/IRender.cpp.obj: CMakeFiles/room_temp.dir/flags.make
+CMakeFiles/room_temp.dir/IRender.cpp.obj: C:/Users/jacob/Desktop/PraktiseRoom/IRender.cpp
+CMakeFiles/room_temp.dir/IRender.cpp.obj: CMakeFiles/room_temp.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\jacob\Desktop\PraktiseRoom\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/room_temp.dir/IRender.cpp.obj"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/room_temp.dir/IRender.cpp.obj -MF CMakeFiles\room_temp.dir\IRender.cpp.obj.d -o CMakeFiles\room_temp.dir\IRender.cpp.obj -c C:\Users\jacob\Desktop\PraktiseRoom\IRender.cpp
+
+CMakeFiles/room_temp.dir/IRender.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/room_temp.dir/IRender.cpp.i"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\jacob\Desktop\PraktiseRoom\IRender.cpp > CMakeFiles\room_temp.dir\IRender.cpp.i
+
+CMakeFiles/room_temp.dir/IRender.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/room_temp.dir/IRender.cpp.s"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\jacob\Desktop\PraktiseRoom\IRender.cpp -o CMakeFiles\room_temp.dir\IRender.cpp.s
+
+CMakeFiles/room_temp.dir/ASCIIRender.cpp.obj: CMakeFiles/room_temp.dir/flags.make
+CMakeFiles/room_temp.dir/ASCIIRender.cpp.obj: C:/Users/jacob/Desktop/PraktiseRoom/ASCIIRender.cpp
+CMakeFiles/room_temp.dir/ASCIIRender.cpp.obj: CMakeFiles/room_temp.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\jacob\Desktop\PraktiseRoom\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/room_temp.dir/ASCIIRender.cpp.obj"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/room_temp.dir/ASCIIRender.cpp.obj -MF CMakeFiles\room_temp.dir\ASCIIRender.cpp.obj.d -o CMakeFiles\room_temp.dir\ASCIIRender.cpp.obj -c C:\Users\jacob\Desktop\PraktiseRoom\ASCIIRender.cpp
+
+CMakeFiles/room_temp.dir/ASCIIRender.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/room_temp.dir/ASCIIRender.cpp.i"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\jacob\Desktop\PraktiseRoom\ASCIIRender.cpp > CMakeFiles\room_temp.dir\ASCIIRender.cpp.i
+
+CMakeFiles/room_temp.dir/ASCIIRender.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/room_temp.dir/ASCIIRender.cpp.s"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\jacob\Desktop\PraktiseRoom\ASCIIRender.cpp -o CMakeFiles\room_temp.dir\ASCIIRender.cpp.s
+
 # Object files for target room_temp
 room_temp_OBJECTS = \
 "CMakeFiles/room_temp.dir/main.cpp.obj" \
 "CMakeFiles/room_temp.dir/Room.cpp.obj" \
-"CMakeFiles/room_temp.dir/Random.cpp.obj"
+"CMakeFiles/room_temp.dir/Random.cpp.obj" \
+"CMakeFiles/room_temp.dir/IRender.cpp.obj" \
+"CMakeFiles/room_temp.dir/ASCIIRender.cpp.obj"
 
 # External object files for target room_temp
 room_temp_EXTERNAL_OBJECTS =
@@ -125,11 +155,13 @@ room_temp_EXTERNAL_OBJECTS =
 room_temp.exe: CMakeFiles/room_temp.dir/main.cpp.obj
 room_temp.exe: CMakeFiles/room_temp.dir/Room.cpp.obj
 room_temp.exe: CMakeFiles/room_temp.dir/Random.cpp.obj
+room_temp.exe: CMakeFiles/room_temp.dir/IRender.cpp.obj
+room_temp.exe: CMakeFiles/room_temp.dir/ASCIIRender.cpp.obj
 room_temp.exe: CMakeFiles/room_temp.dir/build.make
 room_temp.exe: CMakeFiles/room_temp.dir/linkLibs.rsp
 room_temp.exe: CMakeFiles/room_temp.dir/objects1.rsp
 room_temp.exe: CMakeFiles/room_temp.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\jacob\Desktop\PraktiseRoom\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable room_temp.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\jacob\Desktop\PraktiseRoom\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable room_temp.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\room_temp.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -84,12 +84,12 @@ clean: CMakeFiles/room_temp.dir/clean
 CMakeFiles/room_temp.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\jacob\Desktop\PraktiseRoom\cmake-build-debug\CMakeFiles --progress-num=1,2,3,4 "Built target room_temp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\jacob\Desktop\PraktiseRoom\cmake-build-debug\CMakeFiles --progress-num=1,2,3,4,5,6 "Built target room_temp"
 .PHONY : CMakeFiles/room_temp.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/room_temp.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\jacob\Desktop\PraktiseRoom\cmake-build-debug\CMakeFiles 4
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\jacob\Desktop\PraktiseRoom\cmake-build-debug\CMakeFiles 6
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/room_temp.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\jacob\Desktop\PraktiseRoom\cmake-build-debug\CMakeFiles 0
 .PHONY : CMakeFiles/room_temp.dir/rule
@@ -101,7 +101,7 @@ room_temp: CMakeFiles/room_temp.dir/rule
 # codegen rule for target.
 CMakeFiles/room_temp.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\jacob\Desktop\PraktiseRoom\cmake-build-debug\CMakeFiles --progress-num=1,2,3,4 "Finished codegen for target room_temp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\jacob\Desktop\PraktiseRoom\cmake-build-debug\CMakeFiles --progress-num=1,2,3,4,5,6 "Finished codegen for target room_temp"
 .PHONY : CMakeFiles/room_temp.dir/codegen
 
 # clean rule for target.
