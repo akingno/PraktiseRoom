@@ -1,4 +1,6 @@
 #include "ASCIIRender.h"
+#include "AStarGrid.h"
+#include "ActionExecutor.h"
 #include "Block.h"
 #include "Character.h"
 #include "IRender.h"
@@ -9,43 +11,7 @@
 #include <iostream>
 #include <thread>
 
-
-const int FOOD_CALORIES = 25;
 const double BASE_WANDER = 0.05;
-
-struct ActExecutorCtx {
-  Room& room;
-  Character& ch;
-};
-
-/**
- *
- * Node of BT
- * @param ctx
- * @return
- */
-bool step_eat(ActExecutorCtx& ctx) {
-  const auto pos  = ctx.ch.getLoc();
-  const auto fpos = std::pair<int,int>{ctx.room.foodPos().x, ctx.room.foodPos().y};
-  // 当站在食物上就吃
-  if (ctx.room.hasFood() && pos == fpos && ctx.ch.eatAvailable()) {
-    ctx.ch.eat(FOOD_CALORIES);
-    ctx.room.consumeFood();
-    return true;
-  }
-  return false;
-}
-
-bool step_wander(ActExecutorCtx& ctx) {
-  auto is_passable = [&](int x,int y){
-    auto t = ctx.room.getBlocksType(x,y);
-    return t != TileType::WallV && t != TileType::WallH;
-  };
-  ctx.ch.tryMove(is_passable, Character::KEEP_LAST_DIR_PROB);
-  return true;
-}
-
-
 
 
 
@@ -60,39 +26,34 @@ struct Rect4 {
 };
 
 
-struct ActionCandidate {
-  Character::Act kind;
-  double score = 0.0;
-  bool on_cooldown = false;
-
-  // todo:指向行为树的指针/函数对象
-};
-
-
-
-
-
 
 int main() {
   // 初始化
   ASCIIRender::initialTerminal();
   uint64_t seed = static_cast<uint64_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
   Random::init(seed);
-  IRender render;
-
   //初始化结束
 
 
   bool running = true;
   Room room;
   Character character{};
+  IRender render;
 
+  auto passable = [&](int x,int y){
+    auto t = room.getBlocksType(x,y);
+    return t != TileType::WallV && t != TileType::WallH;
+  };
+  AStarGrid pf({VIEW_W, VIEW_H}, passable);
+
+  ActionExecutor executor(pf);
+  Blackboard bb;
 
   //计时器
   using clock = std::chrono::steady_clock;
   auto next_tick = clock::now();
   const auto dt = std::chrono::milliseconds(33);
-
+  int tick_index = 0;
 
   while(running){
 
@@ -118,12 +79,8 @@ int main() {
                                                      : Character::Act::Wander;
     character.setAct(chosen);
 
-    ActExecutorCtx ex{room, character};
-    if (character.act() == Character::Act::Eat) {
-      step_eat(ex);            // 现在是“站上去就吃”，以后直接换成 BT 的 tick
-    } else {
-      step_wander(ex);
-    }
+    ActExecutorCtx ctx{room, character, tick_index};
+    executor.tick(chosen, ctx, bb);
 
     //根据cachechunk找到其chunk, 再找到其block
     //渲染
@@ -134,6 +91,7 @@ int main() {
 
     next_tick += dt;
     std::this_thread::sleep_until(next_tick);
+    ++tick_index;
 
 
   // End of Loop

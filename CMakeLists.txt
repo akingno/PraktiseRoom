@@ -12,4 +12,10 @@ add_executable(room_temp main.cpp
         IRender.cpp
         IRender.h
         ASCIIRender.cpp
-        ASCIIRender.h)
+        ASCIIRender.h
+        Blackboard.h
+        IPathfinder.h
+        AStarGrid.h
+        ActionExecutor.h
+        ActionExecutor.cpp
+        AStarGrid.cpp)

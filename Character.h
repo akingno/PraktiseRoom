@@ -35,6 +35,15 @@ public:
     _hunger = std::max(0.0, _hunger - calories);
     _eat_cooldown = _eat_cooldown_secs;
   }
+  template<class IsPassable>
+  bool tryStepTo(int nx,int ny, IsPassable&& passable) {
+    auto [x,y] = _loc;
+    if (std::abs(nx-x)+std::abs(ny-y)!=1) return false; // 只允许 4 邻接
+    if (!passable(nx,ny)) return false;
+    _loc = {nx,ny};  // 原子移动
+    _last_dir = (nx>x) ? Dir::Right : (nx<x) ? Dir::Left : (ny>y) ? Dir::Down : Dir::Up;
+    return true;
+  }
 
   void  setAct(Act a) { act_ = a; }
   Act   act() const { return act_; }
@@ -89,8 +98,8 @@ public:
   DirWeights _dir_weights;
   Act act_ = Act::Wander;
 
-  double _hunger = 30.0;          // 0=饱 100=极饿，起点 = 30
-  double _hunger_rate = 1.0;      // 每秒 +1
+  double _hunger = 20.0;          // 0=饱 100=极饿，起点 = 30
+  double _hunger_rate = 2;      // 每秒 +1
   double _eat_cooldown = 0.0;   // 当前冷却剩余秒
   double _eat_cooldown_secs = 1.0;
 

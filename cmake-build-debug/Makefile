@@ -152,6 +152,54 @@ ASCIIRender.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/ASCIIRender.cpp.s
 .PHONY : ASCIIRender.cpp.s
 
+AStarGrid.obj: AStarGrid.cpp.obj
+.PHONY : AStarGrid.obj
+
+# target to build an object file
+AStarGrid.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/AStarGrid.cpp.obj
+.PHONY : AStarGrid.cpp.obj
+
+AStarGrid.i: AStarGrid.cpp.i
+.PHONY : AStarGrid.i
+
+# target to preprocess a source file
+AStarGrid.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/AStarGrid.cpp.i
+.PHONY : AStarGrid.cpp.i
+
+AStarGrid.s: AStarGrid.cpp.s
+.PHONY : AStarGrid.s
+
+# target to generate assembly for a file
+AStarGrid.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/AStarGrid.cpp.s
+.PHONY : AStarGrid.cpp.s
+
+ActionExecutor.obj: ActionExecutor.cpp.obj
+.PHONY : ActionExecutor.obj
+
+# target to build an object file
+ActionExecutor.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/ActionExecutor.cpp.obj
+.PHONY : ActionExecutor.cpp.obj
+
+ActionExecutor.i: ActionExecutor.cpp.i
+.PHONY : ActionExecutor.i
+
+# target to preprocess a source file
+ActionExecutor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/ActionExecutor.cpp.i
+.PHONY : ActionExecutor.cpp.i
+
+ActionExecutor.s: ActionExecutor.cpp.s
+.PHONY : ActionExecutor.s
+
+# target to generate assembly for a file
+ActionExecutor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/ActionExecutor.cpp.s
+.PHONY : ActionExecutor.cpp.s
+
 IRender.obj: IRender.cpp.obj
 .PHONY : IRender.obj
 
@@ -260,6 +308,12 @@ help:
 	@echo ... ASCIIRender.obj
 	@echo ... ASCIIRender.i
 	@echo ... ASCIIRender.s
+	@echo ... AStarGrid.obj
+	@echo ... AStarGrid.i
+	@echo ... AStarGrid.s
+	@echo ... ActionExecutor.obj
+	@echo ... ActionExecutor.i
+	@echo ... ActionExecutor.s
 	@echo ... IRender.obj
 	@echo ... IRender.i
 	@echo ... IRender.s

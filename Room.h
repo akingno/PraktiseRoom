@@ -32,6 +32,10 @@ class Room {
   void consumeFood() {
     has_food_ = false;
     setBlock(TileType::Grass, _food.x, _food.y);
+
+    //又生成食物
+    has_food_ = true;
+    setBlock(TileType::FOOD, _food.x, _food.y);
   }
 
  private:
