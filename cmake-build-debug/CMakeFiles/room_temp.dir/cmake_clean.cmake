@@ -5,8 +5,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/room_temp.dir/AStarGrid.cpp.obj.d"
   "CMakeFiles/room_temp.dir/ActionExecutor.cpp.obj"
   "CMakeFiles/room_temp.dir/ActionExecutor.cpp.obj.d"
-  "CMakeFiles/room_temp.dir/IRender.cpp.obj"
-  "CMakeFiles/room_temp.dir/IRender.cpp.obj.d"
   "CMakeFiles/room_temp.dir/Random.cpp.obj"
   "CMakeFiles/room_temp.dir/Random.cpp.obj.d"
   "CMakeFiles/room_temp.dir/Room.cpp.obj"

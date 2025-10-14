@@ -4,28 +4,32 @@
 
 #ifndef UTILS_H
 #define UTILS_H
+
+
 inline double clamp01(double x){ return x<0?0:(x>1?1:x); }
 
+
+// 目前无用
 inline int manhattan(std::pair<int,int> a, std::pair<int,int> b){
   return std::abs(a.first - b.first) + std::abs(a.second - b.second);
 }
 
-// 线性 desire
-inline double desire_from_hunger(double hunger, int enter=60){
+/*
+ *
+ * 关于hunger的计算：线性增长的desire和 计算得到的Score
+ *
+ */
+inline double desire_from_hunger(double hunger, int enter){
   if (hunger <= enter) return 0.0;
-  return clamp01( (hunger - enter) / double(100 - enter) );
-
+  return clamp01( (hunger - enter) / static_cast<double>(100 - enter) );
 }
 
 // scoreEat 计算
 inline double CalcScoreEat(
-    int hunger,
-    std::pair<int,int> agentPos,
+    double hunger,
     bool hasFood,
-    std::pair<int,int> foodPos,
     bool onCooldown,
     bool stickyEatActive,
-    double k_dist   = 0.2,
     int hungryEnter = 60,
     double sticky   = 0.2
 ){
@@ -33,11 +37,35 @@ inline double CalcScoreEat(
   if (onCooldown) return 0.0; // 冷却直接禁止
 
   const double desire = desire_from_hunger(hunger, hungryEnter);
-  const int dist = manhattan(agentPos, foodPos);
-  const double feasibility = 1.0 / (1.0 + k_dist * double(dist));
-  const double base = desire * feasibility;
+  const double base = desire * 0.833;
 
   return stickyEatActive ? (base + sticky) : base;
+}
+
+
+/*
+ *
+ * 关于fatigue的计算：线性增长的desire 和计算得到的socre
+ *
+ */
+inline double desire_from_fatigue(double fatigue, int enter){
+  if (fatigue <= enter) return 0.0;
+  return clamp01( (fatigue - enter) / static_cast<double>(100 - enter) );
+}
+
+inline double CalcScoreSleep(
+    int fatigue,
+    bool hasBed,
+    bool stickySleepActive,
+    int tiredEnter  = 60,
+    double sticky   = 0.25
+){
+  if (!hasBed) return 0.0;
+
+  const double desire = desire_from_fatigue(fatigue, tiredEnter);
+  const double base = desire * 0.833;
+
+  return stickySleepActive ? (base + sticky) : base;
 }
 
 #endif //UTILS_H

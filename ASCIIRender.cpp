@@ -30,6 +30,12 @@ void ASCIIRender::render_items(const Room &room) {
       buf_at(f.x, f.y) = Block::tile_glyph(room.getBlocksType(f.x,f.y));
     }
   }
+  if (room.hasBed()) {
+    const auto& b = room.bedPos();
+    if (0<=b.x && b.x<VIEW_W && 0<=b.y && b.y<VIEW_H) {
+      buf_at(b.x, b.y) = Block::tile_glyph(room.getBlocksType(b.x,b.y));
+    }
+  }
 }
 void ASCIIRender::render_character(const Character &character) {
   // 覆盖玩家 '@'
@@ -39,7 +45,7 @@ void ASCIIRender::render_character(const Character &character) {
     buf_at(sx, sy) = '@';
   }
 }
-void ASCIIRender::render_info(const Room & room, const Character & character, double scoreEat, double scoreWander) {
+void ASCIIRender::render_info(const Room & room, const Character & character, const RenderStats & stats) {
 
   // 或首次渲染前清屏一次
 
@@ -53,30 +59,35 @@ void ASCIIRender::render_info(const Room & room, const Character & character, do
   print_status_line(VIEW_H + 2,
                     "Character Current Direction: " + Dir2Str(character.getLastDir()));
 
-  double desire   = desire_from_hunger(character.get_hunger_score(), 60);
 
   print_status_line(VIEW_H + 3,
-    std::string("Action: ") + Character::Act2Str(character.act())
-    +" | Hunger=" + std::to_string(desire));
+    std::string("Action: ") + Character::Act2Str(character.act()));
 
   print_status_line(VIEW_H + 4,
-    std::string("Hunger Score: ") + std::to_string(scoreEat));
+    std::string("Hunger Score: ") + std::to_string(stats.scoreEat));
 
   print_status_line(VIEW_H + 5,
-      std::string("Wander Score: ") + std::to_string(scoreWander));
-  auto pos  = character.getLoc();
-  std::pair fpos = {room.foodPos().x, room.foodPos().y};
-
-
-  bool   avail    = room.hasFood();
-  int    dist     = manhattan(pos, fpos);
-  double feas     = 1.0 / (1.0 + 0.2 * dist);
-  bool   cooldown = !character.eatAvailable();
+      std::string("Wander Score: ") + std::to_string(stats.scoreWander));
 
   print_status_line(VIEW_H + 6,
-    "DBG desire=" + std::to_string(desire)
-    + " avail=" + std::to_string(avail)
-    + " dist=" + std::to_string(dist)
-    + " feas=" + std::to_string(feas)
-    + " cooldown=" + std::to_string(cooldown));
+    std::string("Sleep  Score: ") + std::to_string(stats.scoreSleep));
+
+  bool   avail    = room.hasFood();
+  bool   cooldown = !character.eatAvailable();
+
+  print_status_line(VIEW_H + 7,
+    "Inner Hunger=" + std::to_string(character.get_hunger_inner())
+    + " Inner Fatigue=" + std::to_string(character.get_fatigue_score())
+    + " Sleeping Status=" + std::to_string(character.isSleeping())
+    + " Food Avail=" + std::to_string(avail)
+    + " Eat Cooldown=" + std::to_string(cooldown));
+}
+void ASCIIRender::render_frame_ascii(const Character&character, const Room& room, const RenderStats& stats){
+  render_room(room);
+
+  render_items(room);
+
+  render_character(character);
+
+  render_info(room, character, stats);
 }

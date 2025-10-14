@@ -25,6 +25,9 @@ Room::Room() {
     _blocks[y * VIEW_W + 0].setTileType(TileType::WallV);
     _blocks[y * VIEW_W + (VIEW_W-1)].setTileType(TileType::WallV);
   }
+  // 物品：床、墙、食物等
   _blocks[DOOR_X].setTileType(TileType::DOOR);
   _blocks[VIEW_W+DOOR_X].setTileType(TileType::FOOD);
+  _blocks[_bed.y * VIEW_W + _bed.x].setTileType(TileType::BED);
+
 }

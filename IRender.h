@@ -5,18 +5,21 @@
 #ifndef IRENDER_H
 #define IRENDER_H
 
-#include "ASCIIRender.h"
+
 #include "Character.h"
 #include "Room.h"
 
+struct RenderStats {
+  double scoreEat;
+  double scoreWander;
+  double scoreSleep;
+};
+
 class IRender {
   public:
-  void render_frame_ascii(const Character&character, const Room& room, double scoreEat, double scoreWander);
-  IRender() : ascii_renderer(VIEW_H * (VIEW_W + 1)) {
+  virtual void render_frame_ascii(const Character&character, const Room& room, const RenderStats& stats) = 0;
+  virtual ~IRender() = default;
 
-  }
- private:
-  ASCIIRender ascii_renderer;
 };
 
 

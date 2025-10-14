@@ -200,30 +200,6 @@ ActionExecutor.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/ActionExecutor.cpp.s
 .PHONY : ActionExecutor.cpp.s
 
-IRender.obj: IRender.cpp.obj
-.PHONY : IRender.obj
-
-# target to build an object file
-IRender.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/IRender.cpp.obj
-.PHONY : IRender.cpp.obj
-
-IRender.i: IRender.cpp.i
-.PHONY : IRender.i
-
-# target to preprocess a source file
-IRender.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/IRender.cpp.i
-.PHONY : IRender.cpp.i
-
-IRender.s: IRender.cpp.s
-.PHONY : IRender.s
-
-# target to generate assembly for a file
-IRender.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\room_temp.dir\build.make CMakeFiles/room_temp.dir/IRender.cpp.s
-.PHONY : IRender.cpp.s
-
 Random.obj: Random.cpp.obj
 .PHONY : Random.obj
 
@@ -314,9 +290,6 @@ help:
 	@echo ... ActionExecutor.obj
 	@echo ... ActionExecutor.i
 	@echo ... ActionExecutor.s
-	@echo ... IRender.obj
-	@echo ... IRender.i
-	@echo ... IRender.s
 	@echo ... Random.obj
 	@echo ... Random.i
 	@echo ... Random.s

@@ -9,7 +9,6 @@ add_executable(room_temp main.cpp
         Random.cpp
         Utils.h
         Directions.h
-        IRender.cpp
         IRender.h
         ASCIIRender.cpp
         ASCIIRender.h

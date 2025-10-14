@@ -6,6 +6,7 @@
 #define ASCIIRENDER_H
 
 #include "Character.h"
+#include "IRender.h"
 #include "Room.h"
 
 #include <cstdint>
@@ -14,7 +15,7 @@
 
 
 
-class ASCIIRender {
+class ASCIIRender : public IRender {
 
   static void enableAnsi() {
     //用于windwos终端使用
@@ -41,7 +42,6 @@ class ASCIIRender {
   }
 
 public:
-
   explicit ASCIIRender(int size_frame) {
     frame.resize(size_frame);
   }
@@ -55,7 +55,10 @@ public:
   void render_room(const Room &room);
   void render_items(const Room &room);
   void render_character(const Character &character);
-  void render_info(const Room & room, const Character & character, double scoreEat, double scoreWander);
+  void render_info(const Room & room, const Character & character, const RenderStats & stats);
+
+  void render_frame_ascii(const Character&character, const Room& room, const RenderStats& stats) override;
+
 
  private:
   std::string frame;

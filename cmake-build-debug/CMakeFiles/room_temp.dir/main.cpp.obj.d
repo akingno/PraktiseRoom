@@ -146,6 +146,7 @@ CMakeFiles/room_temp.dir/main.cpp.obj: \
  C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/atomic \
  C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/atomic_base.h \
  C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/atomic_lockfree_defines.h \
+ C:\Users\jacob\Desktop\PraktiseRoom\IRender.h \
  C:\Users\jacob\Desktop\PraktiseRoom\Room.h \
  C:\Users\jacob\Desktop\PraktiseRoom\Block.h \
  C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iostream \
@@ -451,7 +452,6 @@ CMakeFiles/room_temp.dir/main.cpp.obj: \
  C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/stl_tempbuf.h \
  C:\Users\jacob\Desktop\PraktiseRoom\ActionExecutor.h \
  C:\Users\jacob\Desktop\PraktiseRoom\Blackboard.h \
- C:\Users\jacob\Desktop\PraktiseRoom\IRender.h \
  C:\Users\jacob\Desktop\PraktiseRoom\Utils.h \
  C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/chrono \
  C:/Program\ Files/JetBrains/CLion\ 2025.1.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/chrono.h \

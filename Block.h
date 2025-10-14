@@ -13,6 +13,7 @@ enum class TileType{
   WallH = 2,
   FOOD = 3,
   DOOR = 4,
+  BED = 5
 };
 
 class Block {
@@ -28,6 +29,7 @@ class Block {
       case TileType::WallH: return '-';
       case TileType::FOOD: return 'f';
       case TileType::DOOR: return 'D';
+      case TileType::BED: return 'B';
       case TileType::Grass:
       default:             return ' ';
     }
@@ -45,6 +47,8 @@ class Block {
         return TileType::FOOD;
       case 4:
         return TileType::DOOR;
+      case 5:
+        return TileType::BED;
       default:
         return TileType::Grass;
     }
