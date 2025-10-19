@@ -5,6 +5,7 @@
 #include "Character.h"
 #include "IRender.h"
 #include "Room.h"
+#include "SDL3Render.h"
 #include "Utils.h"
 #include <chrono>
 #include <cmath>
@@ -29,18 +30,18 @@ struct Rect4 {
 
 int main() {
   // 初始化
-  ASCIIRender::initialTerminal();
+  //ASCIIRender::initialTerminal();
   uint64_t seed = static_cast<uint64_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
   Random::init(seed);
-  HWND console = GetConsoleWindow();
-  ShowWindow(console, SW_MAXIMIZE);
+  //HWND console = GetConsoleWindow();
+  //ShowWindow(console, SW_MAXIMIZE);
   //初始化结束
 
 
   bool running = true;
   Room room;
   Character character{};
-  std::unique_ptr<IRender> render = std::make_unique<ASCIIRender>(VIEW_H * (VIEW_W + 1));
+
 
   auto passable = [&](int x,int y){
     auto t = room.getBlocksType(x,y);
@@ -51,6 +52,11 @@ int main() {
   ActionExecutor executor(path_finder);
   Blackboard bb;
 
+  //std::unique_ptr<IRender> render = std::make_unique<ASCIIRender>(VIEW_H * (VIEW_W + 0));
+  //SDL3渲染器
+  const int TILE_PX = 32;
+  std::unique_ptr<IRender> render = std::make_unique<SDL3Render>(VIEW_W, VIEW_H, TILE_PX, "Little Room (SDL3)");
+
   //计时器
   using clock = std::chrono::steady_clock;
   auto next_tick = clock::now();
@@ -59,6 +65,7 @@ int main() {
 
   while(running){
 
+    if (render->poll_quit()) break;
     //tick一下需求的更新
     character.tickNeeds(33.0/1000.0);
     //固定刷新食物
@@ -95,7 +102,7 @@ int main() {
     //渲染
     //渲染其他物品
     //渲染角色
-    render->render_frame_ascii(character, room, stats);
+    render->render_frame(character, room, stats);
 
 
     next_tick += dt;

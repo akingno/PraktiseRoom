@@ -82,7 +82,7 @@ void ASCIIRender::render_info(const Room & room, const Character & character, co
     + " Food Avail=" + std::to_string(avail)
     + " Eat Cooldown=" + std::to_string(cooldown));
 }
-void ASCIIRender::render_frame_ascii(const Character&character, const Room& room, const RenderStats& stats){
+void ASCIIRender::render_frame(const Character&character, const Room& room, const RenderStats& stats){
   render_room(room);
 
   render_items(room);

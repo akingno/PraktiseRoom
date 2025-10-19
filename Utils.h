@@ -58,14 +58,23 @@ inline double CalcScoreSleep(
     bool hasBed,
     bool stickySleepActive,
     int tiredEnter  = 60,
-    double sticky   = 0.25
+    int restedExit = 30,
+    double sticky   = 0.2 // should be less than wander score
 ){
   if (!hasBed) return 0.0;
 
   const double desire = desire_from_fatigue(fatigue, tiredEnter);
   const double base = desire * 0.833;
 
-  return stickySleepActive ? (base + sticky) : base;
+  double gate = 0.0;
+  if (fatigue > restedExit) {
+    if (fatigue >= tiredEnter) gate = 1.0;
+    else gate = (fatigue - restedExit) / static_cast<double>(tiredEnter - restedExit); // 0~1
+  }
+
+  const double stick = stickySleepActive ? (sticky * gate) : 0.0;
+
+  return base + stick;
 }
 
 #endif //UTILS_H

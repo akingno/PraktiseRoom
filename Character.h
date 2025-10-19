@@ -170,15 +170,15 @@ private:
   Act act_ = Act::Wander;
 
   // 饥饿/进食相关成员变量
-  double _hunger = 20.0;          // 0=饱 100=极饿
+  double _hunger = 0.0;          // 0=饱 100=极饿
   double _hunger_rate = HUNGER_SPEED;
   double _eat_cooldown = 0.0;   // 当前冷却剩余秒
   double _eat_cooldown_secs = 1.0;
 
   // 疲劳/睡眠相关成员变量
-  double _fatigue = 20.0;           // 0=精力充沛，100=极困
+  double _fatigue = 0.0;           // 0=精力充沛，100=极困
   double _fatigue_rate = FATIGUE_SPEED;       // 清醒时每秒 +1.5
-  double _sleep_recover_rate = SLEEP_RECOVER_RATE; // 睡眠时每秒 -8.0（可调）
+  double _sleep_recover_rate = SLEEP_RECOVER_RATE; // 睡眠时每秒 -8.0
   bool   _sleeping = false;         // 是否正在睡
 
  public:

@@ -1,0 +1,171 @@
+//
+// Created by jacob on 25-10-18.
+//
+#include "SDL3Render.h"
+
+#include <stdexcept>
+#include <string>
+
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
+
+static std::string RES(const char* name) {
+  return std::string("res/") + name;
+}
+
+SDL3Render::SDL3Render(int viewW, int viewH, int tilePx, const std::string& title)
+  : viewW_(viewW), viewH_(viewH), tilePx_(tilePx) {
+
+  // SDL 基础
+  if (!SDL_Init(SDL_INIT_VIDEO)) {  // 返回bool：true成功 / false失败
+    throw std::runtime_error(std::string("SDL_Init failed: ") + SDL_GetError());;
+  }
+
+  // SDL_ttf 仍需初始化
+  if (!TTF_Init()) {
+    throw std::runtime_error(std::string("TTF_Init failed: ") + SDL_GetError());
+  }
+
+  const int winW = viewW_ * tilePx_;
+  const int winH = viewH_ * tilePx_;
+
+  window_ = SDL_CreateWindow(title.c_str(), winW, winH, SDL_WINDOW_RESIZABLE);
+  if (!window_) {
+    throw std::runtime_error(std::string("SDL_CreateWindow failed: ") + SDL_GetError());
+  }
+
+  renderer_ = SDL_CreateRenderer(window_, nullptr);
+  if (!renderer_) {
+    throw std::runtime_error(std::string("SDL_CreateRenderer failed: ") + SDL_GetError());
+  }
+
+  // 载入纹理
+  tileTex_[TileType::Grass] = loadTexture(RES("grass.png"));
+  tileTex_[TileType::WallH] = loadTexture(RES("wall_h.png"));
+  tileTex_[TileType::WallV] = loadTexture(RES("wall_v.png"));
+  tileTex_[TileType::FOOD]  = loadTexture(RES("food.png"));
+  tileTex_[TileType::BED]   = loadTexture(RES("bed.png"));
+  texDoor_                  = loadTexture(RES("door.png"));
+  texCharacter_             = loadTexture(RES("character.png"));
+
+  // 字体（可选）——没有字体也不致命，drawText 会短路
+  font_ = TTF_OpenFont(RES("JetBrainsMono.ttf").c_str(), 16);
+  // 如果 font_ == nullptr，说明找不到字体；HUD 文本将被自动跳过
+}
+
+SDL3Render::~SDL3Render() {
+  for (auto& kv : tileTex_) if (kv.second) SDL_DestroyTexture(kv.second);
+  if (texDoor_)       SDL_DestroyTexture(texDoor_);
+  if (texCharacter_)  SDL_DestroyTexture(texCharacter_);
+  if (font_)          TTF_CloseFont(font_);
+
+  if (renderer_) SDL_DestroyRenderer(renderer_);
+  if (window_)   SDL_DestroyWindow(window_);
+
+  TTF_Quit();          // SDL3_ttf 仍需 Quit
+  // IMG_Quit();       // SDL3_image 3.x 已无此函数，千万别调用
+  SDL_Quit();
+}
+
+SDL_Texture* SDL3Render::loadTexture(const std::string& path) {
+  SDL_Texture* tex = IMG_LoadTexture(renderer_, path.c_str());
+  if (!tex) {
+    // SDL3_image 统一用 SDL_GetError()
+    throw std::runtime_error(std::string("IMG_LoadTexture failed for ")
+                             + path + ": " + SDL_GetError());
+  }
+  return tex;
+}
+
+void SDL3Render::clear() {
+  SDL_SetRenderDrawColor(renderer_, 16, 16, 18, 255);
+  SDL_RenderClear(renderer_);
+}
+
+void SDL3Render::present() {
+  SDL_RenderPresent(renderer_);
+}
+
+void SDL3Render::drawTile(int gx, int gy, SDL_Texture* tex) {
+  if (!tex) return;
+  SDL_FRect dst;
+  dst.x = static_cast<float>(gx * tilePx_);
+  dst.y = static_cast<float>(gy * tilePx_);
+  dst.w = static_cast<float>(tilePx_);
+  dst.h = static_cast<float>(tilePx_);
+  SDL_RenderTexture(renderer_, tex, nullptr, &dst);
+}
+
+void SDL3Render::drawText(float px, float py, const std::string& s) const {
+  if (!font_) return; // 没字体就不画 HUD
+
+  SDL_Color white{230, 230, 230, 255};
+
+  // SDL3_ttf：UTF-8 为默认编码，使用 TTF_RenderText_*（没有 UTF8 后缀）
+  SDL_Surface* surf = TTF_RenderText_Blended(font_, s.c_str(),0, white);
+  if (!surf) return;
+
+  SDL_Texture* tex = SDL_CreateTextureFromSurface(renderer_, surf);
+  SDL_DestroySurface(surf); // SDL3：销毁 Surface 用 SDL_DestroySurface
+
+  if (!tex) return;
+
+  float w = 0, h = 0;
+  // SDL3：用 SDL_GetTextureSize 代替 SDL_QueryTexture
+  if (!SDL_GetTextureSize(tex, &w, &h)) {
+    SDL_DestroyTexture(tex);
+    return;
+  }
+
+  SDL_FRect dst{ px, py, w, h };
+  SDL_RenderTexture(renderer_, tex, nullptr, &dst);
+  SDL_DestroyTexture(tex);
+}
+
+bool SDL3Render::poll_quit() {
+  SDL_Event e;
+  while (SDL_PollEvent(&e)) {
+    if (e.type == SDL_EVENT_QUIT) return true;
+
+    if (e.type == SDL_EVENT_KEY_DOWN && e.key.key == SDLK_ESCAPE) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void SDL3Render::render_frame(const Character& character, const Room& room, const RenderStats& stats) {
+  clear();
+
+  // 1) 画地面/墙/床/食物
+  for (int y = 0; y < VIEW_H; ++y) {
+    for (int x = 0; x < VIEW_W; ++x) {
+      TileType t = room.getBlocksType(x, y);
+      SDL_Texture* tex = nullptr;
+
+      if (t == TileType::DOOR) {
+        tex = texDoor_;
+      } else {
+        auto it = tileTex_.find(t);
+        if (it != tileTex_.end()) tex = it->second;
+      }
+      if (!tex) tex = tileTex_[TileType::Grass];
+      drawTile(x, y, tex);
+    }
+  }
+
+  // 2) 画角色（你这边是 pair<int,int> getLoc()）
+  const int cx = character.getLoc().first;
+  const int cy = character.getLoc().second;
+  drawTile(cx, cy, texCharacter_);
+
+  // 3) HUD：显示分数（font_ 为空时 drawText 会短路）
+  char buf[256];
+  std::snprintf(buf, sizeof(buf), "Eat: %.3f   Wander: %.3f   Sleep: %.3f",
+                stats.scoreEat, stats.scoreWander, stats.scoreSleep);
+  drawText(8.0, 8.0, buf);
+
+  present();
+}
+

@@ -57,7 +57,7 @@ public:
   void render_character(const Character &character);
   void render_info(const Room & room, const Character & character, const RenderStats & stats);
 
-  void render_frame_ascii(const Character&character, const Room& room, const RenderStats& stats) override;
+  void render_frame(const Character&character, const Room& room, const RenderStats& stats) override;
 
 
  private:

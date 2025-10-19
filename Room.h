@@ -8,14 +8,14 @@
 #include "Block.h"
 #include <vector>
 
-constexpr int VIEW_W = 120;
-constexpr int VIEW_H = 40;
-constexpr int DOOR_X = 80;
+constexpr int VIEW_W = 40;
+constexpr int VIEW_H = 30;
+constexpr int DOOR_X = 20;
 constexpr int DOOR_Y = 0;
-constexpr int FOOD_X = 80;
+constexpr int FOOD_X = 20;
 constexpr int FOOD_Y = 1;
-constexpr int BED_X  = 40;
-constexpr int BED_Y  = 38;
+constexpr int BED_X  = 10;
+constexpr int BED_Y  = 28;
 
 struct Pos { int x, y; };
 
