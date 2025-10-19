@@ -21,7 +21,8 @@ class Block {
  public:
   explicit Block(TileType tileType){
       _tile_type = tileType;
-  };
+  }
+
 
   static char tile_glyph(const TileType t) {
     switch (t) {

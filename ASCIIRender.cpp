@@ -56,10 +56,6 @@ void ASCIIRender::render_info(const Room & room, const Character & character, co
                     "Character location: (" + std::to_string(character.getLoc().first) + ", " +
                         std::to_string(character.getLoc().second) + ")");
 
-  print_status_line(VIEW_H + 2,
-                    "Character Current Direction: " + Dir2Str(character.getLastDir()));
-
-
   print_status_line(VIEW_H + 3,
     std::string("Action: ") + Character::Act2Str(character.act()));
 

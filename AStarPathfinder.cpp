@@ -2,10 +2,10 @@
 // Created by jacob on 25-9-25.
 //
 // AStarGrid.cpp
-#include "AStarGrid.h"
-#include <queue>
-#include <limits>
+#include "AStarPathfinder.h"
 #include <cmath>
+#include <limits>
+#include <queue>
 
 namespace {
   inline int idx(int x,int y,int w){ return y*w + x; }
@@ -22,10 +22,10 @@ namespace {
   };
 }
 
-AStarGrid::AStarGrid(GridSize size, IsPassable passable)
+AStarPathfinder::AStarPathfinder(GridSize size, IsPassable passable)
   : size_(size), passable_(std::move(passable)) {}
 
-bool AStarGrid::plan(int sx,int sy,int tx,int ty,
+bool AStarPathfinder::plan_path(int sx,int sy,int tx,int ty,
                      std::vector<std::pair<int,int>>& out) {
   const int W = size_.w, H = size_.h;
   if (sx<0||sx>=W||sy<0||sy>=H||tx<0||tx>=W||ty<0||ty>=H) return false;

@@ -4,6 +4,7 @@
 
 #include "Random.h"
 
+#include <random>
 
 namespace {
 // 轻量 SplitMix64 做播种扩展

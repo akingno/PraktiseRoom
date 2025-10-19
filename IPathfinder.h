@@ -17,7 +17,7 @@ public:
   virtual ~IPathfinder() = default;
 
   // 规划从 (sx,sy) 到 (tx,ty)，写入 out（含起点和终点）
-  virtual bool plan(int sx,int sy,int tx,int ty,
+  virtual bool plan_path(int sx,int sy,int tx,int ty,
                     std::vector<std::pair<int,int>>& out) = 0;
 };
 

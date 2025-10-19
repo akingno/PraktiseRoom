@@ -2,20 +2,13 @@
 // Created by jacob on 2025/9/14.
 //
 
-#ifndef ROOM_TEMP__ROOM_H_
-#define ROOM_TEMP__ROOM_H_
+#ifndef ROOM_TEMP_ROOM_H_
+#define ROOM_TEMP_ROOM_H_
 
 #include "Block.h"
 #include <vector>
+#include "Config.h"
 
-constexpr int VIEW_W = 40;
-constexpr int VIEW_H = 30;
-constexpr int DOOR_X = 20;
-constexpr int DOOR_Y = 0;
-constexpr int FOOD_X = 20;
-constexpr int FOOD_Y = 1;
-constexpr int BED_X  = 10;
-constexpr int BED_Y  = 28;
 
 struct Pos { int x, y; };
 
@@ -24,6 +17,8 @@ class Room {
   Room();
   [[nodiscard]] TileType getBlocksType(int x, int y) const;
   bool setBlock(TileType type, int x, int y);
+
+  bool isPassable(int x, int y) const;
 
 
   const Pos& doorPos()  const { return _door;}
@@ -56,4 +51,4 @@ class Room {
 
 };
 
-#endif//ROOM_TEMP__ROOM_H_
+#endif//ROOM_TEMP_ROOM_H_

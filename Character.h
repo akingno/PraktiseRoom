@@ -5,13 +5,12 @@
 #ifndef ROOM_TEMP__CHARACTER_H_
 #define ROOM_TEMP__CHARACTER_H_
 
-#define HUNGER_SPEED 2
-#define FATIGUE_SPEED 0.5
-#define SLEEP_RECOVER_RATE 4
+
 
 #include <random>
 #include <utility>
 #include "Directions.h"
+#include "Config.h"
 
 
 class Character {
@@ -20,13 +19,13 @@ public:
   enum class Act {
     Eat,
     Sleep,
-    Wander
+    Wander,
+    Stop
   };
 
  //构造函数
   Character() : _loc(1,1) {
-    int dir = Random::randint(0,MAX_DIR);
-    _last_dir = Int2Dir(dir);
+
   }
 
   // 小人需求随时间增长：目前：饥饿和疲劳
@@ -70,7 +69,7 @@ public:
    *
    *
    */
-  [[nodiscard]] double  get_fatigue_score() const { return _fatigue; }
+  [[nodiscard]] double get_fatigue_score() const { return _fatigue; }
   bool isSleeping() const { return _sleeping; }
   void setSleeping(bool s){ _sleeping = s; }
 
@@ -98,14 +97,14 @@ public:
         return "Wander";
       case Act::Sleep:
         return "Sleep";
+      case Act::Stop:
+        return "Stop";
       default:
         return "Unknown";
     }
   }
 
   [[nodiscard]] std::pair<int, int> getLoc() const{return _loc; }
-  [[nodiscard]] Dir getLastDir() const{return _last_dir; }
-
 
   /*
    *
@@ -115,45 +114,11 @@ public:
    *
    */
   // 尝试走一步
-  template<class IsPassable>
-  bool tryStepTo(int nx,int ny, IsPassable&& passable) {
-    auto [x,y] = _loc;
-    if (std::abs(nx-x)+std::abs(ny-y)!=1) return false; // 只允许 4 邻接
-    if (!passable(nx,ny)) return false;
-    _loc = {nx,ny};  // 原子移动
-    _last_dir = (nx>x) ? Dir::Right : (nx<x) ? Dir::Left : (ny>y) ? Dir::Down : Dir::Up;
+  bool tryStepTo(int nx, int ny) {
+    auto [x, y] = _loc;
+    if (std::abs(nx - x) + std::abs(ny - y) != 1) return false; // 仅允许 4 邻接
+    _loc = {nx, ny};
     return true;
-  }
-
-  /*
-   *
-   * 尝试随机从四个方向中移动
-   */
-  template<class IsPassable>
-  bool tryMove(IsPassable&& is_passable, double keep_prob = KEEP_LAST_DIR_PROB){
-    Dir order[5];
-
-    order[0] = pick_biased_dir(_last_dir, keep_prob);
-    order[1] = opposite(order[0]);
-
-    int oi=2;
-    for (Dir d : {Dir::Right, Dir::Left, Dir::Down, Dir::Up, Dir::Stay}) {
-      if (d!=order[0] && d!=order[1]) order[oi++]=d;
-    }
-
-    for (Dir d : order) {
-      auto [dx,dy] = dir_vec(d);
-      int nx = _loc.first + dx;
-      int ny = _loc.second + dy;
-      if (is_passable(nx, ny)) { _loc = {nx,ny}; _last_dir = d; return true; }
-    }
-    return false; // 四个方向都不行
-  }
-
- private:
-  Dir pick_biased_dir(Dir last, double keep_prob = KEEP_LAST_DIR_PROB) {
-    if (Random::bernoulli(keep_prob)) return last;
-    return _dir_weights.random_dir_weights();
   }
 
 /*
@@ -165,8 +130,6 @@ public:
 
 private:
   std::pair<int, int> _loc;
-  Dir _last_dir;
-  DirWeights _dir_weights;
   Act act_ = Act::Wander;
 
   // 饥饿/进食相关成员变量
@@ -181,8 +144,6 @@ private:
   double _sleep_recover_rate = SLEEP_RECOVER_RATE; // 睡眠时每秒 -8.0
   bool   _sleeping = false;         // 是否正在睡
 
- public:
-  constexpr static double KEEP_LAST_DIR_PROB = 0.9;
 
 };
 

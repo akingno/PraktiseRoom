@@ -22,11 +22,6 @@ SDL3Render::SDL3Render(int viewW, int viewH, int tilePx, const std::string& titl
     throw std::runtime_error(std::string("SDL_Init failed: ") + SDL_GetError());;
   }
 
-  // SDL_ttf 仍需初始化
-  if (!TTF_Init()) {
-    throw std::runtime_error(std::string("TTF_Init failed: ") + SDL_GetError());
-  }
-
   const int winW = viewW_ * tilePx_;
   const int winH = viewH_ * tilePx_;
 
@@ -49,9 +44,7 @@ SDL3Render::SDL3Render(int viewW, int viewH, int tilePx, const std::string& titl
   texDoor_                  = loadTexture(RES("door.png"));
   texCharacter_             = loadTexture(RES("character.png"));
 
-  // 字体（可选）——没有字体也不致命，drawText 会短路
-  font_ = TTF_OpenFont(RES("JetBrainsMono.ttf").c_str(), 16);
-  // 如果 font_ == nullptr，说明找不到字体；HUD 文本将被自动跳过
+
 }
 
 SDL3Render::~SDL3Render() {
@@ -97,31 +90,6 @@ void SDL3Render::drawTile(int gx, int gy, SDL_Texture* tex) {
   SDL_RenderTexture(renderer_, tex, nullptr, &dst);
 }
 
-void SDL3Render::drawText(float px, float py, const std::string& s) const {
-  if (!font_) return; // 没字体就不画 HUD
-
-  SDL_Color white{230, 230, 230, 255};
-
-  // SDL3_ttf：UTF-8 为默认编码，使用 TTF_RenderText_*（没有 UTF8 后缀）
-  SDL_Surface* surf = TTF_RenderText_Blended(font_, s.c_str(),0, white);
-  if (!surf) return;
-
-  SDL_Texture* tex = SDL_CreateTextureFromSurface(renderer_, surf);
-  SDL_DestroySurface(surf); // SDL3：销毁 Surface 用 SDL_DestroySurface
-
-  if (!tex) return;
-
-  float w = 0, h = 0;
-  // SDL3：用 SDL_GetTextureSize 代替 SDL_QueryTexture
-  if (!SDL_GetTextureSize(tex, &w, &h)) {
-    SDL_DestroyTexture(tex);
-    return;
-  }
-
-  SDL_FRect dst{ px, py, w, h };
-  SDL_RenderTexture(renderer_, tex, nullptr, &dst);
-  SDL_DestroyTexture(tex);
-}
 
 bool SDL3Render::poll_quit() {
   SDL_Event e;
@@ -137,21 +105,28 @@ bool SDL3Render::poll_quit() {
 
 void SDL3Render::render_frame(const Character& character, const Room& room, const RenderStats& stats) {
   clear();
+  // 先铺一层地板
+  SDL_Texture* tex = tileTex_[TileType::Grass];
+
+  for (int y = 0; y < VIEW_H; ++y) {
+    for (int x = 0; x < VIEW_W; ++x) {
+      drawTile(x, y, tex);
+    }
+  }
 
   // 1) 画地面/墙/床/食物
   for (int y = 0; y < VIEW_H; ++y) {
     for (int x = 0; x < VIEW_W; ++x) {
       TileType t = room.getBlocksType(x, y);
-      SDL_Texture* tex = nullptr;
+      tex = tileTex_[t];
 
       if (t == TileType::DOOR) {
-        tex = texDoor_;
+        tex = texDoor_; // 这里注意不能删
       } else {
         auto it = tileTex_.find(t);
         if (it != tileTex_.end()) tex = it->second;
       }
-      if (!tex) tex = tileTex_[TileType::Grass];
-      drawTile(x, y, tex);
+      if (tex) drawTile(x, y, tex);
     }
   }
 
@@ -160,11 +135,6 @@ void SDL3Render::render_frame(const Character& character, const Room& room, cons
   const int cy = character.getLoc().second;
   drawTile(cx, cy, texCharacter_);
 
-  // 3) HUD：显示分数（font_ 为空时 drawText 会短路）
-  char buf[256];
-  std::snprintf(buf, sizeof(buf), "Eat: %.3f   Wander: %.3f   Sleep: %.3f",
-                stats.scoreEat, stats.scoreWander, stats.scoreSleep);
-  drawText(8.0, 8.0, buf);
 
   present();
 }

@@ -42,7 +42,6 @@ private:
 private:
   SDL_Texture* loadTexture(const std::string& pngPath);
   void drawTile(int gridX, int gridY, SDL_Texture* tex);
-  void drawText(float px, float py, const std::string& s) const; // 需要 SDL_ttf
   void clear();
   void present();
 

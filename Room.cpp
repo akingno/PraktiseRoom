@@ -31,3 +31,17 @@ Room::Room() {
   _blocks[_bed.y * VIEW_W + _bed.x].setTileType(TileType::BED);
 
 }
+
+bool Room::isPassable(int x, int y) const{
+  // 越界一律不可走
+  if (x < 0 || x >= VIEW_W || y < 0 || y >= VIEW_H) return false;
+
+  TileType t = getBlocksType(x, y);
+  switch (t) {
+    case TileType::WallV:
+    case TileType::WallH:
+      return false;
+    default:
+      return true;
+  }
+}

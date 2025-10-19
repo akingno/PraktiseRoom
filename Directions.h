@@ -5,9 +5,22 @@
 #ifndef DIRECTIONS_H
 #define DIRECTIONS_H
 #include "Random.h"
+#include "Config.h"
 
-constexpr int MAX_DIR = 5;
-
+/**
+ *
+ *
+ *
+ *
+ * Warning: 本类 因为 随机乱走 删除 而 废弃
+ * 可能会因为 后续的图像的脸朝向方向而重新启用
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 enum class Dir{
   Right = 0,
   Left = 1,

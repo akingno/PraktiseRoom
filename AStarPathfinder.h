@@ -7,10 +7,10 @@
 
 #include "IPathfinder.h"
 
-class AStarGrid : public IPathfinder {
+class AStarPathfinder : public IPathfinder {
 public:
-  AStarGrid(GridSize size, IsPassable passable);
-  bool plan(int sx,int sy,int tx,int ty,
+  AStarPathfinder(GridSize size, IsPassable passable);
+  bool plan_path(int sx,int sy,int tx,int ty,
             std::vector<std::pair<int,int>>& out) override;
 
 private:

@@ -29,12 +29,14 @@ add_executable(room_temp main.cpp
         ASCIIRender.h
         Blackboard.h
         IPathfinder.h
-        AStarGrid.h
+        AStarPathfinder.h
         ActionExecutor.h
         ActionExecutor.cpp
-        AStarGrid.cpp
+        AStarPathfinder.cpp
         SDL3Render.cpp
-        SDL3Render.h)
+        SDL3Render.h
+        Config.h
+)
 
 set_target_properties(room_temp PROPERTIES WIN32_EXECUTABLE OFF)
 
