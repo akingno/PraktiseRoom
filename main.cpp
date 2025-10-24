@@ -7,20 +7,9 @@
 #include "SDL3Render.h"
 #include "Utils.h"
 #include <chrono>
-#include <cmath>
 #include <iostream>
 #include <thread>
-
-
-/**
- *
- * A Rectangle with 4 coordinate:
- * [x0,x1), [y0,y1)
- *
- * */
-struct Rect4 {
-  int x0, y0, x1, y1;
-};
+#include "GameContentInit.h"
 
 
 
@@ -33,6 +22,7 @@ int main() {
   bool running = true;
   Room room;
   Character character{};
+  register_default_items();
 
   AStarPathfinder path_finder(
     {VIEW_W, VIEW_H},
@@ -94,11 +84,16 @@ int main() {
 
     RenderStats stats{scoreEat, scoreWander, scoreSleep};
 
-    ActExecutorCtx ctx{room, character, tick_index};
+    ActExecutorCtx ctx{room, character, tick_index, path_finder};
     executor.tick(chosen_action, ctx, bb);
 
     //渲染
     render->render_frame(character, room, stats);
+
+    std::cout<< std::string("Action: ") << Character::Act2Str(character.act())<<"\n"<<
+    "Inner Hunger=" + std::to_string(character.get_hunger_inner())<<"\n"<<
+    " Inner Fatigue=" + std::to_string(character.get_fatigue_score())<<"\n"<<
+    " Sleeping Status=" + std::to_string(character.isSleeping())<<"\n\n";
 
 
     next_tick += dt;

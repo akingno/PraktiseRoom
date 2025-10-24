@@ -67,7 +67,6 @@ public:
    *
    * 关于疲劳fatigue和睡眠
    *
-   *
    */
   [[nodiscard]] double get_fatigue_score() const { return _fatigue; }
   bool isSleeping() const { return _sleeping; }
@@ -77,7 +76,6 @@ public:
   /*
    *
    * 抽象的动作设置和辅助函数
-   *
    *
    */
   // 设置当前动作
@@ -110,8 +108,6 @@ public:
    *
    * 游荡
    * Wander的相关函数
-   *
-   *
    */
   // 尝试走一步
   bool tryStepTo(int nx, int ny) {
@@ -124,7 +120,6 @@ public:
 /*
  *
  * 成员变量
- *
  *
  */
 

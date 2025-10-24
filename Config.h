@@ -29,7 +29,7 @@ constexpr int BED_Y  = 28;
 // 角色状态速度
 constexpr double HUNGER_SPEED = 2.0;
 constexpr double FATIGUE_SPEED = 0.5;
-constexpr int SLEEP_RECOVER_RATE = 4;
+constexpr int SLEEP_RECOVER_RATE = 6;
 
 // 阈值
 constexpr double HUNGER_ENTER = 60.0;
@@ -44,11 +44,10 @@ constexpr int MIN_STOP_TIME = 2;
 constexpr int MAX_STOP_TIME = 6; // seconds
 
 // wander完进入stop的概率
-constexpr double ENTER_STOP_POSSI = 0.8;
+constexpr double ENTER_STOP_POSSI = 0.9;
 
 // 食物
 constexpr int FOOD_CALORIES = 80;
-
 
 
 

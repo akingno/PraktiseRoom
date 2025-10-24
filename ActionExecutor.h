@@ -17,6 +17,7 @@ struct ActExecutorCtx {
   Room& room;
   Character& ch;
   uint64_t tick_index;          // 帧号（可用于节流）
+  IPathfinder& pf;
 };
 
 class ActionExecutor {

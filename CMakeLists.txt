@@ -36,6 +36,12 @@ add_executable(room_temp main.cpp
         SDL3Render.cpp
         SDL3Render.h
         Config.h
+        Item.h
+        ItemBuilder.cpp
+        ItemBuilder.h
+        ItemRegistry.h
+        GameContentInit.h
+        RoomAdapters.h
 )
 
 set_target_properties(room_temp PROPERTIES WIN32_EXECUTABLE OFF)

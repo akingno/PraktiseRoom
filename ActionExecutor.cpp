@@ -3,6 +3,20 @@
 //
 #include "ActionExecutor.h"
 
+#include "ItemRegistry.h"
+#include "RoomAdapters.h"
+
+bool try_use_item_at(ActExecutorCtx& ctx, int x, int y) {
+  auto t = ctx.room.getBlocksType(x, y);
+  auto iid_opt = tile_to_item(t);
+  if (!iid_opt) return false;
+
+  if (Item* def = ItemRegistry::inst().get(*iid_opt)) {
+    return def->onUse(ctx.ch, ctx.room, x, y);
+  }
+  return false;
+}
+
 bool ActionExecutor::plan_if_needed(ActExecutorCtx& ctx, Blackboard& bb, std::pair<int,int> cur) {
   if (!need_replan(ctx, bb, cur, bb.target)) return true;
 
@@ -117,10 +131,13 @@ void ActionExecutor::tick_eat(ActExecutorCtx& ctx, Blackboard& bb) {
   // 如果到达则开吃
   const auto pos  = ctx.ch.getLoc();
   const auto fpos = expected_target_for(TargetKind::Food, ctx.room);
-  if (ctx.room.hasFood() && same_pos(pos, fpos) && ctx.ch.eatAvailable()) {
-    ctx.ch.eat(FOOD_CALORIES);
-    ctx.room.consumeFood();
-    bb.clear_path_and_target();
+  if (same_pos(pos, fpos)) {
+    if (try_use_item_at(ctx, pos.first, pos.second)) {
+      bb.clear_path_and_target();   // ← 仅清理；效果在 onUse 里
+      return;
+    }
+    // 使用失败（例如瞬间被移除），让下帧重算
+    bb.path_invalid = true;
   }
 }
 
@@ -139,9 +156,13 @@ void ActionExecutor::tick_sleep(ActExecutorCtx& ctx, Blackboard& bb) {
   const auto pos  = ctx.ch.getLoc();
   const auto bpos = expected_target_for(TargetKind::Bed, ctx.room);
   if (same_pos(pos, bpos)) {
-    if (!ctx.ch.isSleeping()) ctx.ch.setSleeping(true);
-  } else {
-    if (ctx.ch.isSleeping())  ctx.ch.setSleeping(false);
+    if (try_use_item_at(ctx, pos.first, pos.second)) {
+      bb.clear_path_and_target();
+      return;
+    }
+    bb.path_invalid = true;
+  } else { // 还在路上，不在床上
+    if (ctx.ch.isSleeping()) ctx.ch.setSleeping(false);
   }
 }
 
