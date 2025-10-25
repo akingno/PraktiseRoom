@@ -10,7 +10,6 @@
 #include "IRender.h"
 #include "Room.h"
 #include <SDL3/SDL.h>
-#include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <string>
 #include <unordered_map>

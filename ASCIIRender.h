@@ -52,9 +52,9 @@ public:
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
   }
-  void render_room(const Room &room);
+  /*void render_room(const Room &room);
   void render_items(const Room &room);
-  void render_character(const Character &character);
+  void render_character(const Character &character);*/
   void render_info(const Room & room, const Character & character, const RenderStats & stats);
 
   void render_frame(const Character&character, const Room& room, const RenderStats& stats) override;

@@ -14,7 +14,7 @@ inline void register_default_items() {
     .useable(true)
     .pickable(false)
     .blocks(false)
-    .onUse([](Character& ch, Room& room, int x, int y){
+    .onUse([](Character& ch, Room& room, int, int){
       ch.eat(FOOD_CALORIES);
       room.consumeFood();
       return true;

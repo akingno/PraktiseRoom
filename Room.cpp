@@ -17,14 +17,15 @@ bool Room::setBlock(const TileType type,const int x,const int y) {
 Room::Room() {
   _blocks.assign(VIEW_W * VIEW_H, Block(TileType::Grass));
   // 四周置墙
-  for (int x=0; x<VIEW_W; ++x) {
-    _blocks[x].setTileType(TileType::WallH);
-    _blocks[(VIEW_H-1) * VIEW_W + x].setTileType(TileType::WallH);
-  }
   for (int y=0; y<VIEW_H; ++y) {
     _blocks[y * VIEW_W + 0].setTileType(TileType::WallV);
     _blocks[y * VIEW_W + (VIEW_W-1)].setTileType(TileType::WallV);
   }
+  for (int x=0; x<VIEW_W; ++x) {
+    _blocks[x].setTileType(TileType::WallH);
+    _blocks[(VIEW_H-1) * VIEW_W + x].setTileType(TileType::WallH);
+  }
+
   // 物品：床、墙、食物等
   _blocks[DOOR_X].setTileType(TileType::DOOR);
   _blocks[VIEW_W+DOOR_X].setTileType(TileType::FOOD);

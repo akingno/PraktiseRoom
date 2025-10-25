@@ -5,7 +5,7 @@
 #include "ASCIIRender.h"
 
 #include "Utils.h"
-void ASCIIRender::render_room(const Room &room) {
+/*void ASCIIRender::render_room(const Room &room) {
 
   for(int y = 0; y < VIEW_H; ++y){
     for(int x = 0; x < VIEW_W; ++x){
@@ -36,15 +36,15 @@ void ASCIIRender::render_items(const Room &room) {
       buf_at(b.x, b.y) = Block::tile_glyph(room.getBlocksType(b.x,b.y));
     }
   }
-}
-void ASCIIRender::render_character(const Character &character) {
+}*/
+/*void ASCIIRender::render_character(const Character &character) {
   // 覆盖玩家 '@'
   int sx = static_cast<int>(std::floor(character.getLoc().first));
   int sy = static_cast<int>(std::floor(character.getLoc().second));
   if (0 <= sx && sx < VIEW_W && 0 <= sy && sy < VIEW_H) {
     buf_at(sx, sy) = '@';
   }
-}
+}*/
 void ASCIIRender::render_info(const Room & room, const Character & character, const RenderStats & stats) {
 
   // 或首次渲染前清屏一次
@@ -79,11 +79,11 @@ void ASCIIRender::render_info(const Room & room, const Character & character, co
     + " Eat Cooldown=" + std::to_string(cooldown));
 }
 void ASCIIRender::render_frame(const Character&character, const Room& room, const RenderStats& stats){
-  render_room(room);
+  /*render_room(room);
 
   render_items(room);
 
-  render_character(character);
+  render_character(character);*/
 
   render_info(room, character, stats);
 }
