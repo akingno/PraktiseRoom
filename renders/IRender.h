@@ -6,8 +6,9 @@
 #define IRENDER_H
 
 
-#include "Character.h"
-#include "Room.h"
+#include "../Character.h"
+#include "../Room.h"
+#include "../Item.h"
 
 struct RenderStats {
   double scoreEat;
@@ -17,7 +18,7 @@ struct RenderStats {
 
 class IRender {
   public:
-  virtual void render_frame(const Character&character, const Room& room, const RenderStats& stats) = 0;
+  virtual void render_frame(const ItemLayer& items_, const Character&character, const Room& room, const RenderStats& stats) = 0;
   virtual ~IRender() = default;
   virtual bool poll_quit() = 0;
 

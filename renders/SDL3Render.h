@@ -5,10 +5,8 @@
 #ifndef SDL3RENDER_H
 #define SDL3RENDER_H
 
-
-
+#include "../Room.h"
 #include "IRender.h"
-#include "Room.h"
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <string>
@@ -19,7 +17,7 @@ public:
   SDL3Render(int viewW, int viewH, int tilePx, const std::string& title = "Little Room");
   ~SDL3Render() override;
 
-  void render_frame(const Character& c, const Room& room, const RenderStats& stats) override;
+  void render_frame(const ItemLayer& items_, const Character& c, const Room& room, const RenderStats& stats) override;
   bool poll_quit() override;
 
 private:

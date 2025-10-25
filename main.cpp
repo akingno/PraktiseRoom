@@ -1,17 +1,15 @@
-#include "ASCIIRender.h"
-#include "AStarPathfinder.h"
 #include "ActionExecutor.h"
 #include "Character.h"
-#include "IRender.h"
+#include "GameContentInit.h"
 #include "Room.h"
-#include "SDL3Render.h"
-#include "Utils.h"
+#include "renders/ASCIIRender.h"
+#include "renders/IRender.h"
+#include "renders/SDL3Render.h"
+#include "tools/AStarPathfinder.h"
+#include "tools/Utils.h"
 #include <chrono>
 #include <iostream>
 #include <thread>
-#include "GameContentInit.h"
-
-
 
 int main() {
   // 初始化
@@ -21,8 +19,13 @@ int main() {
 
   bool running = true;
   Room room;
-  Character character{};
+  ItemLayer items;
+  Character character;
   register_default_items();
+
+
+  items.ensureBedPlaced();
+  items.ensureFoodSpawned();
 
   AStarPathfinder path_finder(
     {VIEW_W, VIEW_H},
@@ -51,9 +54,8 @@ int main() {
     //tick一下需求的更新
     character.tickNeeds(TICK_MILLI/1000.0);
     //固定刷新食物
-    room.ensureFoodSpawned();
+    items.ensureFoodSpawned();
     // ===== 3) Perception & Utility =====
-    bool hasFood = room.hasFood();
 
     double scoreStop = 0.0; //用于确认目前是否在Stop
     if (bb.in_stop(tick_index)) {
@@ -61,14 +63,14 @@ int main() {
     }
 
     const double scoreEat = CalcScoreEat(
-        character.get_hunger_inner(), hasFood,
+        character.get_hunger_inner(), items.hasFood(),
         !character.eatAvailable(),              // onCooldown: true=禁止
         character.act() == Character::Act::Eat,  // sticky
         HUNGER_ENTER
     );
 
     const double scoreSleep = CalcScoreSleep(
-    character.get_fatigue_score(),  room.hasBed(),
+    character.get_fatigue_score(),  items.hasBed(),
     character.act() == Character::Act::Sleep,
     TIRED_ENTER, RESTED_EXIT
     );
@@ -84,11 +86,11 @@ int main() {
 
     RenderStats stats{scoreEat, scoreWander, scoreSleep};
 
-    ActExecutorCtx ctx{room, character, tick_index, path_finder};
+    ActExecutorCtx ctx{room, character, tick_index, path_finder, items};
     executor.tick(chosen_action, ctx, bb);
 
     //渲染
-    render->render_frame(character, room, stats);
+    render->render_frame(items, character, room, stats);
 
     std::cout<< std::string("Action: ") << Character::Act2Str(character.act())<<"\n"<<
     "Inner Hunger=" + std::to_string(character.get_hunger_inner())<<"\n"<<

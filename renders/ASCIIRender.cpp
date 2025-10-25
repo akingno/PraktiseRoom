@@ -4,7 +4,7 @@
 
 #include "ASCIIRender.h"
 
-#include "Utils.h"
+#include "../tools/Utils.h"
 /*void ASCIIRender::render_room(const Room &room) {
 
   for(int y = 0; y < VIEW_H; ++y){
@@ -68,17 +68,15 @@ void ASCIIRender::render_info(const Room & room, const Character & character, co
   print_status_line(VIEW_H + 6,
     std::string("Sleep  Score: ") + std::to_string(stats.scoreSleep));
 
-  bool   avail    = room.hasFood();
   bool   cooldown = !character.eatAvailable();
 
   print_status_line(VIEW_H + 7,
     "Inner Hunger=" + std::to_string(character.get_hunger_inner())
     + " Inner Fatigue=" + std::to_string(character.get_fatigue_score())
     + " Sleeping Status=" + std::to_string(character.isSleeping())
-    + " Food Avail=" + std::to_string(avail)
     + " Eat Cooldown=" + std::to_string(cooldown));
 }
-void ASCIIRender::render_frame(const Character&character, const Room& room, const RenderStats& stats){
+void ASCIIRender::render_frame(const ItemLayer& items_, const Character&character, const Room& room, const RenderStats& stats){
   /*render_room(room);
 
   render_items(room);

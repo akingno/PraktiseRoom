@@ -5,14 +5,15 @@
 
 #include "ItemRegistry.h"
 #include "RoomAdapters.h"
+#include "ItemLayer.h"
+#include "Item.h"
 
 bool try_use_item_at(ActExecutorCtx& ctx, int x, int y) {
-  auto t = ctx.room.getBlocksType(x, y);
-  auto iid_opt = tile_to_item(t);
-  if (!iid_opt) return false;
-
-  if (Item* def = ItemRegistry::inst().get(*iid_opt)) {
-    return def->onUse(ctx.ch, ctx.room, x, y);
+  auto iid = ctx.items.idAt(x,y);
+  if (!iid) return false;
+  if (Item* def = ItemRegistry::inst().get(*iid)) {
+    UseCtx ux{ ctx.ch, ctx.room, ctx.items };
+    return def->onUse(ux, x, y);
   }
   return false;
 }
@@ -63,13 +64,14 @@ std::pair<int,int> ActionExecutor::pick_random_reachable(ActExecutorCtx& ctx,
 }
 
 
-std::pair<int,int> ActionExecutor::expected_target_for(TargetKind kind, const Room& room) const {
+std::pair<int,int> ActionExecutor::expected_target_for(TargetKind kind,
+                                                       const ActExecutorCtx& ctx) const {
   switch (kind) {
-    case TargetKind::Food: return {room.foodPos().x, room.foodPos().y};
-    case TargetKind::Bed:  return {room.bedPos().x,  room.bedPos().y};
-    case TargetKind::None:
-    default:               return {-1,-1};
+    case TargetKind::Food: if (auto p=ctx.items.foodPos()) return {p->x,p->y}; break;
+    case TargetKind::Bed:  if (auto p=ctx.items.bedPos())  return {p->x,p->y}; break;
+    default: break;
   }
+  return {-1,-1};
 }
 
 void ActionExecutor::ensure_target(TargetKind need, ActExecutorCtx& ctx, Blackboard& bb) {
@@ -77,8 +79,8 @@ void ActionExecutor::ensure_target(TargetKind need, ActExecutorCtx& ctx, Blackbo
   // 世界可用性检查（Food/Bed 各自判断）
   bool available = false;
   switch (need) {
-    case TargetKind::Food: available = ctx.room.hasFood(); break;
-    case TargetKind::Bed:  available = ctx.room.hasBed();  break;
+    case TargetKind::Food: available = ctx.items.hasFood(); break;
+    case TargetKind::Bed:  available = ctx.items.hasBed();  break;
     default: break;
   }
   if (!available) {
@@ -88,7 +90,7 @@ void ActionExecutor::ensure_target(TargetKind need, ActExecutorCtx& ctx, Blackbo
     return;
   }
   // 期望目标位置
-  const auto want = expected_target_for(need, ctx.room);
+  const auto want = expected_target_for(need, ctx);
   const bool kind_mismatch   = (bb.target_kind != need);
   const bool target_mismatch = (!bb.target_valid || !same_pos(bb.target, want));
 
@@ -130,7 +132,7 @@ void ActionExecutor::tick_eat(ActExecutorCtx& ctx, Blackboard& bb) {
 
   // 如果到达则开吃
   const auto pos  = ctx.ch.getLoc();
-  const auto fpos = expected_target_for(TargetKind::Food, ctx.room);
+  const auto fpos = expected_target_for(TargetKind::Food, ctx);
   if (same_pos(pos, fpos)) {
     if (try_use_item_at(ctx, pos.first, pos.second)) {
       bb.clear_path_and_target();   // ← 仅清理；效果在 onUse 里
@@ -154,7 +156,7 @@ void ActionExecutor::tick_sleep(ActExecutorCtx& ctx, Blackboard& bb) {
 
   // 如果到达则开睡
   const auto pos  = ctx.ch.getLoc();
-  const auto bpos = expected_target_for(TargetKind::Bed, ctx.room);
+  const auto bpos = expected_target_for(TargetKind::Bed, ctx);
   if (same_pos(pos, bpos)) {
     if (try_use_item_at(ctx, pos.first, pos.second)) {
       bb.clear_path_and_target();

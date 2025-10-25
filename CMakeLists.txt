@@ -21,20 +21,19 @@ add_subdirectory("C:/Users/jacob/lib/SDL_ttf" "${CMAKE_BINARY_DIR}/_deps/SDL_ttf
 add_executable(room_temp main.cpp
         Room.h
         Room.cpp
-        Random.cpp
-        Utils.h
-        Directions.h
-        IRender.h
-        ASCIIRender.cpp
-        ASCIIRender.h
+        tools/Random.cpp
+        tools/Utils.h
+        renders/IRender.h
+        renders/ASCIIRender.cpp
+        renders/ASCIIRender.h
         Blackboard.h
-        IPathfinder.h
-        AStarPathfinder.h
+        tools/IPathfinder.h
+        tools/AStarPathfinder.h
         ActionExecutor.h
         ActionExecutor.cpp
-        AStarPathfinder.cpp
-        SDL3Render.cpp
-        SDL3Render.h
+        tools/AStarPathfinder.cpp
+        renders/SDL3Render.cpp
+        renders/SDL3Render.h
         Config.h
         Item.h
         ItemBuilder.cpp
@@ -42,6 +41,8 @@ add_executable(room_temp main.cpp
         ItemRegistry.h
         GameContentInit.h
         RoomAdapters.h
+        ItemLayer.cpp
+        ItemLayer.h
 )
 
 set_target_properties(room_temp PROPERTIES WIN32_EXECUTABLE OFF)

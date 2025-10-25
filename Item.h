@@ -6,8 +6,18 @@
 #define ITEM_H
 
 
-#include <string>
 #include <functional>
+#include <string>
+
+class Room;
+class ItemLayer;
+class Character;
+
+struct UseCtx {
+  Character& ch;
+  Room& room;
+  ItemLayer& items;
+};
 
 using ItemId = std::string;
 
@@ -29,7 +39,7 @@ public:
 
   // 定义使用该物品时的行为（如吃/躺床）
   // 返回 true 表示使用成功（可能导致消耗/冷却）
-  virtual bool onUse(class Character& ch, class Room& room, int x, int y) { (void)ch;(void)room;(void)x;(void)y; return false; }
+  virtual bool onUse(UseCtx& ux, int x, int y) { (void)ux;(void)x;(void)y; return false; }
 
 private:
   ItemId id_;

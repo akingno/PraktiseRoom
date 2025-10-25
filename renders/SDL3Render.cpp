@@ -9,6 +9,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include "../ItemLayer.h"
 
 static std::string RES(const char* name) {
   return std::string("res/") + name;
@@ -103,7 +104,7 @@ bool SDL3Render::poll_quit() {
   return false;
 }
 
-void SDL3Render::render_frame(const Character& character, const Room& room, const RenderStats& stats) {
+void SDL3Render::render_frame(const ItemLayer& items_, const Character& c, const Room& room, const RenderStats& stats) {
   clear();
   // 先铺一层地板
   SDL_Texture* tex = tileTex_[TileType::Grass];
@@ -114,25 +115,29 @@ void SDL3Render::render_frame(const Character& character, const Room& room, cons
     }
   }
 
-  // 1) 画地面/墙/床/食物
-  for (int y = 0; y < VIEW_H; ++y) {
-    for (int x = 0; x < VIEW_W; ++x) {
+  // 1) 画地面/墙/门
+  for (int y=0; y<VIEW_H; ++y) {
+    for (int x=0; x<VIEW_W; ++x) {
       TileType t = room.getBlocksType(x, y);
-      tex = tileTex_[t];
-
-      if (t == TileType::DOOR) {
-        tex = texDoor_; // 这里注意不能删
-      } else {
-        auto it = tileTex_.find(t);
-        if (it != tileTex_.end()) tex = it->second;
-      }
+      auto tex = (t==TileType::DOOR ? texDoor_ : tileTex_[t]);
       if (tex) drawTile(x, y, tex);
     }
   }
 
+  // 2) 画物品
+  for (auto& [key, iid] : items_.items()) {
+    int x = key % VIEW_W;
+    int y = key / VIEW_W;
+    SDL_Texture* tex = nullptr;
+    if (iid == "food") tex = tileTex_[TileType::FOOD];
+    else if (iid == "bed") tex = tileTex_[TileType::BED];
+    // ... 未来更多
+    if (tex) drawTile(x, y, tex);
+  }
+
   // 2) 画角色（你这边是 pair<int,int> getLoc()）
-  const int cx = character.getLoc().first;
-  const int cy = character.getLoc().second;
+  const int cx = c.getLoc().first;
+  const int cy = c.getLoc().second;
   drawTile(cx, cy, texCharacter_);
 
 

@@ -4,8 +4,6 @@
 
 #ifndef WORLD_TEMP__BLOCK_H_
 #define WORLD_TEMP__BLOCK_H_
-#include <cstdint>
-#include <utility>
 
 enum class TileType{
   Grass = 0,
@@ -23,8 +21,11 @@ class Block {
       _tile_type = tileType;
   }
 
-
-  static char tile_glyph(const TileType t) {
+/*
+ * Used by ascii render and not used now
+ *
+ */
+  /*static char tile_glyph(const TileType t) {
     switch (t) {
       case TileType::WallV:  return '|';
       case TileType::WallH: return '-';
@@ -34,7 +35,7 @@ class Block {
       case TileType::Grass:
       default:             return ' ';
     }
-  }
+  }*/
 
   static TileType Int2Tile(int num){
     switch (num) {

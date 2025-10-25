@@ -5,6 +5,9 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+// This should be put in vector2d or something
+struct Pos { int x, y; };
+
 // tile 像素大小
 constexpr int TILE_PX = 32;
 

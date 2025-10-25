@@ -4,8 +4,10 @@
 
 #ifndef DIRECTIONS_H
 #define DIRECTIONS_H
-#include "Random.h"
-#include "Config.h"
+#include "../Config.h"
+#include "../tools/Random.h"
+
+#include <string>
 
 /**
  *

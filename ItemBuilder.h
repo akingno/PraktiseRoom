@@ -22,7 +22,7 @@ public:
   ItemBuilder& useable(bool v)     { props_.useable = v; return *this; }
 
   // 提供自定义 onUse
-  ItemBuilder& onUse(std::function<bool(Character&, Room&, int,int)> fn) {
+  ItemBuilder& onUse(std::function<bool(UseCtx&, int,int)> fn) {
     on_use_ = std::move(fn); return *this;
   }
 
@@ -32,7 +32,7 @@ public:
 private:
   ItemId id_;
   ItemProps props_;
-  std::function<bool(Character&, Room&, int,int)> on_use_;
+  std::function<bool(UseCtx&, int,int)> on_use_;
 };
 
 

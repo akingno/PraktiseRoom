@@ -6,18 +6,18 @@
 #define ACTIONEXECUTOR_H
 
 #include "Blackboard.h"
-#include "IPathfinder.h"
-#include "Room.h"
 #include "Character.h"
-
-
+#include "ItemLayer.h"
+#include "Room.h"
+#include "tools/IPathfinder.h"
 
 // 本帧的资源上下文
 struct ActExecutorCtx {
   Room& room;
   Character& ch;
-  uint64_t tick_index;          // 帧号（可用于节流）
+  uint64_t tick_index; // 帧号（用于节流）
   IPathfinder& pf;
+  ItemLayer& items;
 };
 
 class ActionExecutor {
@@ -38,7 +38,7 @@ private:
   void ensure_target(TargetKind need, ActExecutorCtx& ctx, Blackboard& bb);
 
   // 返回某种目标在世界中的“期望坐标”
-  std::pair<int,int> expected_target_for(TargetKind kind, const Room& room) const;
+  std::pair<int,int> expected_target_for(TargetKind kind, const ActExecutorCtx& ctx) const;
 
 
   // Wander 用：挑一个随机的可达点（带 A* 验证），失败返回 {-1,-1}

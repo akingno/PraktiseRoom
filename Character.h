@@ -5,13 +5,10 @@
 #ifndef ROOM_TEMP__CHARACTER_H_
 #define ROOM_TEMP__CHARACTER_H_
 
-
-
+#include "Config.h"
+#include "unused/Directions.h"
 #include <random>
 #include <utility>
-#include "Directions.h"
-#include "Config.h"
-
 
 class Character {
 

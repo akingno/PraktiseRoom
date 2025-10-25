@@ -5,9 +5,9 @@
 #ifndef ASCIIRENDER_H
 #define ASCIIRENDER_H
 
-#include "Character.h"
+#include "../Character.h"
+#include "../Room.h"
 #include "IRender.h"
-#include "Room.h"
 
 #include <cstdint>
 #include <iostream>
@@ -57,7 +57,7 @@ public:
   void render_character(const Character &character);*/
   void render_info(const Room & room, const Character & character, const RenderStats & stats);
 
-  void render_frame(const Character&character, const Room& room, const RenderStats& stats) override;
+  void render_frame(const ItemLayer& items_,const Character&character, const Room& room, const RenderStats& stats) override;
 
 
  private:
