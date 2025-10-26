@@ -53,7 +53,8 @@ int main() {
     if (render->poll_quit()) break;
     //tick一下需求的更新
     character.tickNeeds(TICK_MILLI/1000.0);
-    //固定刷新食物
+
+    // 每循环固定刷新一下食物
     items.ensureFoodSpawned();
     // ===== 3) Perception & Utility =====
 
@@ -62,6 +63,7 @@ int main() {
       scoreStop = BASE_STOP; // > BASE_WANDER(0.05)，保证到点之前维持 Stop
     }
 
+    // 分数计算
     const double scoreEat = CalcScoreEat(
         character.get_hunger_inner(), items.hasFood(),
         !character.eatAvailable(),              // onCooldown: true=禁止
@@ -84,6 +86,7 @@ int main() {
 
     character.setAct(chosen_action);
 
+    // 渲染数据
     RenderStats stats{scoreEat, scoreWander, scoreSleep};
 
     ActExecutorCtx ctx{room, character, tick_index, path_finder, items};

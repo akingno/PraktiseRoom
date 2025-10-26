@@ -40,7 +40,6 @@ add_executable(room_temp main.cpp
         ItemBuilder.h
         ItemRegistry.h
         GameContentInit.h
-        RoomAdapters.h
         ItemLayer.cpp
         ItemLayer.h
 )
