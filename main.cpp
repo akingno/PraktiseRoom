@@ -22,10 +22,10 @@ int main() {
   ItemLayer items;
   Character character;
   register_default_items();
-
-
+  
   items.ensureBedPlaced();
   items.ensureFoodSpawned();
+  items.ensureComputerPlaced();
 
   AStarPathfinder path_finder(
     {VIEW_W, VIEW_H},

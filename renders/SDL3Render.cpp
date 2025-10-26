@@ -40,17 +40,17 @@ SDL3Render::SDL3Render(int viewW, int viewH, int tilePx, const std::string& titl
   tileTex_[TileType::Grass] = loadTexture(RES("grass.png"));
   tileTex_[TileType::WallH] = loadTexture(RES("wall_h.png"));
   tileTex_[TileType::WallV] = loadTexture(RES("wall_v.png"));
-  tileTex_[TileType::FOOD]  = loadTexture(RES("food.png"));
-  tileTex_[TileType::BED]   = loadTexture(RES("bed.png"));
-  texDoor_                  = loadTexture(RES("door.png"));
-  texCharacter_             = loadTexture(RES("character.png"));
+  tileTex_[TileType::FOOD] = loadTexture(RES("food.png"));
+  tileTex_[TileType::BED] = loadTexture(RES("bed.png"));
+  tileTex_[TileType::COMPUTER] = loadTexture(RES("computer.png"));
+  tileTex_[TileType::DOOR] = loadTexture(RES("door.png"));
+  texCharacter_ = loadTexture(RES("character.png"));
 
 
 }
 
 SDL3Render::~SDL3Render() {
   for (auto& kv : tileTex_) if (kv.second) SDL_DestroyTexture(kv.second);
-  if (texDoor_)       SDL_DestroyTexture(texDoor_);
   if (texCharacter_)  SDL_DestroyTexture(texCharacter_);
   if (font_)          TTF_CloseFont(font_);
 
@@ -119,7 +119,7 @@ void SDL3Render::render_frame(const ItemLayer& items_, const Character& c, const
   for (int y=0; y<VIEW_H; ++y) {
     for (int x=0; x<VIEW_W; ++x) {
       TileType t = room.getBlocksType(x, y);
-      auto tex = (t==TileType::DOOR ? texDoor_ : tileTex_[t]);
+      auto tex = tileTex_[t];
       if (tex) drawTile(x, y, tex);
     }
   }
@@ -131,6 +131,8 @@ void SDL3Render::render_frame(const ItemLayer& items_, const Character& c, const
     SDL_Texture* tex = nullptr;
     if (iid == "food") tex = tileTex_[TileType::FOOD];
     else if (iid == "bed") tex = tileTex_[TileType::BED];
+    else if (iid == "computer") tex = tileTex_[TileType::COMPUTER];
+
     // ... 未来更多
     if (tex) drawTile(x, y, tex);
   }

@@ -11,7 +11,8 @@ enum class TileType{
   WallH = 2,
   FOOD = 3,
   DOOR = 4,
-  BED = 5
+  BED = 5,
+  COMPUTER = 6,
 };
 
 class Block {
@@ -37,6 +38,10 @@ class Block {
     }
   }*/
 
+  /*
+   *
+   * TODO: NOUSE
+   */
   static TileType Int2Tile(int num){
     switch (num) {
       case 0:
@@ -51,6 +56,8 @@ class Block {
         return TileType::DOOR;
       case 5:
         return TileType::BED;
+      case 6:
+        return TileType::COMPUTER;
       default:
         return TileType::Grass;
     }

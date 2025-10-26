@@ -20,14 +20,22 @@ constexpr int MAX_DIR = 5;
 
 
 // 房间相关
+// 房间大小： 40*30格
 constexpr int VIEW_W = 40;
 constexpr int VIEW_H = 30;
+// 门的位置
 constexpr int DOOR_X = 20;
 constexpr int DOOR_Y = 0;
+// 食物的位置
 constexpr int FOOD_X = 20;
 constexpr int FOOD_Y = 1;
+// 床的位置
 constexpr int BED_X  = 10;
 constexpr int BED_Y  = 28;
+// 电脑的位置
+constexpr int COMPUTER_X = 10;
+constexpr int COMPUTER_Y = 1;
+
 
 // 角色状态速度
 constexpr double HUNGER_SPEED = 2.0;
@@ -41,13 +49,22 @@ constexpr double RESTED_EXIT = 30.0;
 
 constexpr double BASE_WANDER = 0.05;
 constexpr double BASE_STOP = 0.06;
+constexpr double BASE_USE_COMPUTER = 0.055;
+
 
 // Stop的时间
 constexpr int MIN_STOP_TIME = 2;
 constexpr int MAX_STOP_TIME = 6; // seconds
 
+// 使用电脑的时间
+constexpr int COMPUTER_USE_MIN_S = 10;           // 10s
+constexpr int COMPUTER_USE_MAX_S = 15;
+
 // wander完进入stop的概率
 constexpr double ENTER_STOP_POSSI = 0.9;
+// wander完使用电脑的概率
+constexpr double ENTER_COMPUTER_PROB = 0.05;
+
 
 // 食物
 constexpr int FOOD_CALORIES = 80;

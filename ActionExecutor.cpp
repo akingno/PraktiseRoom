@@ -4,7 +4,6 @@
 #include "ActionExecutor.h"
 
 #include "ItemRegistry.h"
-#include "RoomAdapters.h"
 #include "ItemLayer.h"
 #include "Item.h"
 

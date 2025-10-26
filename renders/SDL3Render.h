@@ -31,7 +31,6 @@ private:
   // 纹理集合
   std::unordered_map<TileType, SDL_Texture*> tileTex_;
   SDL_Texture* texCharacter_ = nullptr;
-  SDL_Texture* texDoor_      = nullptr; // 可与 tileTex_[TileType::DOOR] 合并
 
   // 字体（HUD）
   TTF_Font* font_ = nullptr;

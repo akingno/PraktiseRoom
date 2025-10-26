@@ -42,6 +42,10 @@ public:
     if (!hasBed()) place("bed", BED_X, BED_Y);
   }
 
+  void ensureComputerPlaced() {
+    if (!anyOf("computer")) place("computer", COMPUTER_X, COMPUTER_Y);
+  }
+
   // 迭代用：给渲染器遍历
   const std::unordered_map<int, ItemId>& items() const { return items_; }
 private:
