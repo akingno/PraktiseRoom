@@ -33,6 +33,7 @@ private:
   void tick_sleep(ActExecutorCtx& ctx, Blackboard& bb);
   void tick_wander(ActExecutorCtx& ctx, Blackboard& bb);
   void tick_stop(ActExecutorCtx& ctx, Blackboard& bb);
+  void tick_use_computer(ActExecutorCtx& ctx, Blackboard& bb);
 
   // 确保目标存在并且在那个位置
   void ensure_target(TargetKind need, ActExecutorCtx& ctx, Blackboard& bb);

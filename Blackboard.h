@@ -6,10 +6,11 @@
 #define BLACKBOARD_H
 
 #include <cstdint>
+#include <iostream>
 #include <utility>
 #include <vector>
 
-enum class TargetKind { None, Food, Bed, WanderPt };
+enum class TargetKind { None, Food, Bed, WanderPt, Computer };
 
 struct Blackboard {
   // 目标（食物或者床的位置）
@@ -21,12 +22,16 @@ struct Blackboard {
   std::vector<std::pair<int,int>> path;
   int path_i = 0;            // 下一步要走到的下标（一般从 1 开始）
   bool path_invalid = true;  // 需要重算
+  bool _using_computer = false;
 
   // 诊断/节流
   uint64_t last_planned_for_tick = -999999; // 本帧已算过就不再算
 
   // 让 Stop 持续到这个 tick（包含）；<0 表示不在 Stop
   long long stop_until_tick = -1;
+  bool is_using_computer() const {
+    return _using_computer;
+  }
 
   // 是否处于 Stop
   [[nodiscard]] bool in_stop(uint64_t now_tick) const {
@@ -76,6 +81,10 @@ struct Blackboard {
   // 停止一段时间
   void start_stop_until(uint64_t now_tick, int hold_ticks) {
     stop_until_tick = static_cast<long long>(now_tick) + hold_ticks;
+  }
+  void computer_used() {
+      std::cout<<"使用完毕"<<std::endl;
+    _using_computer = false;
   }
 
   // 若当前有任何目标/路径，则清空（避免无谓写入）

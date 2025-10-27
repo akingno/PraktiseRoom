@@ -6,6 +6,7 @@
 #define ROOM_TEMP__CHARACTER_H_
 
 #include "Config.h"
+#include "ShortMemory.h"
 #include "unused/Directions.h"
 #include <random>
 #include <utility>
@@ -17,7 +18,8 @@ public:
     Eat,
     Sleep,
     Wander,
-    Stop
+    Stop,
+    UseComputer,
   };
 
  //构造函数
@@ -40,9 +42,7 @@ public:
   }
 
   /*
-   *
    *关于饥饿和进食的计算
-   *
    */
   // 当前饥饿程度（只和时间有关）
   [[nodiscard]] double  get_hunger_inner() const { return _hunger; }
@@ -55,34 +55,34 @@ public:
   }
 
   //（站在食物上）吃饭，饥饿-进食卡路里数
-  void eat(int calories) {                        // 简化：卡路里直接换成饱腹度
+  void eat(int calories) {
     _hunger = std::max(0.0, _hunger - calories);
     _eat_cooldown = _eat_cooldown_secs;
   }
 
   /*
-   *
    * 关于疲劳fatigue和睡眠
-   *
    */
   [[nodiscard]] double get_fatigue_score() const { return _fatigue; }
+
   bool isSleeping() const { return _sleeping; }
+
   void setSleeping(bool s){ _sleeping = s; }
 
+  /*
+   * 关于短期记忆的函数
+   */
+  ShortMemory& short_memory() { return short_memory_; }
+
+  [[nodiscard]] const ShortMemory& short_memory() const { return short_memory_; }
 
   /*
-   *
    * 抽象的动作设置和辅助函数
-   *
    */
   // 设置当前动作
-  void  setAct(Act a) {
-    act_ = a;
-  }
+  void  setAct(Act a) { act_ = a; }
 
-  Act   act() const {
-    return act_;
-  }
+  Act   act() const { return act_; }
 
   static const char* Act2Str(const Act a) {
     switch (a) {
@@ -94,6 +94,8 @@ public:
         return "Sleep";
       case Act::Stop:
         return "Stop";
+      case Act::UseComputer:
+        return "UseComputer";
       default:
         return "Unknown";
     }
@@ -101,11 +103,7 @@ public:
 
   [[nodiscard]] std::pair<int, int> getLoc() const{return _loc; }
 
-  /*
-   *
-   * 游荡
-   * Wander的相关函数
-   */
+
   // 尝试走一步
   bool tryStepTo(int nx, int ny) {
     auto [x, y] = _loc;
@@ -115,11 +113,8 @@ public:
   }
 
 /*
- *
  * 成员变量
- *
  */
-
 private:
   std::pair<int, int> _loc;
   Act act_ = Act::Wander;
@@ -136,7 +131,7 @@ private:
   double _sleep_recover_rate = SLEEP_RECOVER_RATE; // 睡眠时每秒 -8.0
   bool   _sleeping = false;         // 是否正在睡
 
-
+  ShortMemory short_memory_;
 };
 
 #endif//ROOM_TEMP__CHARACTER_H_

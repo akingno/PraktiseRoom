@@ -42,6 +42,7 @@ add_executable(room_temp main.cpp
         GameContentInit.h
         ItemLayer.cpp
         ItemLayer.h
+        ShortMemory.h
 )
 
 set_target_properties(room_temp PROPERTIES WIN32_EXECUTABLE OFF)

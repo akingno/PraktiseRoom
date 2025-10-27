@@ -3,14 +3,16 @@
 //
 #include "ActionExecutor.h"
 
-#include "ItemRegistry.h"
-#include "ItemLayer.h"
 #include "Item.h"
+#include "ItemLayer.h"
+#include "ItemRegistry.h"
+
 
 bool try_use_item_at(ActExecutorCtx& ctx, int x, int y) {
   auto iid = ctx.items.idAt(x,y);
   if (!iid) return false;
   if (Item* def = ItemRegistry::inst().get(*iid)) {
+
     UseCtx ux{ ctx.ch, ctx.room, ctx.items };
     return def->onUse(ux, x, y);
   }
@@ -68,6 +70,7 @@ std::pair<int,int> ActionExecutor::expected_target_for(TargetKind kind,
   switch (kind) {
     case TargetKind::Food: if (auto p=ctx.items.foodPos()) return {p->x,p->y}; break;
     case TargetKind::Bed:  if (auto p=ctx.items.bedPos())  return {p->x,p->y}; break;
+    case TargetKind::Computer: if (auto p=ctx.items.computerPos()) return {p->x,p->y}; break;
     default: break;
   }
   return {-1,-1};
@@ -80,6 +83,7 @@ void ActionExecutor::ensure_target(TargetKind need, ActExecutorCtx& ctx, Blackbo
   switch (need) {
     case TargetKind::Food: available = ctx.items.hasFood(); break;
     case TargetKind::Bed:  available = ctx.items.hasBed();  break;
+    case TargetKind::Computer: available = ctx.items.hasComputer(); break;
     default: break;
   }
   if (!available) {
@@ -110,6 +114,9 @@ void ActionExecutor::tick(Character::Act current_action, ActExecutorCtx& ctx, Bl
     case Character::Act::Stop:
       tick_stop(ctx, bb);
       break;
+    case Character::Act::UseComputer:
+      tick_use_computer(ctx, bb);
+      break;
     case Character::Act::Wander:
     default:
       tick_wander(ctx, bb);
@@ -121,7 +128,7 @@ void ActionExecutor::tick_eat(ActExecutorCtx& ctx, Blackboard& bb) {
   if (ctx.ch.isSleeping()) ctx.ch.setSleeping(false);
 
   ensure_target(TargetKind::Food, ctx, bb);
-  if (bb.target_kind != TargetKind::Food || !bb.target_valid) return;
+  if (!bb.target_valid) return;
 
   const auto cur = ctx.ch.getLoc();
   if (!plan_if_needed(ctx, bb, cur)) return;
@@ -145,7 +152,7 @@ void ActionExecutor::tick_eat(ActExecutorCtx& ctx, Blackboard& bb) {
 // Sleep 行为：FindBed → Plan → Follow → SleepNow
 void ActionExecutor::tick_sleep(ActExecutorCtx& ctx, Blackboard& bb) {
   ensure_target(TargetKind::Bed, ctx, bb);
-  if (bb.target_kind != TargetKind::Bed || !bb.target_valid) return;
+  if (!bb.target_valid) return;
 
   const auto cur = ctx.ch.getLoc();
   if (!plan_if_needed(ctx, bb, cur)) return;
@@ -233,12 +240,18 @@ void ActionExecutor::tick_wander(ActExecutorCtx& ctx, Blackboard& bb) {
   // 4) 到达则让下一帧重新挑点（不在当前帧挑，避免一帧内多次寻路）
   if (same_pos(ctx.ch.getLoc(), bb.target) || bb.path_i >= (int)bb.path.size()) {
     bb.clear_path_and_target();
-
     // 到达后有几率进入stop
-    const bool want_stop = Random::bernoulli(ENTER_STOP_POSSI);
-    if (want_stop) {
-      const int hold_ticks = Random::randint(MIN_STOP_TIME * TICKS_PER_SEC, MAX_STOP_TIME * TICKS_PER_SEC); // 50ms *
-      bb.start_stop_until(ctx.tick_index, hold_ticks);
+    const bool want_change = Random::bernoulli(CHANGE_ACTION_PROB);
+    if (want_change) {
+      bool try_use_pc = Random::bernoulli(ENTER_COMPUTER_PROB) && ctx.items.hasComputer();
+      if (try_use_pc) {
+        // 不在这里设 stop，直接清理；让 main 下一帧把 Act 设为 UseComputer
+        bb.clear_path_and_target();
+        bb._using_computer = true;
+      }else { // 不使用电脑，stop
+        const int hold_ticks = Random::randint(MIN_STOP_TIME * TICKS_PER_SEC, MAX_STOP_TIME * TICKS_PER_SEC); // 50ms *
+        bb.start_stop_until(ctx.tick_index, hold_ticks);
+      }
     }
   }
 
@@ -249,6 +262,33 @@ void ActionExecutor::tick_stop(ActExecutorCtx& ctx, Blackboard& bb) {
   // Stop 不需要目标：确保黑板无目标、无路径（避免残留导致意外移动）
   bb.clear_path_and_target_if_any();
   // 不移动
+}
+
+void ActionExecutor::tick_use_computer(ActExecutorCtx& ctx, Blackboard& bb) {
+  bb._using_computer = true;
+  ensure_target(TargetKind::Computer, ctx, bb);
+  if (!bb.target_valid) return;
+
+  const auto cur = ctx.ch.getLoc();
+  if (!plan_if_needed(ctx, bb, cur)) return;
+
+  follow_one_step_or_invalidate(ctx, bb);
+
+  const auto pos  = ctx.ch.getLoc();
+  const auto cpos = expected_target_for(TargetKind::Computer, ctx);
+
+  if (same_pos(pos, cpos)) {
+    if (try_use_item_at(ctx, pos.first, pos.second)) {
+      bb._using_computer = false;
+      // 使用成功 → 进入stop
+      const int hold = Random::randint(MIN_USE_COMPUTER_TIME * TICKS_PER_SEC, MAX_USE_COMPUTER_TIME * TICKS_PER_SEC);
+      bb.stop_until_tick = static_cast<long long>(ctx.tick_index) + hold;
+
+      bb.clear_path_and_target();
+      return;
+    }
+    bb.path_invalid = true; // 使用失败，下帧重算
+  }
 }
 
 

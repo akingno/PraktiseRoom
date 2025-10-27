@@ -49,7 +49,7 @@ constexpr double RESTED_EXIT = 30.0;
 
 constexpr double BASE_WANDER = 0.05;
 constexpr double BASE_STOP = 0.06;
-constexpr double BASE_USE_COMPUTER = 0.055;
+constexpr double BASE_USE_COMPUTER = 0.055; // BASE_WANDER到BASE_STOP之间
 
 
 // Stop的时间
@@ -57,13 +57,13 @@ constexpr int MIN_STOP_TIME = 2;
 constexpr int MAX_STOP_TIME = 6; // seconds
 
 // 使用电脑的时间
-constexpr int COMPUTER_USE_MIN_S = 10;           // 10s
-constexpr int COMPUTER_USE_MAX_S = 15;
+constexpr int MIN_USE_COMPUTER_TIME = 4;
+constexpr int MAX_USE_COMPUTER_TIME = 8;
 
-// wander完进入stop的概率
-constexpr double ENTER_STOP_POSSI = 0.9;
+// wander完切换状态的概率
+constexpr double CHANGE_ACTION_PROB = 0.95;
 // wander完使用电脑的概率
-constexpr double ENTER_COMPUTER_PROB = 0.05;
+constexpr double ENTER_COMPUTER_PROB = 0.2;
 
 
 // 食物

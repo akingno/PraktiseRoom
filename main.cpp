@@ -8,7 +8,6 @@
 #include "tools/AStarPathfinder.h"
 #include "tools/Utils.h"
 #include <chrono>
-#include <iostream>
 #include <thread>
 
 int main() {
@@ -62,6 +61,10 @@ int main() {
     if (bb.in_stop(tick_index)) {
       scoreStop = BASE_STOP; // > BASE_WANDER(0.05)，保证到点之前维持 Stop
     }
+    double scoreUseComputer = 0.0;
+    if (bb.is_using_computer()) {
+      scoreUseComputer = BASE_USE_COMPUTER;
+    }
 
     // 分数计算
     const double scoreEat = CalcScoreEat(
@@ -83,6 +86,7 @@ int main() {
     if (scoreEat   > best) { best = scoreEat;   chosen_action = Character::Act::Eat; }
     if (scoreSleep > best) { best = scoreSleep; chosen_action = Character::Act::Sleep; }
     if (scoreStop  > best) { best = scoreStop;  chosen_action = Character::Act::Stop; }
+    if (scoreUseComputer > best) { best = scoreUseComputer; chosen_action = Character::Act::UseComputer; }
 
     character.setAct(chosen_action);
 

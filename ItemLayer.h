@@ -27,8 +27,11 @@ public:
 
   bool hasFood() const  { return anyOf("food"); }
   bool hasBed()  const  { return anyOf("bed");  }
+  bool hasComputer() const  { return anyOf("computer");  }
+
   std::optional<Pos> foodPos() const { return firstOf("food"); }
   std::optional<Pos> bedPos()  const { return firstOf("bed");  }
+  std::optional<Pos> computerPos() const { return firstOf("computer"); }
 
   // Demo 生成/消耗
   void ensureFoodSpawned() {
@@ -38,12 +41,12 @@ public:
     if (auto p = foodPos()) removeAt(p->x, p->y);
   }
 
-  void ensureBedPlaced() {               // ← 可选：如果你想用 ensure 风格
+  void ensureBedPlaced() {
     if (!hasBed()) place("bed", BED_X, BED_Y);
   }
 
   void ensureComputerPlaced() {
-    if (!anyOf("computer")) place("computer", COMPUTER_X, COMPUTER_Y);
+    if (!hasComputer()) place("computer", COMPUTER_X, COMPUTER_Y);
   }
 
   // 迭代用：给渲染器遍历
