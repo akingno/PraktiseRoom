@@ -8,17 +8,17 @@
 #include "ItemBuilder.h"
 #include "ItemRegistry.h"
 
-static const std::vector<std::pair<std::string, double>> kComputerFeed = {
-  {"看了一段搞笑视频", +0.5},
-  {"读到一条尖刻评论", -1.0},
-  {"学到一个新技巧", +1.0},
-  {"看到坏消息", -2.0},
-  {"完成日常签到",0.0},
-  {"听了点轻音乐",+0.5},
-  {"刷到宠物视频",+1.0},
-  {"被广告刷屏",-1.0},
-  {"读到励志故事",+2.0},
-  {"无聊地发呆",0.0},
+static const std::vector<std::string> kComputerFeed = {
+  {"看了一段搞笑视频"},
+  {"读到一条尖刻评论"},
+  {"学到一个新技巧"},
+  {"看到坏消息"},
+  {"完成日常签到"},
+  {"听了点轻音乐"},
+  {"刷到宠物视频"},
+  {"被广告刷屏"},
+  {"读到励志故事"},
+  {"无聊地发呆"},
 };
 
 inline void register_default_items() {
@@ -50,9 +50,9 @@ inline void register_default_items() {
   .onUse([](UseCtx& ux, int , int ){
         // 随机抽一条信息
         int idx = Random::randint(0, static_cast<int>(kComputerFeed.size()) - 1);
-        const auto& [content, val] = kComputerFeed[idx];
+        const auto& content = kComputerFeed[idx];
         // 记入 short_memory
-        ux.ch.short_memory().add(content, val);
+        ux.ch.short_memory().add(content);
         std::cout<<"Memory added: "<<content<<std::endl;
         return true;
       })
