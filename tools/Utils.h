@@ -83,4 +83,26 @@ inline double CalcScoreSleep(
   return base + stick;
 }
 
+//计算玩电脑的分数
+// boredom: 当前无聊度
+// hasComputer: 有没有电脑
+// isUsing: 当前是否正在玩 (用于维持状态，避免刚坐下就起来)
+inline double CalcScoreUseComputer(double boredom, bool hasComputer, bool isUsing,
+                                   double enterThresh, double exitThresh) {
+  if (!hasComputer) return 0.0;
+
+  // 如果正在玩，只要没降到 exitThresh，就保持高分，防止中断
+  if (isUsing) {
+    if (boredom > exitThresh) return 1000.0; // 只要没玩够，就继续玩
+    return 0.0; // 玩够了，让出控制权
+  }
+
+  // 如果没在玩，只有超过 enterThresh才有分数
+  if (boredom > enterThresh) {
+    // 简单的线性分数，越无聊分越高，加上基础分保证比 Wander 高
+    return boredom * 2.0 + 10.0;
+  }
+
+  return 0.0;
+}
 #endif //UTILS_H

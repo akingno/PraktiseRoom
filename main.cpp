@@ -2,7 +2,6 @@
 #include "Character.h"
 #include "GameContentInit.h"
 #include "Room.h"
-#include "renders/ASCIIRender.h"
 #include "renders/IRender.h"
 #include "renders/SDL3Render.h"
 #include "tools/AStarPathfinder.h"
@@ -10,7 +9,19 @@
 #include <chrono>
 #include <thread>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+#include <iostream>
+
+
 int main() {
+#ifdef _WIN32
+  SetConsoleOutputCP(CP_UTF8);
+  SetConsoleCP(CP_UTF8);
+#endif
+  std::ios::sync_with_stdio(false);
+
   // 初始化
   uint64_t seed = static_cast<uint64_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
   Random::init(seed);
@@ -31,7 +42,7 @@ int main() {
     [&](int x, int y) { return room.isPassable(x, y); }
 );
 
-  ActionExecutor executor(path_finder);
+  ActionExecutor executor;
 
   Blackboard bb;
 
@@ -61,10 +72,13 @@ int main() {
     if (bb.in_stop(tick_index)) {
       scoreStop = BASE_STOP; // > BASE_WANDER(0.05)，保证到点之前维持 Stop
     }
-    double scoreUseComputer = 0.0;
-    if (bb.is_using_computer()) {
-      scoreUseComputer = BASE_USE_COMPUTER;
-    }
+    const double scoreUseComputer = CalcScoreUseComputer(
+            character.get_boredom(),
+            items.hasComputer(),
+            character.act() == Character::Act::UseComputer,
+            BORED_ENTER,
+            BORED_EXIT
+        );
 
     // 分数计算
     const double scoreEat = CalcScoreEat(
@@ -100,9 +114,11 @@ int main() {
     render->render_frame(items, character, room, stats);
 
     std::cout<< std::string("Action: ") << Character::Act2Str(character.act())<<"\n"<<
-    "Inner Hunger=" + std::to_string(character.get_hunger_inner())<<"\n"<<
-    " Inner Fatigue=" + std::to_string(character.get_fatigue_score())<<"\n"<<
-    " Sleeping Status=" + std::to_string(character.isSleeping())<<"\n\n";
+    "Inner Hunger= " + std::to_string(character.get_hunger_inner())<<"\n"<<
+      "Inner Fatigue= " + std::to_string(character.get_fatigue_score())<<"\n"<<
+        "Bored score= " + std::to_string(character.get_boredom()) <<"\n" <<
+          "Sleeping Status= " + std::to_string(character.isSleeping())<<"\n"<<
+            "Recent Memory: " << character.get_short_memory().to_string()<<"\n";
 
 
     next_tick += dt;

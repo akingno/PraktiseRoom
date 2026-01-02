@@ -13,8 +13,6 @@
 #include <iostream>
 #include <windows.h>
 
-
-
 class ASCIIRender : public IRender {
 
   static void enableAnsi() {

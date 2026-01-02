@@ -39,6 +39,13 @@ public:
     } else {
       _fatigue = std::min(100.0, _fatigue + _fatigue_rate * dt_sec);
     }
+
+    //娱乐
+    if (act_ == Act::UseComputer) {
+      _boredom = std::max(0.0, _boredom - _computer_recover_rate * dt_sec);
+    } else {
+      _boredom = std::min(100.0, _boredom + _boredom_rate * dt_sec);
+    }
   }
 
   /*
@@ -46,8 +53,6 @@ public:
    */
   // 当前饥饿程度（只和时间有关）
   [[nodiscard]] double  get_hunger_inner() const { return _hunger; }
-
-
 
   // 是否进食到冷却了？
   bool eatAvailable() const {
@@ -69,12 +74,16 @@ public:
 
   void setSleeping(bool s){ _sleeping = s; }
 
-  /*
-   * 关于短期记忆的函数
-   */
-  ShortMemory& short_memory() { return short_memory_; }
 
-  [[nodiscard]] const ShortMemory& short_memory() const { return short_memory_; }
+  /*
+   * 关于玩电脑和短期记忆
+   */
+
+  [[nodiscard]] double get_boredom() const { return _boredom; }
+  ShortMemory& short_memory() { return short_memory_; }
+  //当前无聊程度
+
+  [[nodiscard]] const ShortMemory& get_short_memory() const { return short_memory_; }
 
   /*
    * 抽象的动作设置和辅助函数
@@ -130,6 +139,11 @@ private:
   double _fatigue_rate = FATIGUE_SPEED;       // 清醒时每秒 +1.5
   double _sleep_recover_rate = SLEEP_RECOVER_RATE; // 睡眠时每秒 -8.0
   bool   _sleeping = false;         // 是否正在睡
+
+  // 娱乐/玩电脑
+  double _boredom = 0.0;
+  double _boredom_rate = BOREDOM_SPEED;
+  double _computer_recover_rate = COMPUTER_RECOVER_RATE;
 
   ShortMemory short_memory_;
 };

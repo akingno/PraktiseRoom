@@ -40,12 +40,18 @@ constexpr int COMPUTER_Y = 1;
 // 角色状态速度
 constexpr double HUNGER_SPEED = 2.0;
 constexpr double FATIGUE_SPEED = 0.5;
-constexpr int SLEEP_RECOVER_RATE = 6;
+constexpr double BOREDOM_SPEED = 3.0;
+
+constexpr double SLEEP_RECOVER_RATE = 6.0;
+constexpr double COMPUTER_RECOVER_RATE = 10.0;
 
 // 阈值
 constexpr double HUNGER_ENTER = 60.0;
-constexpr double TIRED_ENTER = 50.0;
-constexpr double RESTED_EXIT = 30.0;
+constexpr double TIRED_ENTER = 60.0;
+constexpr double RESTED_EXIT = 25.0;
+constexpr double BORED_ENTER = 40.0;
+constexpr double BORED_EXIT = 5.0;
+
 
 constexpr double BASE_WANDER = 0.05;
 constexpr double BASE_STOP = 0.06;

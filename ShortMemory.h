@@ -24,8 +24,19 @@ public:
 
   [[nodiscard]] const std::vector<Memory>& entries() const { return memories; }
 
-private:
-  static constexpr size_t cap = 128;
+  [[nodiscard]] std::string to_string() const {
+    if(memories.empty()) {
+      return "no memory";
+    }
+    std::string ret;
+    for (const auto& mem : memories) {
+        ret.append(mem.content+"\n");
+    }
+    return ret;
+  }
+
+ private:
+  static constexpr size_t cap = 12;
   std::vector<Memory> memories;
 };
 

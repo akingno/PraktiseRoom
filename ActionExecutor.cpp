@@ -3,292 +3,84 @@
 //
 #include "ActionExecutor.h"
 
-#include "Item.h"
-#include "ItemLayer.h"
-#include "ItemRegistry.h"
 
+// ActionExecutor.cpp
 
-bool try_use_item_at(ActExecutorCtx& ctx, int x, int y) {
-  auto iid = ctx.items.idAt(x,y);
-  if (!iid) return false;
-  if (Item* def = ItemRegistry::inst().get(*iid)) {
+// 确保包含所有 Action 的定义
+#include "actions/MoveToAction.h"
+#include "actions/InteractAction.h"
+#include "actions/WaitAction.h"
+#include "actions/SequenceAction.h"
 
-    UseCtx ux{ ctx.ch, ctx.room, ctx.items };
-    return def->onUse(ux, x, y);
+void ActionExecutor::tick(Character::Act desiredAct, ActExecutorCtx& ctx, Blackboard& bb) {
+
+  // 1. 切换逻辑：如果决策层改变了主意（比如突然饿了，打断闲逛）
+  if (desiredAct != _lastActEnum || _currentAction == nullptr) {
+    // 构建新的动作
+    _currentAction = createActionChain(desiredAct);
+    _currentAction->onEnter(ctx, bb);
+    _lastActEnum = desiredAct;
   }
-  return false;
-}
 
-bool ActionExecutor::plan_if_needed(ActExecutorCtx& ctx, Blackboard& bb, std::pair<int,int> cur) {
-  if (!need_replan(ctx, bb, cur, bb.target)) return true;
+  // 2. 执行逻辑
+  if (_currentAction) {
+    auto status = _currentAction->tick(ctx, bb);
 
-  bb.path.clear();
-  bb.mark_planned(ctx.tick_index);
-
-  if (pf_.plan_path(cur.first, cur.second, bb.target.first, bb.target.second, bb.path)) {
-
-    bb.init_path_after_planned();
-    return true;
-  }
-  // 规划失败：留到下帧重试
-  return false;
-}
-
-bool ActionExecutor::follow_one_step_or_invalidate(ActExecutorCtx& ctx, Blackboard& bb) {
-  if (bb.path_invalid) return false;
-  if (!follow_one_step(ctx, bb)) {
-    bb.path_invalid = true;
-    return false;
-  }
-  return true;
-}
-
-
-std::pair<int,int> ActionExecutor::pick_random_reachable(ActExecutorCtx& ctx,
-                                                         std::pair<int,int> from,
-                                                         int max_tries) {
-  for (int t=0; t<max_tries; ++t) {
-    int rx = Random::randint(1, VIEW_W - 2);
-    int ry = Random::randint(1, VIEW_H - 2);
-
-    // 路点必须可走（不是墙）
-    auto tt = ctx.room.getBlocksType(rx, ry);
-    if (tt == TileType::WallV || tt == TileType::WallH) continue;
-
-    // 用 A* 验证可达（不保存路径，只做可达性检查）
-    std::vector<std::pair<int,int>> tmp;
-    if (pf_.plan_path(from.first, from.second, rx, ry, tmp)) {
-      return {rx, ry};
+    // 如果动作做完了（成功或失败），你可以决定是重置为空，还是让 Character 知道
+    if (status != Action::Status::Running) {
+      _currentAction->onExit(ctx, bb);
+      _currentAction = nullptr; // 等待下一帧决策生成新的
     }
   }
-  return {-1, -1}; // 尝试失败
 }
 
+std::shared_ptr<Action> ActionExecutor::createActionChain(Character::Act act) {
+  auto seq = std::make_shared<SequenceAction>();
 
-std::pair<int,int> ActionExecutor::expected_target_for(TargetKind kind,
-                                                       const ActExecutorCtx& ctx) const {
-  switch (kind) {
-    case TargetKind::Food: if (auto p=ctx.items.foodPos()) return {p->x,p->y}; break;
-    case TargetKind::Bed:  if (auto p=ctx.items.bedPos())  return {p->x,p->y}; break;
-    case TargetKind::Computer: if (auto p=ctx.items.computerPos()) return {p->x,p->y}; break;
-    default: break;
-  }
-  return {-1,-1};
-}
-
-void ActionExecutor::ensure_target(TargetKind need, ActExecutorCtx& ctx, Blackboard& bb) {
-
-  // 世界可用性检查（Food/Bed 各自判断）
-  bool available = false;
-  switch (need) {
-    case TargetKind::Food: available = ctx.items.hasFood(); break;
-    case TargetKind::Bed:  available = ctx.items.hasBed();  break;
-    case TargetKind::Computer: available = ctx.items.hasComputer(); break;
-    default: break;
-  }
-  if (!available) {
-    // 资源不可用，先把目标清空（上层可以选择本帧什么都不做）
-    bb.clear_path_and_target_if_any();
-
-    return;
-  }
-  // 期望目标位置
-  const auto want = expected_target_for(need, ctx);
-  const bool kind_mismatch   = (bb.target_kind != need);
-  const bool target_mismatch = (!bb.target_valid || !same_pos(bb.target, want));
-
-  if (kind_mismatch || target_mismatch) {
-    // 覆盖为正确的目标，并重置路径
-    bb.set_target_and_invalidate(need, want);
-  }
-}
-
-void ActionExecutor::tick(Character::Act current_action, ActExecutorCtx& ctx, Blackboard& bb) {
-  switch (current_action) {
+  switch (act) {
     case Character::Act::Eat:
-      tick_eat(ctx, bb);
+      seq->add(std::make_shared<MoveToAction>(TargetKind::Food));
+      seq->add(std::make_shared<InteractAction>());
       break;
+
     case Character::Act::Sleep:
-      tick_sleep(ctx, bb);
+      seq->add(std::make_shared<MoveToAction>(TargetKind::Bed));
+      seq->add(std::make_shared<InteractAction>());
+      // 睡眠可能不需要 WaitAction，因为 Character 状态变成了 Sleep，
+      // 具体的醒来逻辑由 Character::tickNeeds 处理疲劳度
       break;
-    case Character::Act::Stop:
-      tick_stop(ctx, bb);
+
+    case Character::Act::UseComputer: {
+      seq->add(std::make_shared<MoveToAction>(TargetKind::Computer));
+      seq->add(std::make_shared<InteractAction>());
+      // 随机时间
+      int useTicks = Random::randint(MIN_USE_COMPUTER_TIME, MAX_USE_COMPUTER_TIME) * TICKS_PER_SEC;
+      seq->add(std::make_shared<WaitAction>(useTicks));
       break;
-    case Character::Act::UseComputer:
-      tick_use_computer(ctx, bb);
-      break;
+    }
+
     case Character::Act::Wander:
-    default:
-      tick_wander(ctx, bb);
+      // 闲逛 = 走到随机点 + (可选)发呆一会
+      seq->add(std::make_shared<MoveToAction>(TargetKind::WanderPt));
+      if (Random::bernoulli(CHANGE_ACTION_PROB)) {
+        auto stopTicks = Random::randint(MIN_STOP_TIME,MAX_STOP_TIME) * TICKS_PER_SEC;
+        seq->add(std::make_shared<WaitAction>(stopTicks));
+      }
+      break;
+
+    case Character::Act::Stop:
+      // 纯发呆
+      seq->add(std::make_shared<WaitAction>(60));
       break;
   }
-}
-
-void ActionExecutor::tick_eat(ActExecutorCtx& ctx, Blackboard& bb) {
-  if (ctx.ch.isSleeping()) ctx.ch.setSleeping(false);
-
-  ensure_target(TargetKind::Food, ctx, bb);
-  if (!bb.target_valid) return;
-
-  const auto cur = ctx.ch.getLoc();
-  if (!plan_if_needed(ctx, bb, cur)) return;
-
-  // 路径仍然合法， 试图走一步
-  follow_one_step_or_invalidate(ctx, bb);
-
-  // 如果到达则开吃
-  const auto pos  = ctx.ch.getLoc();
-  const auto fpos = expected_target_for(TargetKind::Food, ctx);
-  if (same_pos(pos, fpos)) {
-    if (try_use_item_at(ctx, pos.first, pos.second)) {
-      bb.clear_path_and_target();   // ← 仅清理；效果在 onUse 里
-      return;
-    }
-    // 使用失败（例如瞬间被移除），让下帧重算
-    bb.path_invalid = true;
-  }
-}
-
-// Sleep 行为：FindBed → Plan → Follow → SleepNow
-void ActionExecutor::tick_sleep(ActExecutorCtx& ctx, Blackboard& bb) {
-  ensure_target(TargetKind::Bed, ctx, bb);
-  if (!bb.target_valid) return;
-
-  const auto cur = ctx.ch.getLoc();
-  if (!plan_if_needed(ctx, bb, cur)) return;
-
-  // 路径仍然合法， 试图走一步
-  follow_one_step_or_invalidate(ctx, bb);
-
-  // 如果到达则开睡
-  const auto pos  = ctx.ch.getLoc();
-  const auto bpos = expected_target_for(TargetKind::Bed, ctx);
-  if (same_pos(pos, bpos)) {
-    if (try_use_item_at(ctx, pos.first, pos.second)) {
-      bb.clear_path_and_target();
-      return;
-    }
-    bb.path_invalid = true;
-  } else { // 还在路上，不在床上
-    if (ctx.ch.isSleeping()) ctx.ch.setSleeping(false);
-  }
-}
-
-bool ActionExecutor::need_replan(const ActExecutorCtx& ctx,
-                                 const Blackboard& bb,
-                                 std::pair<int,int> current_loc,
-                                 std::pair<int,int> target_loc) const {
-
-  if (!bb.target_valid) return false;
-  if (bb.path_invalid) return true;
-
-  if (bb.path_i <= 0 || bb.path_i > (int)bb.path.size()) {
-    //说明路径为空或者路径目标在路径外
-    return true;
-  }
-  // 目标改变 / 当前位置与路径不一致（例如被传送/打断）
-  if (bb.path.empty() || bb.path.front()!=current_loc || bb.path.back()!=target_loc) {
-    return true;
-  }
-  // 本帧已经算过就别再算（节流）
-  if (bb.last_planned_for_tick == ctx.tick_index) return false;
-
-  return false;
+  return seq;
 }
 
 
-bool ActionExecutor::follow_one_step(ActExecutorCtx& ctx, Blackboard& bb) {
-  if (bb.path_i >= (int)bb.path.size()) return true; // 已到
 
-  auto [nx,ny] = bb.path[bb.path_i];
 
-  if (!ctx.room.isPassable(nx, ny)) return false;
 
-  if (!ctx.ch.tryStepTo(nx, ny)) return false;
 
-  // 说明可以走
-  ++bb.path_i;
-  return true;
-}
 
-void ActionExecutor::tick_wander(ActExecutorCtx& ctx, Blackboard& bb) {
-  if (ctx.ch.isSleeping()) ctx.ch.setSleeping(false);
-
-  const auto cur = ctx.ch.getLoc();
-
-  // 1) 若黑板不是 WanderPt 或目标无效/已到达，则挑新点
-  const bool wrong_kind  = (bb.target_kind != TargetKind::WanderPt);
-  const bool need_new    = wrong_kind || !bb.target_valid || same_pos(cur, bb.target);
-
-  if (need_new) {
-    auto pick = pick_random_reachable(ctx, cur, 20);
-    if (pick.first != -1) {
-      bb.set_target_and_invalidate(TargetKind::WanderPt, pick);
-    }
-  }
-
-  // 2) 需要则规划
-  if (!plan_if_needed(ctx, bb, cur)) {
-    // 规划失败：清空，下一帧重新挑点
-    bb.clear_path_and_target();
-    return;
-  }
-
-  // 3) 沿路径走一步
-  follow_one_step_or_invalidate(ctx, bb);
-
-  // 4) 到达则让下一帧重新挑点（不在当前帧挑，避免一帧内多次寻路）
-  if (same_pos(ctx.ch.getLoc(), bb.target) || bb.path_i >= (int)bb.path.size()) {
-    bb.clear_path_and_target();
-    // 到达后有几率进入stop
-    const bool want_change = Random::bernoulli(CHANGE_ACTION_PROB);
-    if (want_change) {
-      bool try_use_pc = Random::bernoulli(ENTER_COMPUTER_PROB) && ctx.items.hasComputer();
-      if (try_use_pc) {
-        // 不在这里设 stop，直接清理；让 main 下一帧把 Act 设为 UseComputer
-        bb.clear_path_and_target();
-        bb._using_computer = true;
-      }else { // 不使用电脑，stop
-        const int hold_ticks = Random::randint(MIN_STOP_TIME * TICKS_PER_SEC, MAX_STOP_TIME * TICKS_PER_SEC); // 50ms *
-        bb.start_stop_until(ctx.tick_index, hold_ticks);
-      }
-    }
-  }
-
-}
-
-void ActionExecutor::tick_stop(ActExecutorCtx& ctx, Blackboard& bb) {
-  if (ctx.ch.isSleeping()) ctx.ch.setSleeping(false);
-  // Stop 不需要目标：确保黑板无目标、无路径（避免残留导致意外移动）
-  bb.clear_path_and_target_if_any();
-  // 不移动
-}
-
-void ActionExecutor::tick_use_computer(ActExecutorCtx& ctx, Blackboard& bb) {
-  bb._using_computer = true;
-  ensure_target(TargetKind::Computer, ctx, bb);
-  if (!bb.target_valid) return;
-
-  const auto cur = ctx.ch.getLoc();
-  if (!plan_if_needed(ctx, bb, cur)) return;
-
-  follow_one_step_or_invalidate(ctx, bb);
-
-  const auto pos  = ctx.ch.getLoc();
-  const auto cpos = expected_target_for(TargetKind::Computer, ctx);
-
-  if (same_pos(pos, cpos)) {
-    if (try_use_item_at(ctx, pos.first, pos.second)) {
-      bb._using_computer = false;
-      // 使用成功 → 进入stop
-      const int hold = Random::randint(MIN_USE_COMPUTER_TIME * TICKS_PER_SEC, MAX_USE_COMPUTER_TIME * TICKS_PER_SEC);
-      bb.stop_until_tick = static_cast<long long>(ctx.tick_index) + hold;
-
-      bb.clear_path_and_target();
-      return;
-    }
-    bb.path_invalid = true; // 使用失败，下帧重算
-  }
-}
 
 

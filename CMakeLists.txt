@@ -43,6 +43,13 @@ add_executable(room_temp main.cpp
         ItemLayer.cpp
         ItemLayer.h
         ShortMemory.h
+        actions/Action.h
+        actions/MoveToAction.h
+        actions/InteractAction.h
+        actions/WaitAction.h
+        actions/SequenceAction.h
+        actions/MoveToAction.cpp
+        actions/InteractAction.cpp
 )
 
 set_target_properties(room_temp PROPERTIES WIN32_EXECUTABLE OFF)
