@@ -68,8 +68,6 @@ constexpr int MAX_USE_COMPUTER_TIME = 8;
 
 // wander完切换状态的概率
 constexpr double CHANGE_ACTION_PROB = 0.95;
-// wander完使用电脑的概率
-constexpr double ENTER_COMPUTER_PROB = 0.2;
 
 
 // 食物

@@ -7,16 +7,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>")
 
-add_subdirectory("C:/Users/jacob/lib/SDL" "${CMAKE_BINARY_DIR}/_deps/SDL-build" EXCLUDE_FROM_ALL)
+add_subdirectory("third_party/SDL" "${CMAKE_BINARY_DIR}/_deps/SDL-build" EXCLUDE_FROM_ALL)
 
 set(SDL3IMAGE_PNG ON CACHE BOOL "" FORCE)
 set(SDL3IMAGE_VENDORED ON CACHE BOOL "" FORCE)
 
-add_subdirectory("C:/Users/jacob/lib/SDL_image" "${CMAKE_BINARY_DIR}/_deps/SDL_image-build" EXCLUDE_FROM_ALL)
+add_subdirectory("third_party/SDL_image" "${CMAKE_BINARY_DIR}/_deps/SDL_image-build" EXCLUDE_FROM_ALL)
 
 set(SDL3TTF_VENDORED ON CACHE BOOL "" FORCE)
 
-add_subdirectory("C:/Users/jacob/lib/SDL_ttf" "${CMAKE_BINARY_DIR}/_deps/SDL_ttf-build" EXCLUDE_FROM_ALL)
+add_subdirectory("third_party/SDL_ttf" "${CMAKE_BINARY_DIR}/_deps/SDL_ttf-build" EXCLUDE_FROM_ALL)
 
 add_executable(room_temp main.cpp
         Room.h
