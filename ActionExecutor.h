@@ -12,10 +12,9 @@
 #include <memory>
 
 class ActionExecutor {
-  std::shared_ptr<Action> _currentAction;
-  Character::Act _lastActEnum = Character::Act::Wander; // 记录上一帧的决策，判断是否需要切换
 
 public:
+  ActionExecutor() = default;
   void tick(Character::Act desiredAct, ActExecutorCtx& ctx, Blackboard& bb);
 
 private:

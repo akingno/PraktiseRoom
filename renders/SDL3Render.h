@@ -7,8 +7,11 @@
 
 #include "../Room.h"
 #include "IRender.h"
+#include "../Agent.h"
+
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <memory>
 #include <string>
 #include <unordered_map>
 
@@ -17,7 +20,7 @@ public:
   SDL3Render(int viewW, int viewH, int tilePx, const std::string& title = "Little Room");
   ~SDL3Render() override;
 
-  void render_frame(const ItemLayer& items_, const Character& c, const Room& room, const RenderStats& stats) override;
+  void render_frame(const ItemLayer& items_,const std::vector<std::unique_ptr<Agent>>& agents, const Room& room) override;
   bool poll_quit() override;
 
 private:

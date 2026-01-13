@@ -104,7 +104,7 @@ bool SDL3Render::poll_quit() {
   return false;
 }
 
-void SDL3Render::render_frame(const ItemLayer& items_, const Character& c, const Room& room, const RenderStats& stats) {
+void SDL3Render::render_frame(const ItemLayer& items_,const std::vector<std::unique_ptr<Agent>>& agents, const Room& room) {
   clear();
   // 先铺一层地板
   SDL_Texture* tex = tileTex_[TileType::Grass];
@@ -138,10 +138,12 @@ void SDL3Render::render_frame(const ItemLayer& items_, const Character& c, const
   }
 
   // 2) 画角色（你这边是 pair<int,int> getLoc()）
-  const int cx = c.getLoc().first;
-  const int cy = c.getLoc().second;
-  drawTile(cx, cy, texCharacter_);
-
+  for (const auto& agent : agents) {
+    const auto& c = agent->getCharacter();
+    const int cx = c.getLoc().first;
+    const int cy = c.getLoc().second;
+    drawTile(cx, cy, texCharacter_);
+}
 
   present();
 }

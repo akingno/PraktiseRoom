@@ -9,7 +9,6 @@
 #include "../Room.h"
 #include "IRender.h"
 
-#include <cstdint>
 #include <iostream>
 #include <windows.h>
 
@@ -28,9 +27,7 @@ class ASCIIRender : public IRender {
     return frame[ sy * (VIEW_W + 1) + sx ];
   }
   /**
-   *
    * Output information at the last line
-   *
    * */
   static void print_status_line(int row, const std::string& s) {
     std::cout << "\x1b[" << row << ";1H"   // 光标定位到 row 行 1 列
@@ -50,12 +47,9 @@ public:
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
   }
-  /*void render_room(const Room &room);
-  void render_items(const Room &room);
-  void render_character(const Character &character);*/
-  void render_info(const Room & room, const Character & character, const RenderStats & stats);
 
-  void render_frame(const ItemLayer& items_,const Character&character, const Room& room, const RenderStats& stats) override;
+
+  void render_frame(const ItemLayer& items_,const std::vector<Character> characters, const Room& room); //override
 
 
  private:

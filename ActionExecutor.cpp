@@ -15,21 +15,21 @@
 void ActionExecutor::tick(Character::Act desiredAct, ActExecutorCtx& ctx, Blackboard& bb) {
 
   // 1. 切换逻辑：如果决策层改变了主意（比如突然饿了，打断闲逛）
-  if (desiredAct != _lastActEnum || _currentAction == nullptr) {
+  if (desiredAct != bb.lastActEnum || bb.currentAction == nullptr) {
     // 构建新的动作
-    _currentAction = createActionChain(desiredAct);
-    _currentAction->onEnter(ctx, bb);
-    _lastActEnum = desiredAct;
+    bb.currentAction = createActionChain(desiredAct);
+    bb.currentAction->onEnter(ctx, bb);
+    bb.lastActEnum = desiredAct;
   }
 
   // 2. 执行逻辑
-  if (_currentAction) {
-    auto status = _currentAction->tick(ctx, bb);
+  if (bb.currentAction) {
+    auto status = bb.currentAction->tick(ctx, bb);
 
     // 如果动作做完了（成功或失败），你可以决定是重置为空，还是让 Character 知道
     if (status != Action::Status::Running) {
-      _currentAction->onExit(ctx, bb);
-      _currentAction = nullptr; // 等待下一帧决策生成新的
+      bb.currentAction->onExit(ctx, bb);
+      bb.currentAction = nullptr; // 等待下一帧决策生成新的
     }
   }
 }

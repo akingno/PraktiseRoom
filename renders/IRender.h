@@ -5,20 +5,16 @@
 #ifndef IRENDER_H
 #define IRENDER_H
 
-
 #include "../Character.h"
-#include "../Room.h"
 #include "../Item.h"
+#include "../Room.h"
+#include <memory>
 
-struct RenderStats {
-  double scoreEat;
-  double scoreWander;
-  double scoreSleep;
-};
+class Agent;
 
 class IRender {
   public:
-  virtual void render_frame(const ItemLayer& items_, const Character&character, const Room& room, const RenderStats& stats) = 0;
+  virtual void render_frame(const ItemLayer&,const std::vector<std::unique_ptr<Agent>>&, const Room&) = 0;
   virtual ~IRender() = default;
   virtual bool poll_quit() = 0;
 

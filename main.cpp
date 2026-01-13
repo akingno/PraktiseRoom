@@ -12,15 +12,19 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif
+#include "Agent.h"
+
 #include <iostream>
 
 
 int main() {
+
 #ifdef _WIN32
   SetConsoleOutputCP(CP_UTF8);
   SetConsoleCP(CP_UTF8);
 #endif
   std::ios::sync_with_stdio(false);
+
 
   // 初始化
   uint64_t seed = static_cast<uint64_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
@@ -30,9 +34,11 @@ int main() {
   bool running = true;
   Room room;
   ItemLayer items;
-  Character character;
+  std::string name_char1, name_char2;
+  name_char1 = "Akingno";
+  name_char2 = "Lilu";
+
   register_default_items();
-  
   items.ensureBedPlaced();
   items.ensureFoodSpawned();
   items.ensureComputerPlaced();
@@ -40,9 +46,15 @@ int main() {
   AStarPathfinder path_finder(
     {VIEW_W, VIEW_H},
     [&](int x, int y) { return room.isPassable(x, y); }
-);
+  );
 
-  ActionExecutor executor;
+  std::vector<std::unique_ptr<Agent>> agents;
+  agents.push_back(std::make_unique<Agent>(name_char1, 5, 5, &path_finder));
+  agents.push_back(std::make_unique<Agent>(name_char2, 1, 1, &path_finder));
+
+  const Character& character1 = agents[0]->getCharacter();
+  const Character& character2 = agents[1]->getCharacter();
+
 
   Blackboard bb;
 
@@ -55,71 +67,35 @@ int main() {
   const auto dt = std::chrono::milliseconds(TICK_MILLI_INT);
   uint64_t tick_index = 0;
 
-  const double scoreWander = BASE_WANDER;
-
-
-  while(running){
+  while(running) {
 
     if (render->poll_quit()) break;
-    //tick一下需求的更新
-    character.tickNeeds(TICK_MILLI/1000.0);
 
     // 每循环固定刷新一下食物
     items.ensureFoodSpawned();
-    // ===== 3) Perception & Utility =====
 
-    double scoreStop = 0.0; //用于确认目前是否在Stop
-    if (bb.in_stop(tick_index)) {
-      scoreStop = BASE_STOP; // > BASE_WANDER(0.05)，保证到点之前维持 Stop
+    //更新+移动
+    for (auto& agent : agents) {
+      // Pathfinder 已经在 Agent 内部了，不需要在这里传
+      agent->Update(TICK_MILLI/1000.0, tick_index, room, items);
     }
-    const double scoreUseComputer = CalcScoreUseComputer(
-            character.get_boredom(),
-            items.hasComputer(),
-            character.act() == Character::Act::UseComputer,
-            BORED_ENTER,
-            BORED_EXIT
-        );
-
-    // 分数计算
-    const double scoreEat = CalcScoreEat(
-        character.get_hunger_inner(), items.hasFood(),
-        !character.eatAvailable(),              // onCooldown: true=禁止
-        character.act() == Character::Act::Eat,  // sticky
-        HUNGER_ENTER
-    );
-
-    const double scoreSleep = CalcScoreSleep(
-    character.get_fatigue_score(),  items.hasBed(),
-    character.act() == Character::Act::Sleep,
-    TIRED_ENTER, RESTED_EXIT
-    );
-
-
-    Character::Act chosen_action = Character::Act::Wander;
-    double best = scoreWander;
-    if (scoreEat   > best) { best = scoreEat;   chosen_action = Character::Act::Eat; }
-    if (scoreSleep > best) { best = scoreSleep; chosen_action = Character::Act::Sleep; }
-    if (scoreStop  > best) { best = scoreStop;  chosen_action = Character::Act::Stop; }
-    if (scoreUseComputer > best) { best = scoreUseComputer; chosen_action = Character::Act::UseComputer; }
-
-    character.setAct(chosen_action);
-
-    // 渲染数据
-    RenderStats stats{scoreEat, scoreWander, scoreSleep};
-
-    ActExecutorCtx ctx{room, character, tick_index, path_finder, items};
-    executor.tick(chosen_action, ctx, bb);
 
     //渲染
-    render->render_frame(items, character, room, stats);
+    render->render_frame(items, agents, room);
 
-    std::cout<< std::string("Action: ") << Character::Act2Str(character.act())<<"\n"<<
-    "Inner Hunger= " + std::to_string(character.get_hunger_inner())<<"\n"<<
-      "Inner Fatigue= " + std::to_string(character.get_fatigue_score())<<"\n"<<
-        "Bored score= " + std::to_string(character.get_boredom()) <<"\n" <<
-          "Sleeping Status= " + std::to_string(character.isSleeping())<<"\n"<<
-            "Recent Memory: " << character.get_short_memory().to_string()<<"\n";
+    std::cout<< std::string("Action: ") << Character::Act2Str(character1.act())<<"\n"<<
+    "Inner Hunger= " + std::to_string(character1.get_hunger_inner())<<"\n"<<
+      "Inner Fatigue= " + std::to_string(character1.get_fatigue_score())<<"\n"<<
+        "Bored score= " + std::to_string(character1.get_boredom()) <<"\n" <<
+          "Sleeping Status= " + std::to_string(character1.isSleeping())<<"\n"<<
+            "Recent Memory: " << character1.get_short_memory().to_string()<<"\n\n";
 
+    std::cout<< std::string("Action2: ") << Character::Act2Str(character2.act())<<"\n"<<
+        "Inner Hunger= " + std::to_string(character2.get_hunger_inner())<<"\n"<<
+          "Inner Fatigue= " + std::to_string(character2.get_fatigue_score())<<"\n"<<
+            "Bored score= " + std::to_string(character2.get_boredom()) <<"\n" <<
+              "Sleeping Status= " + std::to_string(character2.isSleeping())<<"\n"<<
+                "Recent Memory: " << character2.get_short_memory().to_string()<<"\n";
 
     next_tick += dt;
     std::this_thread::sleep_until(next_tick);

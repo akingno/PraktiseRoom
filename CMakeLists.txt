@@ -50,6 +50,7 @@ add_executable(room_temp main.cpp
         actions/SequenceAction.h
         actions/MoveToAction.cpp
         actions/InteractAction.cpp
+        Agent.h
 )
 
 set_target_properties(room_temp PROPERTIES WIN32_EXECUTABLE OFF)

@@ -23,8 +23,12 @@ public:
   };
 
  //构造函数
-  Character() : _loc(1,1) {
+  Character() {
+    setLoc(1,1);
+  }
 
+  void setLoc(int x, int y) {
+    _loc = {x, y};
   }
 
   // 小人需求随时间增长：目前：饥饿和疲劳

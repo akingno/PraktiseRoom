@@ -5,11 +5,15 @@
 #ifndef BLACKBOARD_H
 #define BLACKBOARD_H
 
+#include "Character.h"
+
 #include <cstdint>
 #include <iostream>
+#include <memory>
 #include <utility>
 #include <vector>
 
+class Action;
 enum class TargetKind { None, Food, Bed, WanderPt, Computer };
 
 struct Blackboard {
@@ -24,7 +28,10 @@ struct Blackboard {
   bool path_invalid = true;  // 需要重算
   bool _using_computer = false;
 
-  // 诊断/节流
+  //当前的动作
+  std::shared_ptr<Action> currentAction = nullptr;
+  Character::Act lastActEnum = Character::Act::Wander;
+
   uint64_t last_planned_for_tick = -999999; // 本帧已算过就不再算
 
   // 让 Stop 持续到这个 tick（包含）；<0 表示不在 Stop
