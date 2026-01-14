@@ -7,10 +7,15 @@
 // ActionExecutor.cpp
 
 // 确保包含所有 Action 的定义
-#include "actions/MoveToAction.h"
+#include "actions/ChangeToAction.h"
 #include "actions/InteractAction.h"
-#include "actions/WaitAction.h"
+#include "actions/MoveToAction.h"
+#include "actions/SelectAgentAction.h"
 #include "actions/SequenceAction.h"
+#include "actions/SignalChatAction.h"
+#include "actions/TransferMemoryAction.h"
+#include "actions/WaitAction.h"
+#include "actions/WaitForChatAction.h"
 
 void ActionExecutor::tick(Character::Act desiredAct, ActExecutorCtx& ctx, Blackboard& bb) {
 
@@ -38,6 +43,14 @@ std::shared_ptr<Action> ActionExecutor::createActionChain(Character::Act act) {
   auto seq = std::make_shared<SequenceAction>();
 
   switch (act) {
+    case Character::Act::Talk:
+      seq->add(std::make_shared<SelectAgentAction>());
+      seq->add(std::make_shared<SignalChatAction>());
+      seq->add(std::make_shared<MoveToAction>(TargetKind::Character));
+      seq->add(std::make_shared<TransferMemoryAction>());
+      seq->add(std::make_shared<WaitAction>(30));
+      seq->add(std::make_shared<ChangeToAction>(Character::Act::Wander));
+      break;
     case Character::Act::Eat:
       seq->add(std::make_shared<MoveToAction>(TargetKind::Food));
       seq->add(std::make_shared<InteractAction>());
@@ -66,11 +79,18 @@ std::shared_ptr<Action> ActionExecutor::createActionChain(Character::Act act) {
         auto stopTicks = Random::randint(MIN_STOP_TIME,MAX_STOP_TIME) * TICKS_PER_SEC;
         seq->add(std::make_shared<WaitAction>(stopTicks));
       }
+      else if (Random::bernoulli(CHANGE_TALK_PROB)) {
+        seq->add(std::make_shared<ChangeToAction>(Character::Act::Talk));
+      }
       break;
 
     case Character::Act::Stop:
       // 纯发呆
       seq->add(std::make_shared<WaitAction>(60));
+      break;
+
+    case Character::Act::WaitAlways:
+      seq->add(std::make_shared<WaitForChatAction>());
       break;
   }
   return seq;

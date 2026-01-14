@@ -34,9 +34,8 @@ int main() {
   bool running = true;
   Room room;
   ItemLayer items;
-  std::string name_char1, name_char2;
-  name_char1 = "Akingno";
-  name_char2 = "Lilu";
+  std::string name_char1 = "Akingno";
+  std::string name_char2 = "Lilu";
 
   register_default_items();
   items.ensureBedPlaced();
@@ -55,11 +54,13 @@ int main() {
   const Character& character1 = agents[0]->getCharacter();
   const Character& character2 = agents[1]->getCharacter();
 
-
-  Blackboard bb;
+  std::vector<Agent*> raw_agents_ptrs;
+  for(auto& a : agents) {
+    raw_agents_ptrs.push_back(a.get());
+  }
 
   //SDL3渲染器
-  std::unique_ptr<IRender> render = std::make_unique<SDL3Render>(VIEW_W, VIEW_H, TILE_PX, "Little Room (SDL3)");
+  std::unique_ptr<IRender> render = std::make_unique<SDL3Render>(VIEW_W, VIEW_H, TILE_PX, "Little Room");
 
   //计时器
   using clock = std::chrono::steady_clock;
@@ -77,7 +78,7 @@ int main() {
     //更新+移动
     for (auto& agent : agents) {
       // Pathfinder 已经在 Agent 内部了，不需要在这里传
-      agent->Update(TICK_MILLI/1000.0, tick_index, room, items);
+      agent->Update(TICK_MILLI/1000.0, tick_index, room, items, raw_agents_ptrs);
     }
 
     //渲染
@@ -95,7 +96,7 @@ int main() {
           "Inner Fatigue= " + std::to_string(character2.get_fatigue_score())<<"\n"<<
             "Bored score= " + std::to_string(character2.get_boredom()) <<"\n" <<
               "Sleeping Status= " + std::to_string(character2.isSleeping())<<"\n"<<
-                "Recent Memory: " << character2.get_short_memory().to_string()<<"\n";
+                "Recent Memory: " << character2.get_short_memory().to_string()<<"\n\n\n";
 
     next_tick += dt;
     std::this_thread::sleep_until(next_tick);

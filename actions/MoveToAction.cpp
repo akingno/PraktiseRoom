@@ -3,6 +3,7 @@
 //
 #include "MoveToAction.h"
 #include "../ActionExecutor.h"
+#include "../Agent.h"
 
     void MoveToAction::onEnter(ActExecutorCtx& ctx, Blackboard& bb){
         // 1. 确定我们要去哪
@@ -10,15 +11,26 @@
         bool found = false;
 
         switch (_targetKind) {
-            case TargetKind::Food:
-                if (auto p = ctx.items.foodPos()) { targetPos = {p->x, p->y}; found = true; }
-                break;
-            case TargetKind::Bed:
-                if (auto p = ctx.items.bedPos()) { targetPos = {p->x, p->y}; found = true; }
-                break;
-            case TargetKind::Computer:
-                if (auto p = ctx.items.computerPos()) { targetPos = {p->x, p->y}; found = true; }
-                break;
+          case TargetKind::Character:
+            bb.target = bb.target_agent->getCharacter().getLoc();
+            targetPos = bb.target;
+            found = true;
+            break;
+          case TargetKind::Food:
+            if (auto p = ctx.items.foodPos()) {
+              targetPos = {p->x, p->y}; found = true;
+            }
+            break;
+          case TargetKind::Bed:
+            if (auto p = ctx.items.bedPos()) {
+              targetPos = {p->x, p->y}; found = true;
+            }
+            break;
+          case TargetKind::Computer:
+            if (auto p = ctx.items.computerPos()) {
+              targetPos = {p->x, p->y}; found = true;
+            }
+            break;
           case TargetKind::WanderPt: {
             if (ctx.ch.isSleeping()) {
               ctx.ch.setSleeping(false);

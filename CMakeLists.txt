@@ -51,6 +51,10 @@ add_executable(room_temp main.cpp
         actions/MoveToAction.cpp
         actions/InteractAction.cpp
         Agent.h
+        actions/SignalChatAction.h
+        actions/TransferMemoryAction.h
+        actions/WaitForChatAction.h
+        actions/SelectAgentAction.h
 )
 
 set_target_properties(room_temp PROPERTIES WIN32_EXECUTABLE OFF)

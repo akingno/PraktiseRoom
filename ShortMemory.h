@@ -22,7 +22,9 @@ public:
     memories.push_back({std::move(content)});
   }
 
-  [[nodiscard]] const std::vector<Memory>& entries() const { return memories; }
+  [[nodiscard]] const std::vector<Memory>& entries() const {
+    return memories;
+  }
 
   [[nodiscard]] std::string to_string() const {
     if(memories.empty()) {

@@ -10,6 +10,8 @@
 #include "../tools/IPathfinder.h"
 #include "../ItemLayer.h"
 
+class Agent;
+
 // 本帧的资源上下文
 struct ActExecutorCtx {
   Room& room;
@@ -17,6 +19,7 @@ struct ActExecutorCtx {
   uint64_t tick_index; // 帧号（用于节流）
   IPathfinder& pf;
   ItemLayer& items;
+  Agent* parent_agent;
 };
 
 class Action {

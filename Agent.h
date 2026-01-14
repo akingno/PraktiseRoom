@@ -30,7 +30,10 @@ public:
   [[nodiscard]] const std::string& getName() const { return _name; }
 
 
-  void Update(double dt_sec, uint64_t tick_index, Room& room, ItemLayer& items) {
+  void Update(double dt_sec, uint64_t tick_index, Room& room, ItemLayer& items, std::vector<Agent *>& others) {
+
+    _other_agents = others;
+
     // 需求更新
     _ch.tickNeeds(dt_sec);
 
@@ -38,13 +41,30 @@ public:
     decideAction(items, tick_index);
 
     // 构建瞬时的context
-    ActExecutorCtx ctx{room, _ch, tick_index, *_pf, items};
+    ActExecutorCtx ctx{room, _ch, tick_index, *_pf, items, this};
 
     // 执行
     _executor->tick(_ch.act(), ctx, _bb);
   }
 
+  void receiveCall(Agent* agent) {
+    _bb.caller_agent = agent;
+    _bb.is_being_called = true;
+  }
 
+  void headMessage(const std::string &msg) {
+    _ch.short_memory().add(msg);
+  }
+
+  void finishChat() {
+    _bb.is_being_called = false;
+    _bb.caller_agent = nullptr;
+    _ch.setAct(Character::Act::Wander);
+  }
+
+  [[nodiscard]] std::vector<Agent *> get_other_agents(){
+    return _other_agents;
+  }
 private:
 
   /*
@@ -52,10 +72,20 @@ private:
    */
   void decideAction(const ItemLayer& items, uint64_t tick_index) {
 
+    if (_bb.is_being_called) {
+      _ch.setAct(Character::Act::WaitAlways);
+      return;
+    }
+
     // stop
     double scoreStop = 0.0; //用于确认目前是否在Stop
     if (_bb.in_stop(tick_index)) {
       scoreStop = BASE_STOP;
+    }
+
+    double scoreTalk = 0.0;
+    if (_ch.act() == Character::Act::Talk) {
+      scoreTalk = BASE_TALK;
     }
 
     // use computer
@@ -90,6 +120,7 @@ private:
     if (scoreSleep > best) { best = scoreSleep; chosen_action = Character::Act::Sleep; }
     if (scoreStop > best) { best = scoreStop; chosen_action = Character::Act::Stop; }
     if (scoreUseComputer > best) { best = scoreUseComputer; chosen_action = Character::Act::UseComputer; }
+    if (scoreTalk > best) { best = scoreTalk; chosen_action = Character::Act::Talk; }
 
     _ch.setAct(chosen_action);
   }
@@ -99,8 +130,8 @@ private:
   Character     _ch;
   Blackboard    _bb;
   IPathfinder*   _pf;
-
   std::unique_ptr<ActionExecutor> _executor;
+  std::vector<Agent *> _other_agents;
 
 };
 

@@ -7,20 +7,24 @@
 
 #include "Character.h"
 
-#include <cstdint>
 #include <iostream>
 #include <memory>
 #include <utility>
 #include <vector>
 
+class Agent;
 class Action;
-enum class TargetKind { None, Food, Bed, WanderPt, Computer };
+enum class TargetKind { None, Food, Bed, WanderPt, Computer, Character};
 
 struct Blackboard {
   // 目标（食物或者床的位置）
   std::pair<int,int> target{-1,-1};
   bool target_valid = false;
   TargetKind target_kind = TargetKind::None;
+
+  Agent* target_agent = nullptr;
+  bool is_being_called = false;
+  Agent* caller_agent = nullptr;
 
   // 路径：从起点到终点（含自己与终点）
   std::vector<std::pair<int,int>> path;
@@ -34,7 +38,7 @@ struct Blackboard {
 
   uint64_t last_planned_for_tick = -999999; // 本帧已算过就不再算
 
-  // 让 Stop 持续到这个 tick（包含）；<0 表示不在 Stop
+  // 让 Stop 持续到这个 tick（包含）<0 表示不在 Stop
   long long stop_until_tick = -1;
   bool is_using_computer() const {
     return _using_computer;
@@ -51,7 +55,6 @@ struct Blackboard {
     path_i = 0;
     path_invalid = true;
   }
-
 
   // 规划后初始化 path_i，并把路径标记为合法
   void init_path_after_planned() {

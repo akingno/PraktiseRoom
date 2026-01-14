@@ -20,6 +20,8 @@ public:
     Wander,
     Stop,
     UseComputer,
+    Talk,
+    WaitAlways
   };
 
  //构造函数
@@ -109,6 +111,10 @@ public:
         return "Stop";
       case Act::UseComputer:
         return "UseComputer";
+      case Act::Talk:
+        return "Talk";
+      case Act::WaitAlways:
+        return "WaitAlways";
       default:
         return "Unknown";
     }
