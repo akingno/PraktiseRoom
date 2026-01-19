@@ -15,7 +15,7 @@ class ActionExecutor {
 
 public:
   ActionExecutor() = default;
-  void tick(Character::Act desiredAct, ActExecutorCtx& ctx, Blackboard& bb);
+  void tick(ActExecutorCtx& ctx, Blackboard& bb);
 
 private:
   // 这里是硬编码的工厂，未来这部分会被 JSON 读取替代

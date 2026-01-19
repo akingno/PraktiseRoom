@@ -78,7 +78,7 @@ int main() {
     //更新+移动
     for (auto& agent : agents) {
       // Pathfinder 已经在 Agent 内部了，不需要在这里传
-      agent->Update(TICK_MILLI/1000.0, tick_index, room, items, raw_agents_ptrs);
+      agent->update(TICK_MILLI/1000.0, tick_index, room, items, raw_agents_ptrs);
     }
 
     //渲染

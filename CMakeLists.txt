@@ -55,12 +55,21 @@ add_executable(room_temp main.cpp
         actions/TransferMemoryAction.h
         actions/WaitForChatAction.h
         actions/SelectAgentAction.h
+        actions/ActionFactory.cpp
+        actions/ActionFactory.h
+        Brain.cpp
+        Brain.h
 )
 
 set_target_properties(room_temp PROPERTIES WIN32_EXECUTABLE OFF)
+
+target_include_directories(room_temp PRIVATE
+        ${CMAKE_SOURCE_DIR}/third_party
+)
 
 target_link_libraries(room_temp PRIVATE
         SDL3::SDL3
         SDL3_image::SDL3_image
         SDL3_ttf::SDL3_ttf
 )
+target_compile_definitions(room_temp PRIVATE _WIN32_WINNT=0x0A00)

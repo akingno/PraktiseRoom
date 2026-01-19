@@ -5,12 +5,13 @@
 #ifndef AGENT_H
 #define AGENT_H
 
-#include <string>
-#include "Character.h"
-#include "Blackboard.h"
 #include "ActionExecutor.h"
-#include "tools/Utils.h"
+#include "Blackboard.h"
+#include "Brain.h"
+#include "Character.h"
 #include "Config.h"
+#include "tools/Utils.h"
+#include <string>
 
 class Room;
 class ItemLayer;
@@ -19,9 +20,10 @@ class IPathfinder;
 class Agent {
 public:
   Agent(std::string& name, int start_x, int start_y, IPathfinder* pf )
-         : _name(name), _pf(pf)  {
+         : _name(name), _pf(pf){
     _ch.setLoc(start_x, start_y);
     _executor = std::make_unique<ActionExecutor>();
+    _brain = std::make_unique<Brain>();
 
   }
   Agent();
@@ -30,21 +32,36 @@ public:
   [[nodiscard]] const std::string& getName() const { return _name; }
 
 
-  void Update(double dt_sec, uint64_t tick_index, Room& room, ItemLayer& items, std::vector<Agent *>& others) {
+  void update(double dt_sec, uint64_t tick_index, Room& room, ItemLayer& items, std::vector<Agent *>& others) {
 
     _other_agents = others;
 
     // 需求更新
     _ch.tickNeeds(dt_sec);
 
-    // 决策
-    decideAction(items, tick_index);
+    //取 Brain 结果
+    _brain->poll(_bb);
+
+    // 如果队列空且不在思考 → 发起思考
+    bool queueEmpty;
+    {
+      std::lock_guard<std::mutex> lk(_bb.queueMutex);
+      queueEmpty = _bb.actionQueue.empty();
+    }
+
+    if (queueEmpty && !_bb.currentAction && !_bb.is_thinking) {
+      _bb.is_thinking = true;
+      _brain->requestDecision(_ch, _bb, tick_index,
+                              items.hasFood(),
+                              items.hasBed(),
+                              items.hasComputer());
+    }
 
     // 构建瞬时的context
     ActExecutorCtx ctx{room, _ch, tick_index, *_pf, items, this};
 
     // 执行
-    _executor->tick(_ch.act(), ctx, _bb);
+    _executor->tick(ctx, _bb);
   }
 
   void receiveCall(Agent* agent) {
@@ -67,64 +84,6 @@ public:
   }
 private:
 
-  /*
-   * Calculate scores of actions and set now action
-   */
-  void decideAction(const ItemLayer& items, uint64_t tick_index) {
-
-    if (_bb.is_being_called) {
-      _ch.setAct(Character::Act::WaitAlways);
-      return;
-    }
-
-    // stop
-    double scoreStop = 0.0; //用于确认目前是否在Stop
-    if (_bb.in_stop(tick_index)) {
-      scoreStop = BASE_STOP;
-    }
-
-    double scoreTalk = 0.0;
-    if (_ch.act() == Character::Act::Talk) {
-      scoreTalk = BASE_TALK;
-    }
-
-    // use computer
-    const double scoreUseComputer = CalcScoreUseComputer(
-            _ch.get_boredom(),
-            items.hasComputer(),
-            _ch.act() == Character::Act::UseComputer,
-            BORED_ENTER,
-            BORED_EXIT
-        );;
-
-    // eat
-    const double scoreEat = CalcScoreEat(
-        _ch.get_hunger_inner(), items.hasFood(),
-        !_ch.eatAvailable(),
-        _ch.act() == Character::Act::Eat,  // sticky
-        HUNGER_ENTER
-    );
-
-    // sleep
-    const double scoreSleep = CalcScoreSleep(
-    _ch.get_fatigue_score(),  items.hasBed(),
-    _ch.act() == Character::Act::Sleep,
-    TIRED_ENTER, RESTED_EXIT
-    );
-
-    // 5. 计算
-    Character::Act chosen_action = Character::Act::Wander;
-    double best = BASE_WANDER;
-
-    if (scoreEat > best) { best = scoreEat; chosen_action = Character::Act::Eat; }
-    if (scoreSleep > best) { best = scoreSleep; chosen_action = Character::Act::Sleep; }
-    if (scoreStop > best) { best = scoreStop; chosen_action = Character::Act::Stop; }
-    if (scoreUseComputer > best) { best = scoreUseComputer; chosen_action = Character::Act::UseComputer; }
-    if (scoreTalk > best) { best = scoreTalk; chosen_action = Character::Act::Talk; }
-
-    _ch.setAct(chosen_action);
-  }
-
 
   std::string   _name;
   Character     _ch;
@@ -132,6 +91,7 @@ private:
   IPathfinder*   _pf;
   std::unique_ptr<ActionExecutor> _executor;
   std::vector<Agent *> _other_agents;
+  std::unique_ptr<Brain> _brain;
 
 };
 
