@@ -28,7 +28,7 @@ int main() {
 
   // 初始化
   uint64_t seed = static_cast<uint64_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-  Random::init(seed);
+  AkRandom::init(seed);
   //初始化结束
 
   bool running = true;

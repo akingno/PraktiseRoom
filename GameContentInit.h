@@ -49,7 +49,7 @@ inline void register_default_items() {
   .useable(true)
   .onUse([](UseCtx& ux, int , int ){
         // 随机抽一条信息
-        int idx = Random::randint(0, static_cast<int>(kComputerFeed.size()) - 1);
+        int idx = AkRandom::randint(0, static_cast<int>(kComputerFeed.size()) - 1);
         const auto& content = kComputerFeed[idx];
         // 记入 short_memory
         ux.ch.short_memory().add(content);

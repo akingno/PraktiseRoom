@@ -40,8 +40,8 @@
 
             for (int t = 0; t < max_tries; ++t) {
               // 1. 随机取点
-              int rx = Random::randint(1, VIEW_W - 2);
-              int ry = Random::randint(1, VIEW_H - 2);
+              int rx = AkRandom::randint(1, VIEW_W - 2);
+              int ry = AkRandom::randint(1, VIEW_H - 2);
 
               // 2. 检查地形 (是否是墙)
               auto tt = ctx.room.getBlocksType(rx, ry);

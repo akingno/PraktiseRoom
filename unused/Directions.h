@@ -40,7 +40,7 @@ private:
 public:
   // 随机选择一个方向
   [[nodiscard]] Dir random_dir_weights() const{
-    double r = Random::rand01() * sum();
+    double r = AkRandom::rand01() * sum();
     if((r -= right) < 0 ) return Dir::Right;
     if((r -= left) < 0 ) return Dir::Left;
     if((r -= down) < 0 ) return Dir::Down;
