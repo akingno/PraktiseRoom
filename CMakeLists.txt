@@ -21,7 +21,7 @@ add_subdirectory("third_party/SDL_ttf" "${CMAKE_BINARY_DIR}/_deps/SDL_ttf-build"
 add_executable(room_temp main.cpp
         Room.h
         Room.cpp
-        tools/Random.cpp
+        tools/Random.h
         tools/Utils.h
         renders/IRender.h
         renders/ASCIIRender.cpp

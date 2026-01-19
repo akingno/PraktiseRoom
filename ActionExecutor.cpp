@@ -64,7 +64,7 @@ std::shared_ptr<Action> ActionExecutor::createActionChain(Character::Act act) {
       seq->add(std::make_shared<MoveToAction>(TargetKind::Computer));
       seq->add(std::make_shared<InteractAction>());
       // 随机时间
-      int useTicks = Random::randint(MIN_USE_COMPUTER_TIME, MAX_USE_COMPUTER_TIME) * TICKS_PER_SEC;
+      int useTicks = AkRandom::randint(MIN_USE_COMPUTER_TIME, MAX_USE_COMPUTER_TIME) * TICKS_PER_SEC;
       seq->add(std::make_shared<WaitAction>(useTicks));
       break;
     }
@@ -72,11 +72,11 @@ std::shared_ptr<Action> ActionExecutor::createActionChain(Character::Act act) {
     case Character::Act::Wander:
       // 闲逛 = 走到随机点 + 发呆一会
       seq->add(std::make_shared<MoveToAction>(TargetKind::WanderPt));
-      if (Random::bernoulli(CHANGE_ACTION_PROB)) {
-        auto stopTicks = Random::randint(MIN_STOP_TIME,MAX_STOP_TIME) * TICKS_PER_SEC;
+      if (AkRandom::bernoulli(CHANGE_ACTION_PROB)) {
+        auto stopTicks = AkRandom::randint(MIN_STOP_TIME,MAX_STOP_TIME) * TICKS_PER_SEC;
         seq->add(std::make_shared<WaitAction>(stopTicks));
       }
-      else if (Random::bernoulli(CHANGE_TALK_PROB)) {
+      else if (AkRandom::bernoulli(CHANGE_TALK_PROB)) {
         seq->add(std::make_shared<ChangeToAction>(Character::Act::Talk));
       }
       break;

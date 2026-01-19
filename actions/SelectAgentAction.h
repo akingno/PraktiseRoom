@@ -23,7 +23,7 @@ public:
       return Status::Failure;
     }
 
-    int idx = Random::randint(0, static_cast<int>(candidates.size()) - 1);
+    int idx = AkRandom::randint(0, static_cast<int>(candidates.size()) - 1);
     bb.target_agent = candidates[idx];
 
     return Status::Success;
