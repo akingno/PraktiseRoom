@@ -60,6 +60,10 @@ public:
     // 构建瞬时的context
     ActExecutorCtx ctx{room, _ch, tick_index, *_pf, items, this};
 
+    {
+      std::lock_guard<std::mutex> lk(_bb.queueMutex);
+      _ch.setAct(_bb.actNow);
+    }
     // 执行
     _executor->tick(ctx, _bb);
   }

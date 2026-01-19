@@ -40,7 +40,7 @@ constexpr int COMPUTER_Y = 1;
 // 角色状态速度
 constexpr double HUNGER_SPEED = 2.0;
 constexpr double FATIGUE_SPEED = 0.5;
-constexpr double BOREDOM_SPEED = 1.8;
+constexpr double BOREDOM_SPEED = 0.8;
 
 constexpr double SLEEP_RECOVER_RATE = 6.0;
 constexpr double COMPUTER_RECOVER_RATE = 10.0;
@@ -67,8 +67,8 @@ constexpr int MIN_USE_COMPUTER_TIME = 4;
 constexpr int MAX_USE_COMPUTER_TIME = 8;
 
 // wander完切换状态的概率
-constexpr double CHANGE_ACTION_PROB = 0.7;
-constexpr double CHANGE_TALK_PROB = 0.5;
+constexpr double CHANGE_ACTION_PROB = 0.9;
+constexpr double CHANGE_TALK_PROB = 0.4;
 
 
 // 食物

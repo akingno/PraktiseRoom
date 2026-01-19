@@ -59,6 +59,7 @@ void Brain::poll(Blackboard& bb)
     if (action) {
         std::lock_guard<std::mutex> lk(bb.queueMutex);
         bb.actionQueue.push_back(std::move(action));
+      bb.actNow = act;
     }
     bb.is_thinking = false;
 }

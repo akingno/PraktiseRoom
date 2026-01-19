@@ -20,6 +20,7 @@ enum class TargetKind { None, Food, Bed, WanderPt, Computer, Character};
 
 struct Blackboard {
   Blackboard() = default;
+  Character::Act actNow = Character::Act::Wander;
   // 目标
   std::pair<int,int> target{-1,-1};
   bool target_valid = false;

@@ -39,12 +39,7 @@ void ActionExecutor::tick(ActExecutorCtx& ctx, Blackboard& bb)
   }
 }
 
-std::shared_ptr<Action> ActionExecutor::createActionChain(Character::Act act) {
-  //TODO DELETE
-  auto seq = std::make_shared<SequenceAction>();
-  return seq;
 
-}
 
 
 
