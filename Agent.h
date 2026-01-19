@@ -78,10 +78,10 @@ private:
     }
 
     // stop
-    double scoreStop = 0.0; //用于确认目前是否在Stop
-    if (_bb.in_stop(tick_index)) {
+    double scoreStop = 0.0; //用于确认目前是否在Stop,目前无用
+    /*if (_bb.in_stop(tick_index)) {
       scoreStop = BASE_STOP;
-    }
+    }*/
 
     double scoreTalk = 0.0;
     if (_ch.act() == Character::Act::Talk) {

@@ -16,7 +16,7 @@ class Agent;
 struct ActExecutorCtx {
   Room& room;
   Character& ch;
-  uint64_t tick_index; // 帧号（用于节流）
+  uint64_t tick_index; // 帧号，目前无用
   IPathfinder& pf;
   ItemLayer& items;
   Agent* parent_agent;

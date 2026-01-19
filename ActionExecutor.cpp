@@ -19,7 +19,7 @@
 
 void ActionExecutor::tick(Character::Act desiredAct, ActExecutorCtx& ctx, Blackboard& bb) {
 
-  // 1. 切换逻辑：如果决策层改变了主意（比如突然饿了，打断闲逛）
+  // 切换逻辑：如果决策层改变了主意（比如突然饿了，打断闲逛）
   if (desiredAct != bb.lastActEnum || bb.currentAction == nullptr) {
     // 构建新的动作
     bb.currentAction = createActionChain(desiredAct);
@@ -27,11 +27,9 @@ void ActionExecutor::tick(Character::Act desiredAct, ActExecutorCtx& ctx, Blackb
     bb.lastActEnum = desiredAct;
   }
 
-  // 2. 执行逻辑
+  // 执行逻辑
   if (bb.currentAction) {
     auto status = bb.currentAction->tick(ctx, bb);
-
-    // 如果动作做完了（成功或失败），你可以决定是重置为空，还是让 Character 知道
     if (status != Action::Status::Running) {
       bb.currentAction->onExit(ctx, bb);
       bb.currentAction = nullptr; // 等待下一帧决策生成新的
@@ -60,7 +58,6 @@ std::shared_ptr<Action> ActionExecutor::createActionChain(Character::Act act) {
       seq->add(std::make_shared<MoveToAction>(TargetKind::Bed));
       seq->add(std::make_shared<InteractAction>());
       // 睡眠可能不需要 WaitAction，因为 Character 状态变成了 Sleep，
-      // 具体的醒来逻辑由 Character::tickNeeds 处理疲劳度
       break;
 
     case Character::Act::UseComputer: {
@@ -73,7 +70,7 @@ std::shared_ptr<Action> ActionExecutor::createActionChain(Character::Act act) {
     }
 
     case Character::Act::Wander:
-      // 闲逛 = 走到随机点 + (可选)发呆一会
+      // 闲逛 = 走到随机点 + 发呆一会
       seq->add(std::make_shared<MoveToAction>(TargetKind::WanderPt));
       if (Random::bernoulli(CHANGE_ACTION_PROB)) {
         auto stopTicks = Random::randint(MIN_STOP_TIME,MAX_STOP_TIME) * TICKS_PER_SEC;

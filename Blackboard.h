@@ -36,17 +36,9 @@ struct Blackboard {
   std::shared_ptr<Action> currentAction = nullptr;
   Character::Act lastActEnum = Character::Act::Wander;
 
-  uint64_t last_planned_for_tick = -999999; // 本帧已算过就不再算
-
   // 让 Stop 持续到这个 tick（包含）<0 表示不在 Stop
-  long long stop_until_tick = -1;
   bool is_using_computer() const {
     return _using_computer;
-  }
-
-  // 是否处于 Stop
-  [[nodiscard]] bool in_stop(uint64_t now_tick) const {
-    return stop_until_tick >= 0 && static_cast<long long>(now_tick) <= stop_until_tick;
   }
 
   // 仅清路径（保持 target 不变）

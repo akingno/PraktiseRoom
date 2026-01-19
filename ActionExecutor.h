@@ -18,7 +18,6 @@ public:
   void tick(Character::Act desiredAct, ActExecutorCtx& ctx, Blackboard& bb);
 
 private:
-  // 这里是硬编码的工厂，未来这部分会被 JSON 读取替代
   std::shared_ptr<Action> createActionChain(Character::Act act);
 };
 

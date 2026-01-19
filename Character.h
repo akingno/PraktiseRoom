@@ -57,7 +57,6 @@ public:
   /*
    *关于饥饿和进食的计算
    */
-  // 当前饥饿程度（只和时间有关）
   [[nodiscard]] double  get_hunger_inner() const { return _hunger; }
 
   // 是否进食到冷却了？
@@ -122,7 +121,6 @@ public:
 
   [[nodiscard]] std::pair<int, int> getLoc() const{return _loc; }
 
-
   // 尝试走一步
   bool tryStepTo(int nx, int ny) {
     auto [x, y] = _loc;
@@ -145,10 +143,10 @@ private:
   double _eat_cooldown_secs = 1.0;
 
   // 疲劳/睡眠相关成员变量
-  double _fatigue = 0.0;           // 0=精力充沛，100=极困
-  double _fatigue_rate = FATIGUE_SPEED;       // 清醒时每秒 +1.5
-  double _sleep_recover_rate = SLEEP_RECOVER_RATE; // 睡眠时每秒 -8.0
-  bool   _sleeping = false;         // 是否正在睡
+  double _fatigue = 0.0;
+  double _fatigue_rate = FATIGUE_SPEED;
+  double _sleep_recover_rate = SLEEP_RECOVER_RATE;
+  bool   _sleeping = false;
 
   // 娱乐/玩电脑
   double _boredom = 0.0;

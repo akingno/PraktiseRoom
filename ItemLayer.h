@@ -16,12 +16,12 @@ class ItemLayer {
 public:
   ItemLayer() = default;
   // 基础操作
-  bool place(const ItemId& id, int x, int y); // 放置/覆盖
-  bool removeAt(int x, int y); // 移除
+  bool place(const ItemId& id, int x, int y); //放置
+  bool removeAt(int x, int y); //移除
   bool hasAt(int x, int y) const;
   std::optional<ItemId> idAt(int x, int y) const;
 
-  // 查询一类物品（第一个/任意一个）
+  // 查询一类物品
   std::optional<Pos> firstOf(const ItemId& id) const;
   bool anyOf(const ItemId& id) const { return firstOf(id).has_value(); }
 
@@ -33,7 +33,7 @@ public:
   std::optional<Pos> bedPos()  const { return firstOf("bed");  }
   std::optional<Pos> computerPos() const { return firstOf("computer"); }
 
-  // Demo 生成/消耗
+  //生成/消耗
   void ensureFoodSpawned() {
     if (!hasFood()) place("food", FOOD_X, FOOD_Y);
   }

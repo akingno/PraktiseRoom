@@ -115,7 +115,7 @@ void SDL3Render::render_frame(const ItemLayer& items_,const std::vector<std::uni
     }
   }
 
-  // 1) 画地面/墙/门
+  // 画墙/门
   for (int y=0; y<VIEW_H; ++y) {
     for (int x=0; x<VIEW_W; ++x) {
       TileType t = room.getBlocksType(x, y);
@@ -124,7 +124,7 @@ void SDL3Render::render_frame(const ItemLayer& items_,const std::vector<std::uni
     }
   }
 
-  // 2) 画物品
+  // 画物品
   for (auto& [key, iid] : items_.items()) {
     int x = key % VIEW_W;
     int y = key / VIEW_W;
@@ -133,11 +133,11 @@ void SDL3Render::render_frame(const ItemLayer& items_,const std::vector<std::uni
     else if (iid == "bed") tex = tileTex_[TileType::BED];
     else if (iid == "computer") tex = tileTex_[TileType::COMPUTER];
 
-    // ... 未来更多
+    // 未来更多
     if (tex) drawTile(x, y, tex);
   }
 
-  // 2) 画角色（你这边是 pair<int,int> getLoc()）
+  // 2) 画角色
   for (const auto& agent : agents) {
     const auto& c = agent->getCharacter();
     const int cx = c.getLoc().first;

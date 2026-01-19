@@ -38,30 +38,6 @@ class Block {
     }
   }*/
 
-  /*
-   *
-   * TODO: NOUSE
-   */
-  static TileType Int2Tile(int num){
-    switch (num) {
-      case 0:
-        return TileType::Grass;
-      case 1:
-        return TileType::WallV;
-      case 2:
-        return TileType::WallH;
-      case 3:
-        return TileType::FOOD;
-      case 4:
-        return TileType::DOOR;
-      case 5:
-        return TileType::BED;
-      case 6:
-        return TileType::COMPUTER;
-      default:
-        return TileType::Grass;
-    }
-  }
 
   TileType getTileType() const {
     return _tile_type;

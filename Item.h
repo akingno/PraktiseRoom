@@ -37,8 +37,8 @@ public:
   const ItemId& id()           const { return id_; }
   const ItemProps& props()     const { return props_; }
 
-  // 定义使用该物品时的行为（如吃/躺床）
-  // 返回 true 表示使用成功（可能导致消耗/冷却）
+  // 定义使用该物品时的行为
+  // 返回true表示使用成功
   virtual bool onUse(UseCtx& ux, int x, int y) { (void)ux;(void)x;(void)y; return false; }
 
 private:
