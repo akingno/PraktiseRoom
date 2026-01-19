@@ -53,7 +53,6 @@ inline void register_default_items() {
         const auto& content = kComputerFeed[idx];
         // 记入 short_memory
         ux.ch.short_memory().add(content);
-        std::cout<<"Memory added: "<<content<<std::endl;
         return true;
       })
   .build();

@@ -84,6 +84,7 @@ int main() {
     //渲染
     render->render_frame(items, agents, room);
 
+#ifndef NDEBUG
     std::cout<< std::string("Action: ") << Character::Act2Str(character1.act())<<"\n"<<
     "Inner Hunger= " + std::to_string(character1.get_hunger_inner())<<"\n"<<
       "Inner Fatigue= " + std::to_string(character1.get_fatigue_score())<<"\n"<<
@@ -97,6 +98,7 @@ int main() {
             "Bored score= " + std::to_string(character2.get_boredom()) <<"\n" <<
               "Sleeping Status= " + std::to_string(character2.isSleeping())<<"\n"<<
                 "Recent Memory: " << character2.get_short_memory().to_string()<<"\n\n\n";
+#endif
 
     next_tick += dt;
     std::this_thread::sleep_until(next_tick);

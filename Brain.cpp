@@ -81,9 +81,9 @@ Character::Act Brain::localUtility(const Character& _ch,
 
   // stop
   double scoreStop = 0.0; //用于确认目前是否在Stop
-  if (_bb.in_stop(tick_index)) {
+  /*if (_bb.in_stop(tick_index)) {
     scoreStop = BASE_STOP;
-  }
+  }*/
 
   double scoreTalk = 0.0;
   if (_ch.act() == Character::Act::Talk) {
@@ -121,10 +121,7 @@ Character::Act Brain::localUtility(const Character& _ch,
   if (scoreEat > best) { best = scoreEat; chosen_action = Character::Act::Eat; }
   if (scoreSleep > best) { best = scoreSleep; chosen_action = Character::Act::Sleep; }
   if (scoreStop > best) { best = scoreStop; chosen_action = Character::Act::Stop; }
-  if (scoreUseComputer > best) {
-    best = scoreUseComputer; chosen_action = Character::Act::UseComputer;
-    std::cout<<"Using computer"<<std::endl;
-  }
+  if (scoreUseComputer > best) {best = scoreUseComputer; chosen_action = Character::Act::UseComputer;}
   if (scoreTalk > best) { best = scoreTalk; chosen_action = Character::Act::Talk; }
 
   return chosen_action;

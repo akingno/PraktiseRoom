@@ -8,14 +8,7 @@
 
 // 确保包含所有 Action 的定义
 #include "actions/ChangeToAction.h"
-#include "actions/InteractAction.h"
-#include "actions/MoveToAction.h"
 #include "actions/SelectAgentAction.h"
-#include "actions/SequenceAction.h"
-#include "actions/SignalChatAction.h"
-#include "actions/TransferMemoryAction.h"
-#include "actions/WaitAction.h"
-#include "actions/WaitForChatAction.h"
 
 void ActionExecutor::tick(ActExecutorCtx& ctx, Blackboard& bb)
 {
