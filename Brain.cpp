@@ -3,8 +3,8 @@
 //
 
 #include "Brain.h"
+#include "actions/ActionFactory.h"
 #include "tools/Utils.h"
-#include <chrono>
 
 Brain::~Brain()
 {
@@ -12,56 +12,92 @@ Brain::~Brain()
 }
 
 void Brain::requestDecision(const Character& chSnap,
-                            const Blackboard& bbSnap,
+                            const bool is_being_called,
+                            const std::string& name,
                             uint64_t   nowTick,
                             bool       hasFood,
                             bool       hasBed,
                             bool       hasComputer)
 {
-    if (_fut.valid()) return;               // 上一次还没取完结果
-    _fut = std::async(std::launch::async, [=, &bbSnap]() {
+    if (_fut.valid()) return; // 上一次还没取完结果
+    _fut = std::async(std::launch::async, [=]() {
 
         /* ------------------------ 可插拔分支 ------------------------ */
 #ifdef USE_LLM_HTTP_SERVER
-#include <nlohmann/json.hpp>
-#include <httplib/httplib.h>
-        using nlohmann::json;
-        json j;
-        j["hunger"]   = chSnap.get_hunger_inner();
-        j["fatigue"]  = chSnap.get_fatigue_score();
-        j["boredom"]  = chSnap.get_boredom();
-        j["nowTick"]  = nowTick;
+      using nlohmann::json;
+      try {
+          json j;
+          j["name"] = name;
+          j["hunger"] = chSnap.get_hunger_inner();
+          j["fatigue"] = chSnap.get_fatigue_score();
+          j["boredom"] = chSnap.get_boredom();
+          j["nowTick"] = nowTick;
+          j["hasFood"] = hasFood;
+          j["hasBed"] = hasBed;
+          j["hasComputer"] = hasComputer;
 
-        httplib::Client cli("http://127.0.0.1:8000");
-        auto res = cli.Post("/decide", j.dump(), "application/json");
-        if (res && res->status == 200) {
-            auto r = json::parse(res->body);
-            std::string actStr = r.value("action", "Wander");
-            if (actStr == "Eat")   return Character::Act::Eat;
-            if (actStr == "Sleep") return Character::Act::Sleep;
-            if (actStr == "UsePC") return Character::Act::UseComputer;
-        }
-        /* 若 HTTP 失败 fallthrough 到本地 */
+          // 1. 发送记忆列表
+          j["memories"] = json::array();
+          for(const auto& mem : chSnap.get_short_memory().entries()) {
+              j["memories"].push_back(mem.content);
+          }
+
+          httplib::Client cli("http://127.0.0.1:8000");
+          // 设置超时，防止 C++ 卡死
+          cli.set_connection_timeout(0, 300000); // 300ms 连接
+          cli.set_read_timeout(20, 0); // 5s 读取 (给 LLM 留时间)
+
+          auto res = cli.Post("/decide", j.dump(), "application/json");
+
+          if (res && res->status == 200) {
+              auto r = json::parse(res->body);
+
+              std::string actStr = r.value("action", "Wander");
+              std::string thought = r.value("thought", "");
+
+              Character::Act finalAct = Character::Act::Wander;
+
+              // 简单的字符串映射 (建议后续用 map 优化)
+              if (actStr == "Eat")   finalAct = Character::Act::Eat;
+              else if (actStr == "Sleep") finalAct = Character::Act::Sleep;
+              else if (actStr == "UsePC") finalAct = Character::Act::UseComputer;
+              else if (actStr == "Talk")  finalAct = Character::Act::Talk;
+              else if (actStr == "Stop")  finalAct = Character::Act::Stop;
+
+              // 返回结果
+              return BrainResult{finalAct, thought};
+          }
+      } catch (const std::exception& e) {
+          printf("HTTP Error: %s\n", e.what());
+      }
+      // 如果 HTTP 失败，回退到本地逻辑
 #endif
-        return localUtility(chSnap, bbSnap, nowTick, hasFood, hasBed, hasComputer);
+        return localUtility(chSnap, is_being_called, nowTick, hasFood, hasBed, hasComputer);
     });
 }
 
-void Brain::poll(Blackboard& bb)
+void Brain::poll(Blackboard& bb, Character& ch)
 {
-    if (!_fut.valid()) return;
-    using namespace std::chrono_literals;
-    if (_fut.wait_for(0s) != std::future_status::ready) return;
+  if (!_fut.valid()) return;
+  using namespace std::chrono_literals;
+  if (_fut.wait_for(0s) != std::future_status::ready) return;
 
-    Character::Act act = _fut.get();
+  BrainResult result = _fut.get();
 
-    auto action = ActionFactory::createFromEnum(act);
-    if (action) {
-        std::lock_guard<std::mutex> lk(bb.queueMutex);
-        bb.actionQueue.push_back(std::move(action));
-      bb.actNow = act;
-    }
-    bb.is_thinking = false;
+  //思考写入记忆
+  if (!result.thought.empty()) {
+    ch.short_memory().add("[Thought] " + result.thought);
+  }
+
+  // action推入队列
+  auto action = ActionFactory::createFromEnum(result.act);
+  if (action) {
+    std::lock_guard<std::mutex> lk(bb.queueMutex);
+    bb.actionQueue.push_back(std::move(action));
+    bb.actNow = result.act; // 更新当前意图状态
+  }
+
+  bb.is_thinking = false;
 }
 
 bool Brain::isThinking() const
@@ -70,13 +106,13 @@ bool Brain::isThinking() const
 }
 
 // Old Decide action logic
-Character::Act Brain::localUtility(const Character& _ch,
-                                   const Blackboard& _bb,
+BrainResult Brain::localUtility(const Character& _ch,
+                                   const bool is_being_called,
                                    uint64_t tick_index,
                                    bool hasFood, bool hasBed, bool hasComputer)
 {
-  if (_bb.is_being_called) {
-    return Character::Act::WaitAlways;
+  if (is_being_called) {
+    return BrainResult{Character::Act::WaitAlways, ""};
   }
 
   // stop
@@ -124,5 +160,5 @@ Character::Act Brain::localUtility(const Character& _ch,
   if (scoreUseComputer > best) {best = scoreUseComputer; chosen_action = Character::Act::UseComputer;}
   if (scoreTalk > best) { best = scoreTalk; chosen_action = Character::Act::Talk; }
 
-  return chosen_action;
+  return BrainResult{chosen_action, ""};
 }

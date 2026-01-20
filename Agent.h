@@ -9,8 +9,6 @@
 #include "Blackboard.h"
 #include "Brain.h"
 #include "Character.h"
-#include "Config.h"
-#include "tools/Utils.h"
 #include <string>
 
 class Room;
@@ -33,14 +31,12 @@ public:
 
 
   void update(double dt_sec, uint64_t tick_index, Room& room, ItemLayer& items, std::vector<Agent *>& others) {
-
     _other_agents = others;
-
     // 需求更新
     _ch.tickNeeds(dt_sec);
 
     //取 Brain 结果
-    _brain->poll(_bb);
+    _brain->poll(_bb, _ch);
 
     // 如果队列空且不在思考 → 发起思考
     bool queueEmpty;
@@ -51,10 +47,10 @@ public:
 
     if (queueEmpty && !_bb.currentAction && !_bb.is_thinking) {
       _bb.is_thinking = true;
-      _brain->requestDecision(_ch, _bb, tick_index,
-                              items.hasFood(),
-                              items.hasBed(),
-                              items.hasComputer());
+      _brain->requestDecision(
+        _ch, _bb.is_being_called,_name,
+        tick_index,
+        items.hasFood(),items.hasBed(),items.hasComputer());
     }
 
     // 构建瞬时的context

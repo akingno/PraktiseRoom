@@ -6,18 +6,20 @@
 #define BRAIN_H
 
 #include <future>
-#include <thread>
-#include "actions/ActionFactory.h"
 #include "Blackboard.h"
-#include "ItemLayer.h"
 
 // 打开后将走 HTTP；不开则走本地 Utility 逻辑。
-/* #define USE_LLM_HTTP_SERVER */
+#define USE_LLM_HTTP_SERVER
 
 #ifdef USE_LLM_HTTP_SERVER
 #include <nlohmann/json.hpp>
-#include <httplib.h>
+#include <httplib/httplib.h>
 #endif
+
+struct BrainResult {
+  Character::Act act;
+  std::string thought; // 新的记忆/思考内容
+};
 
 class Brain {
 public:
@@ -26,22 +28,23 @@ public:
 
   // 在主线程调用：快照参数全部按值传入，避免竞态
   void requestDecision(const Character& chSnap,
-                       const Blackboard& bbSnap,
+                       bool is_being_called,
+                       const std::string& name,
                        uint64_t   nowTick,
                        bool       hasFood,
                        bool       hasBed,
                        bool       hasComputer);
 
   // 主线程轮询：若结果就绪则写入 bb.actionQueue
-  void poll(Blackboard& bb);
+  void poll(Blackboard& bb, Character& ch);
 
   bool isThinking() const;
 
 private:
-  std::future<Character::Act> _fut;
+  std::future<BrainResult> _fut;
 
-  Character::Act localUtility(const Character& ch,
-                              const Blackboard& bb,
+  BrainResult localUtility(const Character& ch,
+                              bool is_being_called,
                               uint64_t nowTick,
                               bool f, bool b, bool c);
 };

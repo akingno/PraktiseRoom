@@ -5,7 +5,6 @@
 #include "renders/IRender.h"
 #include "renders/SDL3Render.h"
 #include "tools/AStarPathfinder.h"
-#include "tools/Utils.h"
 #include <chrono>
 #include <thread>
 
