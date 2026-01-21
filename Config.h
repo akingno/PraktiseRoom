@@ -73,6 +73,7 @@ constexpr double CHANGE_TALK_PROB = 0.4;
 
 // 食物
 constexpr int FOOD_CALORIES = 80;
+constexpr int PLAY_COMPUTER_ENTERTAIN = 70;
 
 
 

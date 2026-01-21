@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Dict
 import random
 import uvicorn
 import asyncio
@@ -24,40 +24,65 @@ class DecisionResponse(BaseModel):
     thought: str      # LLM 的思考过程，将存入 ShortMemory
     target: Optional[str] = None # 预留：如果 LLM 指定了具体目标
 
-# 2. 模拟 LLM 的随机逻辑
-@app.post("/decide", response_model=DecisionResponse)
-async def decide(state: AgentState):
-    print(f"Receive Request from {state.name}: H={state.hunger:.1f}, B={state.boredom:.1f}")
+class BatchResponse(BaseModel):
+    decisions: Dict[str, DecisionResponse]
 
-    think_time = random.uniform(2.0, 5.0) 
-    print(f"  Thinking... ({think_time:.2f}s)")
-    await asyncio.sleep(think_time) # 使用 await 释放控制权，不卡死其他请求
+
+
+
+@app.post("/decide_batch", response_model=BatchResponse)
+async def decide_batch(agents: List[AgentState]):
     
-    # 简单的逻辑模拟 (未来这里替换为 LLM API 调用)
-    possible_actions = ["Wander"]
-    thought_process = "I am feeling okay, just looking around."
+    # --- 1. 收到所有人的状态 ---
+    names = [a.name for a in agents]
+    print(f"\n[Batch Request] Received states for: {names}")
 
-    # 优先级逻辑模拟
-    if state.hunger > 80 and state.hasFood:
-        possible_actions = ["Eat"]
-        thought_process = "I am starving! I need food now."
-    elif state.fatigue > 80 and state.hasBed:
-        possible_actions = ["Sleep"]
-        thought_process = "I can barely keep my eyes open. Going to bed."
-    elif state.boredom > 60 and state.hasComputer:
-        possible_actions = ["UsePC"]
-        thought_process = "So bored... I wonder what's on the internet."
-    elif random.random() < 0.1: # 偶尔想聊天
-        possible_actions = ["Talk"]
-        thought_process = "I feel like socializing."
+    # --- 2. 模拟 LLM 的“全局思考”延迟 ---
+    # 这一次 sleep 代表 LLM 阅读所有人的状态并生成 tokens 的时间
+    think_time = random.uniform(1.0, 3.0)
+    print(f"  Thinking globally... ({think_time:.2f}s)")
+    await asyncio.sleep(think_time)
 
-    chosen_action = random.choice(possible_actions)
-    print(f"  > Decision for {state.name}: {chosen_action}")
+    # --- 3. 做出决策 (模拟 LLM 逻辑) ---
+    decisions = {}
+
+    # 在未来接入 LLM 时，你会在这里构建一个巨大的 Prompt，包含所有 agent 的信息
+    # prompt = f"Scene contains: {names}. Status: {agents}..."
+    # response = llm.generate(prompt)
+    # 然后解析 response 分配给每个人
     
-    return {
-        "action": chosen_action,
-        "thought": thought_process
-    }
+    for agent in agents:
+        possible_actions = ["Wander"]
+        thought_process = "Just looking around."
+        
+        # 简单的基于规则的模拟 (未来替换为 LLM 的输出解析)
+        if agent.hunger > 80 and agent.hasFood:
+            possible_actions = ["Eat"]
+            thought_process = "I'm starving, let's grab some food."
+        elif agent.fatigue > 80 and agent.hasBed:
+            possible_actions = ["Sleep"]
+            thought_process = "Too tired... going to sleep."
+        elif agent.boredom > 60 and agent.hasComputer:
+            possible_actions = ["UsePC"]
+            thought_process = "Bored. Checking the internet."
+        
+        # 模拟社交互动的随机性
+        # (只有当 LLM 真的理解场景时，这里才能做出真正的协作决策，比如 A 找 B)
+        elif random.random() < 0.05: 
+            possible_actions = ["Talk"]
+            thought_process = f"I want to talk to someone."
 
+        chosen_action = random.choice(possible_actions)
+        
+        print(f"  > Decision for {agent.name}: {chosen_action}")
+
+        # 构建单个决策结果
+        decisions[agent.name] = DecisionResponse(
+            action=chosen_action,
+            thought=thought_process
+        )
+
+    # --- 4. 打包返回 ---
+    return BatchResponse(decisions=decisions)
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)

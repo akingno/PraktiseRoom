@@ -22,7 +22,7 @@ static const std::vector<std::string> kComputerFeed = {
 };
 
 inline void register_default_items() {
-  // 食物：被使用时喂饱，并刷新房间里的 food tile
+  // 食物被使用后直接喂饱，并刷新房间里的food
   auto food = ItemBuilder("food")
   .useable(true)
   .onUse([](UseCtx& ux, int, int){
@@ -35,7 +35,7 @@ inline void register_default_items() {
 
   ItemRegistry::inst().register_item(std::move(food));
 
-  // 床：被使用时进入睡眠状态
+  // 床被使用时进入睡眠状态
   auto bed = ItemBuilder("bed")
   .useable(true)
   .onUse([](UseCtx& ux, int, int){
@@ -48,13 +48,13 @@ inline void register_default_items() {
   auto computer = ItemBuilder("computer")
   .useable(true)
   .onUse([](UseCtx& ux, int , int ){
-        // 随机抽一条信息
-        int idx = AkRandom::randint(0, static_cast<int>(kComputerFeed.size()) - 1);
-        const auto& content = kComputerFeed[idx];
-        // 记入 short_memory
-        ux.ch.short_memory().add(content);
-        return true;
-      })
+    //随机抽一条信息计入记忆
+    int idx = AkRandom::randint(0, static_cast<int>(kComputerFeed.size()) - 1);
+    const auto& content = kComputerFeed[idx];
+    ux.ch.short_memory().add(content);
+    ux.ch.play(PLAY_COMPUTER_ENTERTAIN);
+    return true;
+  })
   .build();
 
   ItemRegistry::inst().register_item(std::move(computer));

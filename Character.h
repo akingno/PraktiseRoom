@@ -71,6 +71,10 @@ public:
     _eat_cooldown = _eat_cooldown_secs;
   }
 
+  void play(int board_decrease) {
+    _boredom = std::max(0.0, _boredom - board_decrease);
+  }
+
   /*
    * 关于疲劳fatigue和睡眠
    */

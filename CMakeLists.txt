@@ -21,6 +21,7 @@ add_subdirectory("third_party/SDL_ttf" "${CMAKE_BINARY_DIR}/_deps/SDL_ttf-build"
 add_executable(room_temp main.cpp
         Room.h
         Room.cpp
+        Block.h
         tools/Utils.h
         tools/Random.h
         renders/IRender.h
@@ -57,8 +58,8 @@ add_executable(room_temp main.cpp
         actions/SelectAgentAction.h
         actions/ActionFactory.cpp
         actions/ActionFactory.h
-        Brain.cpp
-        Brain.h
+        DecisionMaker.cpp
+        DecisionMaker.h
 )
 
 set_target_properties(room_temp PROPERTIES WIN32_EXECUTABLE OFF)

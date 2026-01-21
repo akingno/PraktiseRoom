@@ -8,10 +8,12 @@
 #include <chrono>
 #include <thread>
 
+#include "Agent.h"
+#include "DecisionMaker.h"
+
 #ifdef _WIN32
 #include <windows.h>
 #endif
-#include "Agent.h"
 
 #include <iostream>
 
@@ -33,8 +35,8 @@ int main() {
   bool running = true;
   Room room;
   ItemLayer items;
-  std::string name_char1 = "Akingno";
-  std::string name_char2 = "Lilu";
+  std::string name_char1 = "张三";
+  std::string name_char2 = "李四";
 
   register_default_items();
   items.ensureBedPlaced();
@@ -58,6 +60,9 @@ int main() {
     raw_agents_ptrs.push_back(a.get());
   }
 
+  //全局决策器
+  DecisionMaker decisionMaker;
+
   //SDL3渲染器
   std::unique_ptr<IRender> render = std::make_unique<SDL3Render>(VIEW_W, VIEW_H, TILE_PX, "Little Room");
 
@@ -80,23 +85,35 @@ int main() {
       agent->update(TICK_MILLI/1000.0, tick_index, room, items, raw_agents_ptrs);
     }
 
+    if (!decisionMaker.isThinking()) {
+      bool anyNeedsDecision = false;
+      // 检查是否有任何一个agent处于空闲缺策状态
+      for (auto* agent : raw_agents_ptrs) {
+        if (agent->needsNewDecision()) {
+          anyNeedsDecision = true;
+          // 标记为思考中防止下一帧重复触发
+          agent->markThinking();
+        }
+      }
+
+      if (anyNeedsDecision) {
+        decisionMaker.requestBatchDecision(raw_agents_ptrs, tick_index);
+      }
+    }
+    decisionMaker.poll(raw_agents_ptrs);
+
     //渲染
     render->render_frame(items, agents, room);
 
 #ifndef NDEBUG
-    std::cout<< std::string("Action: ") << Character::Act2Str(character1.act())<<"\n"<<
-    "Inner Hunger= " + std::to_string(character1.get_hunger_inner())<<"\n"<<
-      "Inner Fatigue= " + std::to_string(character1.get_fatigue_score())<<"\n"<<
-        "Bored score= " + std::to_string(character1.get_boredom()) <<"\n" <<
-          "Sleeping Status= " + std::to_string(character1.isSleeping())<<"\n"<<
-            "Recent Memory: " << character1.get_short_memory().to_string()<<"\n\n";
+    if (tick_index % 20 == 0) {
+      const auto& c1 = agents[0]->getCharacter();
+      std::cout << "[Tick " << tick_index << "] " << agents[0]->getName()
+      << " Act: " << Character::Act2Str(c1.act())
+      << " Board: " << std::to_string(c1.get_boredom())
+      << " Mem: " << c1.get_short_memory().to_string()<< std::endl <<std::endl;
+    }
 
-    std::cout<< std::string("Action2: ") << Character::Act2Str(character2.act())<<"\n"<<
-        "Inner Hunger= " + std::to_string(character2.get_hunger_inner())<<"\n"<<
-          "Inner Fatigue= " + std::to_string(character2.get_fatigue_score())<<"\n"<<
-            "Bored score= " + std::to_string(character2.get_boredom()) <<"\n" <<
-              "Sleeping Status= " + std::to_string(character2.isSleeping())<<"\n"<<
-                "Recent Memory: " << character2.get_short_memory().to_string()<<"\n\n\n";
 #endif
 
     next_tick += dt;
