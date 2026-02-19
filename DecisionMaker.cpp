@@ -28,6 +28,7 @@ void DecisionMaker::requestBatchDecision(const std::vector<Agent*>& agents, uint
         snap.boredom = ch.get_boredom();
         snap.isBeingCalled = agent->isBeingCalled();
         snap.currentAct = ch.act();
+        snap.eatAvailable = ch.eatAvailable();
 
         for(const auto& mem : ch.get_short_memory().entries()) {
             snap.memories.push_back(mem.content);
@@ -156,7 +157,7 @@ std::map<std::string, DecisionResult> DecisionMaker::localUtilityBatch(const std
           Cfg::threshold::bored_enter, Cfg::threshold::bored_exit);
 
       double scoreEat = CalcScoreEat(
-          agent.hunger, agent.hasFood, true /*eatAvailable*/,
+          agent.hunger, agent.hasFood, !agent.eatAvailable,
           agent.currentAct == Character::Act::Eat, Cfg::threshold::hunger_enter);
 
       double scoreSleep = CalcScoreSleep(

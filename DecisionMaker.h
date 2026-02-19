@@ -39,6 +39,7 @@ struct AgentSnapshot {
   bool hasBed;
   bool hasComputer;
   bool isBeingCalled;
+  bool eatAvailable;
   std::vector<std::string> memories;
   Character::Act currentAct;
 };
