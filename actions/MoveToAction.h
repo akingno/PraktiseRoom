@@ -4,7 +4,6 @@
 
 #ifndef MOVETOACTION_H
 #define MOVETOACTION_H
-// MoveToAction.cpp (或者写在头文件里)
 
 #include "Action.h"
 

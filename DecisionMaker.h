@@ -11,14 +11,15 @@
 #include <map>
 #include <string>
 #include "Character.h"
+#include <nlohmann/json.hpp>
 
 class Agent;
 
 //打开则走http
-#define USE_LLM_HTTP_SERVER
+//#define USE_LLM_HTTP_SERVER
 
 #ifdef USE_LLM_HTTP_SERVER
-#include <nlohmann/json.hpp>
+
 #include <httplib/httplib.h>
 #endif
 

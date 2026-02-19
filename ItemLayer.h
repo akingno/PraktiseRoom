@@ -35,24 +35,24 @@ public:
 
   // Demo 生成/消耗
   void ensureFoodSpawned() {
-    if (!hasFood()) place("food", FOOD_X, FOOD_Y);
+    if (!hasFood()) place("food", Cfg::room::food_x, Cfg::room::food_y);
   }
   void consumeFood() { // 找到一个food就删
     if (auto p = foodPos()) removeAt(p->x, p->y);
   }
 
   void ensureBedPlaced() {
-    if (!hasBed()) place("bed", BED_X, BED_Y);
+    if (!hasBed()) place("bed", Cfg::room::bed_x, Cfg::room::bed_y);
   }
 
   void ensureComputerPlaced() {
-    if (!hasComputer()) place("computer", COMPUTER_X, COMPUTER_Y);
+    if (!hasComputer()) place("computer", Cfg::room::computer_x, Cfg::room::computer_y);
   }
 
   // 迭代用：给渲染器遍历
   const std::unordered_map<int, ItemId>& items() const { return items_; }
 private:
-  static int key(int x, int y) { return y * VIEW_W + x; }
+  static int key(int x, int y) { return y * Cfg::room::view_w + x; }
   std::unordered_map<int, ItemId> items_; // key= y*W+x
 };
 

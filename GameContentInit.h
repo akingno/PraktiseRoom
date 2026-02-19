@@ -28,7 +28,7 @@ inline void register_default_items() {
   .onUse([](UseCtx& ux, int, int){
     if (!ux.ch.eatAvailable()) return false;
     if (!ux.items.hasFood())   return false;
-    ux.ch.eat(FOOD_CALORIES);
+    ux.ch.eat(Cfg::item::food_calories);
     ux.items.consumeFood();
     return true;
   }).build();
@@ -52,7 +52,7 @@ inline void register_default_items() {
     int idx = AkRandom::randint(0, static_cast<int>(kComputerFeed.size()) - 1);
     const auto& content = kComputerFeed[idx];
     ux.ch.short_memory().add(content);
-    ux.ch.play(PLAY_COMPUTER_ENTERTAIN);
+    ux.ch.play(Cfg::item::play_computer_entertain);
     return true;
   })
   .build();

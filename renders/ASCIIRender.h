@@ -24,7 +24,7 @@ class ASCIIRender : public IRender {
     SetConsoleMode(hOut, mode);
   }
   char& buf_at(int sx, int sy){
-    return frame[ sy * (VIEW_W + 1) + sx ];
+    return frame[ sy * (Cfg::room::view_w + 1) + sx ];
   }
   /**
    * Output information at the last line

@@ -2,79 +2,79 @@
 // Created by jacob on 25-10-19.
 //
 
+
+// Config.h
 #ifndef CONFIG_H
 #define CONFIG_H
 
-// This should be put in vector2d or something
+#include <string>
+
+// 辅助结构体保持不变
 struct Pos { int x, y; };
 
-// tile 像素大小
-constexpr int TILE_PX = 32;
+namespace Cfg {
+void Load(const std::string& filename = "config.json");
+void Save(const std::string& filename = "config.json");
 
-constexpr double TICK_MILLI = 50.0;
-inline int TICK_MILLI_INT = 50;
-constexpr int TICKS_PER_SEC = 20;
+namespace core {
+inline int tile_px = 32;
+inline double tick_milli = 50.0;
+inline int tick_milli_int = 50;
+inline int ticks_per_sec = 20;
+}
 
-// 方向（已弃用）， 启用后请把此删除
-constexpr int MAX_DIR = 5;
+namespace room {
+inline int view_w = 40;
+inline int view_h = 30;
+inline int door_x = 20;
+inline int door_y = 0;
+inline int food_x = 20;
+inline int food_y = 1;
+inline int bed_x  = 10;
+inline int bed_y  = 28;
+inline int computer_x = 10;
+inline int computer_y = 1;
+}
 
+namespace speed {
+inline double hunger = 2.0;
+inline double fatigue = 0.5;
+inline double boredom = 0.8;
+inline double sleep_recover = 6.0;
+inline double computer_recover = 10.0;
+}
 
-// 房间相关
-// 房间大小： 40*30格
-constexpr int VIEW_W = 40;
-constexpr int VIEW_H = 30;
-// 门的位置
-constexpr int DOOR_X = 20;
-constexpr int DOOR_Y = 0;
-// 食物的位置
-constexpr int FOOD_X = 20;
-constexpr int FOOD_Y = 1;
-// 床的位置
-constexpr int BED_X  = 10;
-constexpr int BED_Y  = 28;
-// 电脑的位置
-constexpr int COMPUTER_X = 10;
-constexpr int COMPUTER_Y = 1;
+namespace threshold {
+inline double hunger_enter = 60.0;
+inline double tired_enter = 60.0;
+inline double rested_exit = 25.0;
+inline double bored_enter = 40.0;
+inline double bored_exit = 5.0;
+}
 
+namespace score {
+inline double base_wander = 0.05;
+inline double base_stop = 0.06;
+inline double base_use_computer = 0.055;
+inline double base_talk = 99.0;
+}
 
-// 角色状态速度
-constexpr double HUNGER_SPEED = 2.0;
-constexpr double FATIGUE_SPEED = 0.5;
-constexpr double BOREDOM_SPEED = 0.8;
+namespace time {
+inline int min_stop = 2;
+inline int max_stop = 6;
+inline int min_use_computer = 4;
+inline int max_use_computer = 8;
+}
 
-constexpr double SLEEP_RECOVER_RATE = 6.0;
-constexpr double COMPUTER_RECOVER_RATE = 10.0;
+namespace prob {
+inline double change_action = 0.9;
+inline double change_talk = 0.4;
+}
 
-// 阈值
-constexpr double HUNGER_ENTER = 60.0;
-constexpr double TIRED_ENTER = 60.0;
-constexpr double RESTED_EXIT = 25.0;
-constexpr double BORED_ENTER = 40.0;
-constexpr double BORED_EXIT = 5.0;
-
-
-constexpr double BASE_WANDER = 0.05;
-constexpr double BASE_STOP = 0.06;
-constexpr double BASE_USE_COMPUTER = 0.055;
-constexpr double BASE_TALK = 99.0;
-
-// Stop的时间
-constexpr int MIN_STOP_TIME = 2;
-constexpr int MAX_STOP_TIME = 6; // seconds
-
-// 使用电脑的时间
-constexpr int MIN_USE_COMPUTER_TIME = 4;
-constexpr int MAX_USE_COMPUTER_TIME = 8;
-
-// wander完切换状态的概率
-constexpr double CHANGE_ACTION_PROB = 0.9;
-constexpr double CHANGE_TALK_PROB = 0.4;
-
-
-// 食物
-constexpr int FOOD_CALORIES = 80;
-constexpr int PLAY_COMPUTER_ENTERTAIN = 70;
-
-
+namespace item {
+inline int food_calories = 80;
+inline int play_computer_entertain = 70;
+}
+}
 
 #endif //CONFIG_H

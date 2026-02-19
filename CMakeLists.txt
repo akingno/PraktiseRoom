@@ -60,6 +60,7 @@ add_executable(room_temp main.cpp
         actions/ActionFactory.h
         DecisionMaker.cpp
         DecisionMaker.h
+        Config.cpp
 )
 
 set_target_properties(room_temp PROPERTIES WIN32_EXECUTABLE OFF)

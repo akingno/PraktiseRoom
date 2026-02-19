@@ -6,7 +6,7 @@
 #include "../Agent.h"
 
     void MoveToAction::onEnter(ActExecutorCtx& ctx, Blackboard& bb){
-        // 1. 确定我们要去哪
+        // 1. 确定去
         std::pair<int, int> targetPos = {-1, -1};
         bool found = false;
 
@@ -40,14 +40,14 @@
 
             for (int t = 0; t < max_tries; ++t) {
               // 1. 随机取点
-              int rx = AkRandom::randint(1, VIEW_W - 2);
-              int ry = AkRandom::randint(1, VIEW_H - 2);
+              int rx = AkRandom::randint(1, Cfg::room::view_w - 2);
+              int ry = AkRandom::randint(1, Cfg::room::view_h - 2);
 
               // 2. 检查地形 (是否是墙)
               auto tt = ctx.room.getBlocksType(rx, ry);
               if (tt == TileType::WallV || tt == TileType::WallH) continue;
 
-              // 3. 用 A* 验证可达性 (注意这里用 ctx.pf)
+              // 3. 用 A* 验证可达性
               std::vector<std::pair<int, int>> tmp;
               if (ctx.pf.plan_path(startPos.first, startPos.second, rx, ry, tmp)) {
                 targetPos = {rx, ry};
@@ -60,7 +60,7 @@
             default: break;
         }
 
-        // 2. 设置 Blackboard (类似于原 set_target_and_invalidate)
+        // 2. 设置Blackboard
         if (found) {
             // 如果目标变了，或者原路径无效，重置路径
             if (bb.target != targetPos || !bb.target_valid) {
@@ -76,7 +76,7 @@
     }
 
     Action::Status MoveToAction::tick(ActExecutorCtx& ctx, Blackboard& bb) {
-        // 1. 检查目标是否还存在/有效
+        // 1. 检查目标是否有效
         if (!bb.target_valid) return Status::Failure;
 
         // 2. 检查是否到达

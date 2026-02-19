@@ -24,7 +24,7 @@ class Room {
 
  private:
   std::vector<Block>  _blocks;
-  Pos  _door{DOOR_X, DOOR_Y};
+  Pos  _door{Cfg::room::door_x, Cfg::room::door_y};
 
 };
 

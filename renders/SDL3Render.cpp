@@ -109,15 +109,15 @@ void SDL3Render::render_frame(const ItemLayer& items_,const std::vector<std::uni
   // 先铺一层地板
   SDL_Texture* tex = tileTex_[TileType::Grass];
 
-  for (int y = 0; y < VIEW_H; ++y) {
-    for (int x = 0; x < VIEW_W; ++x) {
+  for (int y = 0; y < Cfg::room::view_h; ++y) {
+    for (int x = 0; x < Cfg::room::view_w; ++x) {
       drawTile(x, y, tex);
     }
   }
 
   // 1) 画地面/墙/门
-  for (int y=0; y<VIEW_H; ++y) {
-    for (int x=0; x<VIEW_W; ++x) {
+  for (int y=0; y < Cfg::room::view_h; ++y) {
+    for (int x=0; x < Cfg::room::view_w; ++x) {
       TileType t = room.getBlocksType(x, y);
       auto tex = tileTex_[t];
       if (tex) drawTile(x, y, tex);
@@ -126,8 +126,8 @@ void SDL3Render::render_frame(const ItemLayer& items_,const std::vector<std::uni
 
   // 2) 画物品
   for (auto& [key, iid] : items_.items()) {
-    int x = key % VIEW_W;
-    int y = key / VIEW_W;
+    int x = key % Cfg::room::view_w;
+    int y = key / Cfg::room::view_w;
     SDL_Texture* tex = nullptr;
     if (iid == "food") tex = tileTex_[TileType::FOOD];
     else if (iid == "bed") tex = tileTex_[TileType::BED];

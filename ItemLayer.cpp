@@ -5,7 +5,7 @@
 #include "ItemLayer.h"
 
 bool ItemLayer::place(const ItemId& id, int x, int y){
-  if (x<0||x>=VIEW_W||y<0||y>=VIEW_H) return false;
+  if (x<0||x >= Cfg::room::view_w ||y<0||y >= Cfg::room::view_h) return false;
   items_[key(x,y)] = id;
   return true;
 }
@@ -22,7 +22,7 @@ std::optional<ItemId> ItemLayer::idAt(int x,int y) const{
 }
 std::optional<Pos> ItemLayer::firstOf(const ItemId& id) const{
   for (auto& [k,vid] : items_){
-    if (vid==id) return Pos{ k%VIEW_W, k/VIEW_W };
+    if (vid==id) return Pos{ k % Cfg::room::view_w, k / Cfg::room::view_w };
   }
   return std::nullopt;
 }

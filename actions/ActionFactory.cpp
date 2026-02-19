@@ -41,7 +41,7 @@ std::shared_ptr<Action> ActionFactory::createFromEnum(Character::Act act) {
       seq->add(std::make_shared<MoveToAction>(TargetKind::Computer));
       seq->add(std::make_shared<InteractAction>());
       // 随机时间
-      int useTicks = AkRandom::randint(MIN_USE_COMPUTER_TIME, MAX_USE_COMPUTER_TIME) * TICKS_PER_SEC;
+      int useTicks = AkRandom::randint(Cfg::time::min_use_computer, Cfg::time::max_use_computer) * Cfg::core::ticks_per_sec;
       seq->add(std::make_shared<WaitAction>(useTicks));
       break;
     }
@@ -49,11 +49,11 @@ std::shared_ptr<Action> ActionFactory::createFromEnum(Character::Act act) {
     case Character::Act::Wander:
       // 闲逛 = 走到随机点+发呆一会
       seq->add(std::make_shared<MoveToAction>(TargetKind::WanderPt));
-      if (AkRandom::bernoulli(CHANGE_ACTION_PROB)) {
-        auto stopTicks = AkRandom::randint(MIN_STOP_TIME,MAX_STOP_TIME) * TICKS_PER_SEC;
+      if (AkRandom::bernoulli(Cfg::prob::change_action)) {
+        auto stopTicks = AkRandom::randint(Cfg::time::min_stop, Cfg::time::max_stop) * Cfg::core::ticks_per_sec;
         seq->add(std::make_shared<WaitAction>(stopTicks));
       }
-      else if (AkRandom::bernoulli(CHANGE_TALK_PROB)) {
+      else if (AkRandom::bernoulli(Cfg::prob::change_talk)) {
         seq->add(std::make_shared<ChangeToAction>(Character::Act::Talk));
       }
       break;

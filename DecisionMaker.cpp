@@ -148,23 +148,23 @@ std::map<std::string, DecisionResult> DecisionMaker::localUtilityBatch(const std
       }
         double scoreTalk = 0.0;
       if (agent.currentAct == Character::Act::Talk) {
-        scoreTalk = BASE_TALK;
+        scoreTalk = Cfg::score::base_talk;
       }
 
       double scoreUseComputer = CalcScoreUseComputer(
            agent.boredom, agent.hasComputer, agent.currentAct == Character::Act::UseComputer,
-           BORED_ENTER, BORED_EXIT);
+          Cfg::threshold::bored_enter, Cfg::threshold::bored_exit);
 
       double scoreEat = CalcScoreEat(
           agent.hunger, agent.hasFood, true /*eatAvailable*/,
-          agent.currentAct == Character::Act::Eat, HUNGER_ENTER);
+          agent.currentAct == Character::Act::Eat, Cfg::threshold::hunger_enter);
 
       double scoreSleep = CalcScoreSleep(
           agent.fatigue, agent.hasBed, agent.currentAct == Character::Act::Sleep,
-          TIRED_ENTER, RESTED_EXIT);
+          Cfg::threshold::tired_enter, Cfg::threshold::rested_exit);
 
       Character::Act chosen = Character::Act::Wander;
-      double best = BASE_WANDER;
+      double best = Cfg::score::base_wander;
 
       if (scoreEat > best) { best = scoreEat; chosen = Character::Act::Eat; }
       if (scoreSleep > best) { best = scoreSleep; chosen = Character::Act::Sleep; }

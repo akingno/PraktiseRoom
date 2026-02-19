@@ -30,6 +30,7 @@ int main() {
   // 初始化
   uint64_t seed = static_cast<uint64_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
   AkRandom::init(seed);
+  Cfg::Load("config.json");
   //初始化结束
 
   bool running = true;
@@ -44,7 +45,7 @@ int main() {
   items.ensureComputerPlaced();
 
   AStarPathfinder path_finder(
-    {VIEW_W, VIEW_H},
+    {Cfg::room::view_w, Cfg::room::view_h},
     [&](int x, int y) { return room.isPassable(x, y); }
   );
 
@@ -64,12 +65,12 @@ int main() {
   DecisionMaker decisionMaker;
 
   //SDL3渲染器
-  std::unique_ptr<IRender> render = std::make_unique<SDL3Render>(VIEW_W, VIEW_H, TILE_PX, "Little Room");
+  std::unique_ptr<IRender> render = std::make_unique<SDL3Render>(Cfg::room::view_w, Cfg::room::view_h, Cfg::core::tile_px, "Little Room");
 
   //计时器
   using clock = std::chrono::steady_clock;
   auto next_tick = clock::now();
-  const auto dt = std::chrono::milliseconds(TICK_MILLI_INT);
+  const auto dt = std::chrono::milliseconds(Cfg::core::tick_milli_int);
   uint64_t tick_index = 0;
 
   while(running) {
@@ -82,7 +83,7 @@ int main() {
     //更新+移动
     for (auto& agent : agents) {
       // Pathfinder 已经在 Agent 内部了，不需要在这里传
-      agent->update(TICK_MILLI/1000.0, tick_index, room, items, raw_agents_ptrs);
+      agent->update(Cfg::core::tick_milli /1000.0, tick_index, room, items, raw_agents_ptrs);
     }
 
     if (!decisionMaker.isThinking()) {
@@ -110,6 +111,7 @@ int main() {
       const auto& c1 = agents[0]->getCharacter();
       std::cout << "[Tick " << tick_index << "] " << agents[0]->getName()
       << " Act: " << Character::Act2Str(c1.act())
+      << " Hunger: " << std::to_string(c1.get_hunger_inner())
       << " Board: " << std::to_string(c1.get_boredom())
       << " Mem: " << c1.get_short_memory().to_string()<< std::endl <<std::endl;
     }
