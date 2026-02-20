@@ -109,11 +109,11 @@ int main() {
 #ifndef NDEBUG
     if (tick_index % 20 == 0) {
       const auto& c1 = agents[0]->getCharacter();
-      std::cout << "[Tick " << tick_index << "] " << agents[0]->getName()
-      << " Act: " << Character::Act2Str(c1.act())
-      << " Hunger: " << std::to_string(c1.get_hunger_inner())
-      << " Board: " << std::to_string(c1.get_boredom())
-      << " Mem: " << c1.get_short_memory().to_string()<< std::endl <<std::endl;
+      std::cout << "[Tick " << tick_index << "] " << agents[0]->getName()<<
+      " Inner Hunger: " + std::to_string(character1.getStat("hunger"))<<"\n"<<
+      " Inner Fatigue: " + std::to_string(character1.getStat("fatigue"))<<"\n"<<
+      " Bored: " + std::to_string(character1.getStat("boredom")) <<"\n"<<
+      " Mem: " << c1.get_short_memory().to_string()<< std::endl <<std::endl;
     }
 
 #endif

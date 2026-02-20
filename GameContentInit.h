@@ -26,7 +26,6 @@ inline void register_default_items() {
   auto food = ItemBuilder("food")
   .useable(true)
   .onUse([](UseCtx& ux, int, int){
-    if (!ux.ch.eatAvailable()) return false;
     if (!ux.items.hasFood())   return false;
     ux.ch.eat(Cfg::item::food_calories);
     ux.items.consumeFood();

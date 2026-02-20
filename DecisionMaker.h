@@ -32,16 +32,24 @@ struct DecisionResult {
 // 线程安全的快照数据结构
 struct AgentSnapshot {
   std::string name;
-  double hunger;
-  double fatigue;
-  double boredom;
+  std::unordered_map<std::string, double> stats;
+
   bool hasFood;
   bool hasBed;
   bool hasComputer;
+
   bool isBeingCalled;
-  bool eatAvailable;
+
   std::vector<std::string> memories;
   Character::Act currentAct;
+
+  [[nodiscard]] double getStat(const std::string& key) const {
+    auto it = stats.find(key);
+    if (it != stats.end()) {
+      return it->second;
+    }
+    return 0.0;
+  }
 };
 
 class DecisionMaker {

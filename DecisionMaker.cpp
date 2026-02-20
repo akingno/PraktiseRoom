@@ -4,8 +4,8 @@
 
 #include "DecisionMaker.h"
 #include "Agent.h"
-#include "actions/ActionFactory.h"
 #include "tools/Utils.h"
+#include "Character.h"
 
 DecisionMaker::~DecisionMaker() {
     if (_fut.valid()) _fut.wait();
@@ -19,27 +19,23 @@ void DecisionMaker::requestBatchDecision(const std::vector<Agent*>& agents, uint
     snapshots.reserve(agents.size());
 
     for (const auto* agent : agents) {
-        const Character& ch = agent->getCharacter();
+      const Character& ch = agent->getCharacter();
 
-        AgentSnapshot snap;
-        snap.name = agent->getName();
-        snap.hunger = ch.get_hunger_inner();
-        snap.fatigue = ch.get_fatigue_score();
-        snap.boredom = ch.get_boredom();
-        snap.isBeingCalled = agent->isBeingCalled();
-        snap.currentAct = ch.act();
-        snap.eatAvailable = ch.eatAvailable();
+      AgentSnapshot snap;
+      snap.name = agent->getName();
+      snap.stats = ch.getAllStats();
+      snap.isBeingCalled = agent->isBeingCalled();
+      snap.currentAct = ch.act();
 
-        for(const auto& mem : ch.get_short_memory().entries()) {
-            snap.memories.push_back(mem.content);
-        }
+      for(const auto& mem : ch.get_short_memory().entries()) {
+        snap.memories.push_back(mem.content);
+      }
 
-        //环境感知，目前都是true
-        snap.hasFood = true;
-        snap.hasBed = true;
-        snap.hasComputer = true;
-
-        snapshots.push_back(snap);
+      //环境感知，目前都是true
+      snap.hasFood = true;
+      snap.hasBed = true;
+      snap.hasComputer = true;
+      snapshots.push_back(snap);
     }
 
     // 2. 启动后台线程
@@ -55,9 +51,7 @@ void DecisionMaker::requestBatchDecision(const std::vector<Agent*>& agents, uint
             for(const auto& snap : snapshots) {
                 json j;
                 j["name"] = snap.name;
-                j["hunger"] = snap.hunger;
-                j["fatigue"] = snap.fatigue;
-                j["boredom"] = snap.boredom;
+                j["stats"] = snap.stats;
                 j["nowTick"] = nowTick;
                 j["hasFood"] = snap.hasFood;
                 j["hasBed"] = snap.hasBed;
@@ -144,25 +138,26 @@ std::map<std::string, DecisionResult> DecisionMaker::localUtilityBatch(const std
 
     for (const auto& agent : snapshots) {
       if (agent.isBeingCalled) {
-          results[agent.name] = {Character::Act::WaitAlways, ""};
-          continue;
+        results[agent.name] = {Character::Act::WaitAlways, ""};
+        continue;
       }
-        double scoreTalk = 0.0;
+      double scoreTalk = 0.0;
       if (agent.currentAct == Character::Act::Talk) {
         scoreTalk = Cfg::score::base_talk;
       }
 
-      double scoreUseComputer = CalcScoreUseComputer(
-           agent.boredom, agent.hasComputer, agent.currentAct == Character::Act::UseComputer,
-          Cfg::threshold::bored_enter, Cfg::threshold::bored_exit);
+      // 此处应该遍历调用所有stat，得到一些分数，和act关联起来。
+      double scoreUseComputer = CalcScoreGeneric(
+        agent.getStat("boredom"), Cfg::threshold::bored_enter, Cfg::threshold::bored_exit,
+        agent.hasComputer, agent.currentAct == Character::Act::UseComputer, 1.0);
 
-      double scoreEat = CalcScoreEat(
-          agent.hunger, agent.hasFood, !agent.eatAvailable,
-          agent.currentAct == Character::Act::Eat, Cfg::threshold::hunger_enter);
+      double scoreEat = CalcScoreGeneric(
+          agent.getStat("hunger"), Cfg::threshold::hunger_enter, 0.0,
+          agent.hasFood, agent.currentAct == Character::Act::Eat, 1.5);
 
-      double scoreSleep = CalcScoreSleep(
-          agent.fatigue, agent.hasBed, agent.currentAct == Character::Act::Sleep,
-          Cfg::threshold::tired_enter, Cfg::threshold::rested_exit);
+      double scoreSleep = CalcScoreGeneric(
+        agent.getStat("fatigue"), Cfg::threshold::tired_enter, Cfg::threshold::rested_exit,
+        agent.hasBed, agent.currentAct == Character::Act::Sleep, 1.2);
 
       Character::Act chosen = Character::Act::Wander;
       double best = Cfg::score::base_wander;

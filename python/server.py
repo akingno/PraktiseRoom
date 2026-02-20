@@ -10,9 +10,7 @@ app = FastAPI()
 # 1. 定义与 C++ 端对应的 JSON 数据模型
 class AgentState(BaseModel):
     name: str
-    hunger: float
-    fatigue: float
-    boredom: float
+    stats: Dict[str, float]
     nowTick: int
     hasFood: bool
     hasBed: bool
@@ -56,13 +54,13 @@ async def decide_batch(agents: List[AgentState]):
         thought_process = "Just looking around."
         
         # 简单的基于规则的模拟 (未来替换为 LLM 的输出解析)
-        if agent.hunger > 80 and agent.hasFood:
+        if agent.stats.get("hunger", 0.0) > 80 and agent.hasFood:
             possible_actions = ["Eat"]
             thought_process = "I'm starving, let's grab some food."
-        elif agent.fatigue > 80 and agent.hasBed:
+        elif agent.stats.get("fatigue", 0.0) > 80 and agent.hasBed:
             possible_actions = ["Sleep"]
             thought_process = "Too tired... going to sleep."
-        elif agent.boredom > 60 and agent.hasComputer:
+        elif agent.stats.get("boredom", 0.0) > 60 and agent.hasComputer:
             possible_actions = ["UsePC"]
             thought_process = "Bored. Checking the internet."
         
