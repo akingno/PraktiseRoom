@@ -146,17 +146,28 @@ std::map<std::string, DecisionResult> DecisionMaker::localUtilityBatch(const std
         scoreTalk = Cfg::score::base_talk;
       }
 
-      // 此处应该遍历调用所有stat，得到一些分数，和act关联起来。
+      auto getRule = [](const std::string& needName) -> Cfg::NeedRule {
+        for (const auto& rule : Cfg::need_rules) {
+          if (rule.name == needName) return rule;
+        }
+        // 防json出问题保底
+        return {needName, 1.0, 50.0, 0.0, 1.0};
+      };
+      auto boredRule = getRule("boredom");
+      auto hungerRule = getRule("hunger");
+      auto fatigueRule = getRule("fatigue");
+
+      // TODO: 此处应该遍历调用所有stat，得到一些分数，和act关联起来，此外，act也应该不是枚举了，枚举可能会很难json化。
       double scoreUseComputer = CalcScoreGeneric(
-        agent.getStat("boredom"), Cfg::threshold::bored_enter, Cfg::threshold::bored_exit,
+        agent.getStat("boredom"), boredRule.enter_threshold, boredRule.exit_threshold,
         agent.hasComputer, agent.currentAct == Character::Act::UseComputer, 1.0);
 
       double scoreEat = CalcScoreGeneric(
-          agent.getStat("hunger"), Cfg::threshold::hunger_enter, 0.0,
+          agent.getStat("hunger"), hungerRule.enter_threshold, hungerRule.exit_threshold,
           agent.hasFood, agent.currentAct == Character::Act::Eat, 1.5);
 
       double scoreSleep = CalcScoreGeneric(
-        agent.getStat("fatigue"), Cfg::threshold::tired_enter, Cfg::threshold::rested_exit,
+        agent.getStat("fatigue"), fatigueRule.enter_threshold, fatigueRule.exit_threshold,
         agent.hasBed, agent.currentAct == Character::Act::Sleep, 1.2);
 
       Character::Act chosen = Character::Act::Wander;

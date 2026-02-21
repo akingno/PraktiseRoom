@@ -50,13 +50,10 @@ public:
  //构造函数
   Character() {
     setLoc(1,1);
-    _stats["hunger"] = 0.0;
-    _stats["fatigue"] = 0.0;
-    _stats["boredom"] = 0.0;
-
-    _base_rates["hunger"] = Cfg::speed::hunger;
-    _base_rates["fatigue"] = Cfg::speed::fatigue;
-    _base_rates["boredom"] = Cfg::speed::boredom;
+    for (const auto& rule : Cfg::need_rules) {
+      _stats[rule.name] = 0.0;
+      _base_rates[rule.name] = rule.growth_rate;
+    }
   }
 
   void setLoc(int x, int y) {
@@ -79,7 +76,6 @@ public:
       modifyStat(stat_name, rate * dt_sec);
     }
   }
-
 
   /*
    *关于饥饿和进食的计算
@@ -159,11 +155,7 @@ private:
   Act act_ = Act::Wander;
 
   // 疲劳/睡眠相关成员变量
-  double _sleep_recover_rate = Cfg::speed::sleep_recover; // 睡眠时每秒 -8.0
   bool   _sleeping = false;         // 是否正在睡
-
-  // 娱乐/玩电脑
-  double _computer_recover_rate = Cfg::speed::computer_recover;
 
   ShortMemory short_memory_;
   std::unordered_map<std::string, double> _stats;

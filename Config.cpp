@@ -42,19 +42,8 @@ void Cfg::Load(const std::string& filename) {
         }
 
         if (j.contains("speed")) {
-            speed::hunger = j["speed"].value("hunger", speed::hunger);
-            speed::fatigue = j["speed"].value("fatigue", speed::fatigue);
-            speed::boredom = j["speed"].value("boredom", speed::boredom);
             speed::sleep_recover = j["speed"].value("sleep_recover", speed::sleep_recover);
             speed::computer_recover = j["speed"].value("computer_recover", speed::computer_recover);
-        }
-
-        if (j.contains("threshold")) {
-            threshold::hunger_enter = j["threshold"].value("hunger_enter", threshold::hunger_enter);
-            threshold::tired_enter = j["threshold"].value("tired_enter", threshold::tired_enter);
-            threshold::rested_exit = j["threshold"].value("rested_exit", threshold::rested_exit);
-            threshold::bored_enter = j["threshold"].value("bored_enter", threshold::bored_enter);
-            threshold::bored_exit = j["threshold"].value("bored_exit", threshold::bored_exit);
         }
 
         if (j.contains("score")) {
@@ -70,6 +59,18 @@ void Cfg::Load(const std::string& filename) {
             time::min_use_computer = j["time"].value("min_use_computer", time::min_use_computer);
             time::max_use_computer = j["time"].value("max_use_computer", time::max_use_computer);
         }
+      if (j.contains("needs")) {
+        need_rules.clear();
+        for (const auto& item : j["needs"]) {
+          NeedRule rule;
+          rule.name = item.value("name", "unknown");
+          rule.growth_rate = item.value("growth_rate", 1.0);
+          rule.enter_threshold = item.value("enter_threshold", 50.0);
+          rule.exit_threshold = item.value("exit_threshold", 0.0);
+          rule.weight = item.value("weight", 1.0);
+          need_rules.push_back(rule);
+        }
+      }
 
         if (j.contains("prob")) {
             prob::change_action = j["prob"].value("change_action", prob::change_action);
@@ -88,57 +89,57 @@ void Cfg::Load(const std::string& filename) {
 }
 
 void Cfg::Save(const std::string& filename) {
-    json j;
+  json j;
 
-    j["core"] = {
-        {"tile_px", core::tile_px},
-        {"tick_milli", core::tick_milli},
-        {"tick_milli_int", core::tick_milli_int},
-        {"ticks_per_sec", core::ticks_per_sec}
-    };
+  j["core"] = {
+      {"tile_px", core::tile_px},
+      {"tick_milli", core::tick_milli},
+      {"tick_milli_int", core::tick_milli_int},
+      {"ticks_per_sec", core::ticks_per_sec}
+  };
 
-    j["room"] = {
-        {"view_w", room::view_w}, {"view_h", room::view_h},
-        {"door_x", room::door_x}, {"door_y", room::door_y},
-        {"food_x", room::food_x}, {"food_y", room::food_y},
-        {"bed_x", room::bed_x}, {"bed_y", room::bed_y},
-        {"computer_x", room::computer_x}, {"computer_y", room::computer_y}
-    };
+  j["room"] = {
+      {"view_w", room::view_w}, {"view_h", room::view_h},
+      {"door_x", room::door_x}, {"door_y", room::door_y},
+      {"food_x", room::food_x}, {"food_y", room::food_y},
+      {"bed_x", room::bed_x}, {"bed_y", room::bed_y},
+      {"computer_x", room::computer_x}, {"computer_y", room::computer_y}
+  };
 
-    j["speed"] = {
-        {"hunger", speed::hunger}, {"fatigue", speed::fatigue}, {"boredom", speed::boredom},
-        {"sleep_recover", speed::sleep_recover}, {"computer_recover", speed::computer_recover}
-    };
+  j["speed"] = {
+      {"sleep_recover", speed::sleep_recover}, {"computer_recover", speed::computer_recover}
+  };
 
-    j["threshold"] = {
-        {"hunger_enter", threshold::hunger_enter}, {"tired_enter", threshold::tired_enter},
-        {"rested_exit", threshold::rested_exit}, {"bored_enter", threshold::bored_enter},
-        {"bored_exit", threshold::bored_exit}
-    };
+  j["needs"] = json::array({
+        {{"name", "hunger"}, {"growth_rate", 2.0}, {"enter_threshold", 60.0}, {"exit_threshold", 0.0}, {"weight", 1.5}},
+        {{"name", "fatigue"}, {"growth_rate", 0.5}, {"enter_threshold", 60.0}, {"exit_threshold", 25.0}, {"weight", 1.2}},
+        {{"name", "boredom"}, {"growth_rate", 0.8}, {"enter_threshold", 40.0}, {"exit_threshold", 5.0}, {"weight", 1.0}}
+    });
 
-    j["score"] = {
-        {"base_wander", score::base_wander}, {"base_stop", score::base_stop},
-        {"base_use_computer", score::base_use_computer}, {"base_talk", score::base_talk}
-    };
 
-    j["time"] = {
-        {"min_stop", time::min_stop}, {"max_stop", time::max_stop},
-        {"min_use_computer", time::min_use_computer}, {"max_use_computer", time::max_use_computer}
-    };
+  j["score"] = {
+      {"base_wander", score::base_wander}, {"base_stop", score::base_stop},
+      {"base_use_computer", score::base_use_computer}, {"base_talk", score::base_talk}
+  };
 
-    j["prob"] = {
-        {"change_action", prob::change_action}, {"change_talk", prob::change_talk}
-    };
+  j["time"] = {
+      {"min_stop", time::min_stop}, {"max_stop", time::max_stop},
+      {"min_use_computer", time::min_use_computer}, {"max_use_computer", time::max_use_computer}
+  };
 
-    j["item"] = {
-        {"food_calories", item::food_calories}, {"play_computer_entertain", item::play_computer_entertain}
-    };
+  j["prob"] = {
+      {"change_action", prob::change_action}, {"change_talk", prob::change_talk}
+  };
 
-    std::ofstream file(filename);
-    if (file.is_open()) {
-        file << j.dump(4);
-        std::cout << "[Config] Saved configuration to " << filename << std::endl;
-    } else {
-        std::cerr << "[Config] Error saving configuration to " << filename << std::endl;
-    }
+  j["item"] = {
+      {"food_calories", item::food_calories}, {"play_computer_entertain", item::play_computer_entertain}
+  };
+
+  std::ofstream file(filename);
+  if (file.is_open()) {
+      file << j.dump(4);
+      std::cout << "[Config] Saved configuration to " << filename << std::endl;
+  } else {
+      std::cerr << "[Config] Error saving configuration to " << filename << std::endl;
+  }
 }

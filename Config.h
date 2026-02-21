@@ -8,11 +8,22 @@
 #define CONFIG_H
 
 #include <string>
+#include <vector>
 
 // 辅助结构体保持不变
 struct Pos { int x, y; };
 
 namespace Cfg {
+struct NeedRule {
+  std::string name; // 需求名字
+  double growth_rate; // 增长速度
+  double enter_threshold; // 开始想解决的阈值
+  double exit_threshold; // 退出的阈值
+  double weight; // 权重（生存需求高，娱乐低）
+};
+
+inline std::vector<NeedRule> need_rules;
+
 void Load(const std::string& filename = "config.json");
 void Save(const std::string& filename = "config.json");
 
@@ -37,19 +48,8 @@ inline int computer_y = 1;
 }
 
 namespace speed {
-inline double hunger = 2.0;
-inline double fatigue = 0.5;
-inline double boredom = 0.8;
 inline double sleep_recover = 6.0;
 inline double computer_recover = 10.0;
-}
-
-namespace threshold {
-inline double hunger_enter = 60.0;
-inline double tired_enter = 60.0;
-inline double rested_exit = 25.0;
-inline double bored_enter = 40.0;
-inline double bored_exit = 5.0;
 }
 
 namespace score {
