@@ -37,7 +37,7 @@ struct DecisionResult {
 struct ItemSnapshot {
   std::string id;
   std::pair<int, int> pos;
-  const SmartItem* smartItemPtr;
+  const SmartItem *smartItemPtr;
 };
 
 // 线程安全的快照数据结构
@@ -49,7 +49,7 @@ struct AgentSnapshot {
   Character::Act currentAct;
   std::string targetItemId;
 
-  [[nodiscard]] double getStat(const std::string& key) const {
+  [[nodiscard]] double getStat(const std::string &key) const {
     auto it = stats.find(key);
     if (it != stats.end()) {
       return it->second;
@@ -59,7 +59,7 @@ struct AgentSnapshot {
 };
 
 class DecisionMaker {
-public:
+ public:
   DecisionMaker() = default;
   ~DecisionMaker();
 
@@ -68,26 +68,24 @@ public:
    * @param agents 所有需要参与决策的 Agent 指针
    * @param nowTick 当前时间 tick
    */
-  void requestBatchDecision(const std::vector<Agent*>& agents, uint64_t nowTick, const ItemLayer& items);
+  void requestBatchDecision(const std::vector<Agent *> &agents, uint64_t nowTick, const ItemLayer &items);
 
   /**
    * @brief 轮询结果 (主线程调用)
    * @param agents 将根据名字匹配结果，并应用到 Agent 身上
    */
-  void poll(std::vector<Agent*>& agents);
+  void poll(std::vector<Agent *> &agents);
 
   bool isThinking() const;
 
-private:
+ private:
   // 返回值是一个 Map: Key=AgentName, Value=DecisionResult
   std::future<std::map<std::string, DecisionResult>> _fut;
 
   // 本地逻辑 (Fallback)
   std::map<std::string, DecisionResult> localUtilityBatch(
-    const std::vector<AgentSnapshot>& snapshots,
-    const std::vector<ItemSnapshot>& availableItems);
+      const std::vector<AgentSnapshot> &snapshots,
+      const std::vector<ItemSnapshot> &availableItems);
 };
 
-
-
-#endif //DECISIONMAKER_H
+#endif//DECISIONMAKER_H

@@ -33,8 +33,7 @@ std::shared_ptr<Action> ActionFactory::createFromEnum(Character::Act act) {
       if (AkRandom::bernoulli(Cfg::prob::change_action)) {
         auto stopTicks = AkRandom::randint(Cfg::time::min_stop, Cfg::time::max_stop) * Cfg::core::ticks_per_sec;
         seq->add(std::make_shared<WaitAction>(stopTicks));
-      }
-      else if (AkRandom::bernoulli(Cfg::prob::change_talk)) {
+      } else if (AkRandom::bernoulli(Cfg::prob::change_talk)) {
         seq->add(std::make_shared<ChangeToAction>(Character::Act::Talk));
       }
       break;
@@ -49,17 +48,15 @@ std::shared_ptr<Action> ActionFactory::createFromEnum(Character::Act act) {
   }
   return seq;
 }
-std::shared_ptr<Action> ActionFactory::createFromSmartItem(const SmartItem* item) {
+std::shared_ptr<Action> ActionFactory::createFromSmartItem(const SmartItem *item) {
   auto seq = std::make_shared<SequenceAction>();
 
-  for (const auto& desc : item->getSequence()) {
+  for (const auto &desc : item->getSequence()) {
     if (desc.name == "Interact") {
       seq->add(std::make_shared<InteractAction>());
-    }
-    else if (desc.name == "Wait") {
+    } else if (desc.name == "Wait") {
       seq->add(std::make_shared<WaitAction>(desc.intParam));
-    }
-    else if (desc.name == "MoveToTarget") {
+    } else if (desc.name == "MoveToTarget") {
       seq->add(std::make_shared<MoveToAction>(TargetKind::Coordinate));
     }
   }

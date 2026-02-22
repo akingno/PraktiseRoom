@@ -75,6 +75,6 @@ target_link_libraries(room_temp PRIVATE
         ws2_32
 )
 target_compile_definitions(room_temp PRIVATE _WIN32_WINNT=0x0A00)
-if(MINGW)
+if (MINGW)
     target_link_options(room_temp PRIVATE -static -static-libstdc++ -static-libgcc)
-endif()
+endif ()

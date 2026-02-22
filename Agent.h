@@ -19,19 +19,18 @@ class ItemLayer;
 class IPathfinder;
 
 class Agent {
-public:
-  Agent(std::string& name, int start_x, int start_y, IPathfinder* pf )
-         : _name(name), _pf(pf){
+ public:
+  Agent(std::string &name, int start_x, int start_y, IPathfinder *pf)
+      : _name(name), _pf(pf) {
     _ch.setLoc(start_x, start_y);
     _executor = std::make_unique<ActionExecutor>();
-
   }
   Agent();
 
-  [[nodiscard]] const Character& getCharacter() const { return _ch; }
-  [[nodiscard]] Character& getCharacter() { return _ch; }
+  [[nodiscard]] const Character &getCharacter() const { return _ch; }
+  [[nodiscard]] Character &getCharacter() { return _ch; }
 
-  [[nodiscard]] const std::string& getName() const { return _name; }
+  [[nodiscard]] const std::string &getName() const { return _name; }
 
   //是否在被呼叫？
   [[nodiscard]] bool isBeingCalled() const {
@@ -55,7 +54,7 @@ public:
   }
 
   // 应用得到的决策
-  void applyDecision(Character::Act act, const std::string& targetItemId = "", std::pair<int, int> targetPos = {-1, -1}) {
+  void applyDecision(Character::Act act, const std::string &targetItemId = "", std::pair<int, int> targetPos = {-1, -1}) {
 
     _bb.target_item_id = targetItemId;
     _bb.target = targetPos;
@@ -64,8 +63,8 @@ public:
     std::shared_ptr<Action> action = nullptr;
 
     if (act == Character::Act::UseItem) {
-      if (Item* baseItem = ItemRegistry::inst().get(targetItemId)) {
-        if (auto* smartItem = dynamic_cast<SmartItem*>(baseItem)) {
+      if (Item *baseItem = ItemRegistry::inst().get(targetItemId)) {
+        if (auto *smartItem = dynamic_cast<SmartItem *>(baseItem)) {
           action = ActionFactory::createFromSmartItem(smartItem);
         }
       }
@@ -85,8 +84,7 @@ public:
     _bb.is_thinking = false;
   }
 
-
-  void update(double dt_sec, uint64_t tick_index, Room& room, ItemLayer& items, std::vector<Agent *>& others) {
+  void update(double dt_sec, uint64_t tick_index, Room &room, ItemLayer &items, std::vector<Agent *> &others) {
     _other_agents = others;
     // 需求更新
     _ch.tickNeeds(dt_sec);
@@ -97,7 +95,7 @@ public:
     _executor->tick(ctx, _bb);
   }
 
-  void receiveCall(Agent* agent) {
+  void receiveCall(Agent *agent) {
     _bb.caller_agent = agent;
     _bb.is_being_called = true;
   }
@@ -112,26 +110,21 @@ public:
     _ch.setAct(Character::Act::Wander);
   }
 
-  [[nodiscard]] std::vector<Agent *> get_other_agents(){
+  [[nodiscard]] std::vector<Agent *> get_other_agents() {
     return _other_agents;
   }
 
   std::string getTargetItemId() const {
     return _bb.target_item_id;
   }
-private:
 
-
-  std::string   _name;
-  Character     _ch;
-  Blackboard    _bb;
-  IPathfinder*   _pf;
+ private:
+  std::string _name;
+  Character _ch;
+  Blackboard _bb;
+  IPathfinder *_pf;
   std::unique_ptr<ActionExecutor> _executor;
   std::vector<Agent *> _other_agents;
-
 };
 
-
-
-
-#endif //AGENT_H
+#endif//AGENT_H

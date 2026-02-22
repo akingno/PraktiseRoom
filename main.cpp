@@ -17,7 +17,6 @@
 
 #include <iostream>
 
-
 int main() {
 
 #ifdef _WIN32
@@ -25,7 +24,6 @@ int main() {
   SetConsoleCP(CP_UTF8);
 #endif
   std::ios::sync_with_stdio(false);
-
 
   // 初始化
   uint64_t seed = static_cast<uint64_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
@@ -45,19 +43,18 @@ int main() {
   items.ensureComputerPlaced();
 
   AStarPathfinder path_finder(
-    {Cfg::room::view_w, Cfg::room::view_h},
-    [&](int x, int y) { return room.isPassable(x, y); }
-  );
+      {Cfg::room::view_w, Cfg::room::view_h},
+      [&](int x, int y) { return room.isPassable(x, y); });
 
   std::vector<std::unique_ptr<Agent>> agents;
   agents.push_back(std::make_unique<Agent>(name_char1, 5, 5, &path_finder));
   agents.push_back(std::make_unique<Agent>(name_char2, 1, 1, &path_finder));
 
-  const Character& character1 = agents[0]->getCharacter();
-  const Character& character2 = agents[1]->getCharacter();
+  const Character &character1 = agents[0]->getCharacter();
+  const Character &character2 = agents[1]->getCharacter();
 
-  std::vector<Agent*> raw_agents_ptrs;
-  for(auto& a : agents) {
+  std::vector<Agent *> raw_agents_ptrs;
+  for (auto &a : agents) {
     raw_agents_ptrs.push_back(a.get());
   }
 
@@ -73,7 +70,7 @@ int main() {
   const auto dt = std::chrono::milliseconds(Cfg::core::tick_milli_int);
   uint64_t tick_index = 0;
 
-  while(running) {
+  while (running) {
 
     if (render->poll_quit()) break;
 
@@ -81,15 +78,15 @@ int main() {
     items.ensureFoodSpawned();
 
     //更新+移动
-    for (auto& agent : agents) {
+    for (auto &agent : agents) {
       // Pathfinder 已经在 Agent 内部了，不需要在这里传
-      agent->update(Cfg::core::tick_milli /1000.0, tick_index, room, items, raw_agents_ptrs);
+      agent->update(Cfg::core::tick_milli / 1000.0, tick_index, room, items, raw_agents_ptrs);
     }
 
     if (!decisionMaker.isThinking()) {
       bool anyNeedsDecision = false;
       // 检查是否有任何一个agent处于空闲缺策状态
-      for (auto* agent : raw_agents_ptrs) {
+      for (auto *agent : raw_agents_ptrs) {
         if (agent->needsNewDecision()) {
           anyNeedsDecision = true;
           // 标记为思考中防止下一帧重复触发
@@ -108,12 +105,12 @@ int main() {
 
 #ifndef NDEBUG
     if (tick_index % 20 == 0) {
-      const auto& c1 = agents[0]->getCharacter();
-      std::cout << "[Tick " << tick_index << "] " << agents[0]->getName()<<
-      " Inner Hunger: " + std::to_string(character1.getStat("hunger"))<<"\n"<<
-      " Inner Fatigue: " + std::to_string(character1.getStat("fatigue"))<<"\n"<<
-      " Bored: " + std::to_string(character1.getStat("boredom")) <<"\n"<<
-      " Mem: " << c1.get_short_memory().to_string()<< std::endl <<std::endl;
+      const auto &c1 = agents[0]->getCharacter();
+      std::cout << "[Tick " << tick_index << "] " << agents[0]->getName() << " Inner Hunger: " + std::to_string(character1.getStat("hunger")) << "\n"
+                << " Inner Fatigue: " + std::to_string(character1.getStat("fatigue")) << "\n"
+                << " Bored: " + std::to_string(character1.getStat("boredom")) << "\n"
+                << " Mem: " << c1.get_short_memory().to_string() << std::endl
+                << std::endl;
     }
 
 #endif
@@ -122,9 +119,6 @@ int main() {
     std::this_thread::sleep_until(next_tick);
     ++tick_index;
 
-
-  // End of Loop
+    // End of Loop
   }
-
 }
-

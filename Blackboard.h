@@ -6,42 +6,48 @@
 #define BLACKBOARD_H
 
 #include "Character.h"
-#include <deque>
-#include <mutex>
 #include <atomic>
+#include <deque>
 #include <memory>
+#include <mutex>
 #include <utility>
 #include <vector>
 
 class Agent;
 class Action;
-enum class TargetKind { None, Food, Bed, WanderPt, Computer, Character, Coordinate};
+enum class TargetKind { None,
+                        Food,
+                        Bed,
+                        WanderPt,
+                        Computer,
+                        Character,
+                        Coordinate };
 
 struct Blackboard {
   Blackboard() = default;
   Character::Act actNow = Character::Act::Wander;
   // 目标
-  std::pair<int,int> target{-1,-1};
+  std::pair<int, int> target{-1, -1};
   bool target_valid = false;
   std::string target_item_id = "";
   TargetKind target_kind = TargetKind::None;
   // 小人之间交互
-  Agent* target_agent = nullptr;
+  Agent *target_agent = nullptr;
   bool is_being_called = false;
-  Agent* caller_agent = nullptr;
+  Agent *caller_agent = nullptr;
 
   // 路径：从起点到终点（含自己与终点）
-  std::vector<std::pair<int,int>> path;
-  int path_i = 0;            // 下一步要走到的下标（一般从 1 开始）
-  bool path_invalid = true;  // 需要重算
+  std::vector<std::pair<int, int>> path;
+  int path_i = 0;          // 下一步要走到的下标（一般从 1 开始）
+  bool path_invalid = true;// 需要重算
   bool _using_computer = false;
 
   // action 生产消费相关
   std::deque<std::shared_ptr<Action>> actionQueue;
-  std::mutex                          queueMutex;
-  std::shared_ptr<Action>             currentAction = nullptr;  // 正在执行的action
-  std::atomic<bool>                   is_thinking{false};     // Brain 是否在正在决策
-  Character::Act                      lastActEnum = Character::Act::Wander;
+  std::mutex queueMutex;
+  std::shared_ptr<Action> currentAction = nullptr;// 正在执行的action
+  std::atomic<bool> is_thinking{false};           // Brain 是否在正在决策
+  Character::Act lastActEnum = Character::Act::Wander;
 
   // 辅助工具，用于路径操作
   bool is_using_computer() const {
@@ -60,7 +66,6 @@ struct Blackboard {
     path_i = (path.size() > 1) ? 1 : static_cast<int>(path.size());
     path_invalid = false;
   }
-
 };
 
-#endif //BLACKBOARD_H
+#endif//BLACKBOARD_H

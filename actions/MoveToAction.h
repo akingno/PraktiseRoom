@@ -7,21 +7,16 @@
 
 #include "Action.h"
 
-
-
-
 struct ActExecutorCtx;
 
 class MoveToAction : public Action {
-    TargetKind _targetKind;
+  TargetKind _targetKind;
 
-public:
-    explicit MoveToAction(TargetKind kind) : _targetKind(kind) {}
+ public:
+  explicit MoveToAction(TargetKind kind) : _targetKind(kind) {}
 
-  void onEnter(ActExecutorCtx& ctx, Blackboard& bb) override;
-  Status tick(ActExecutorCtx& ctx, Blackboard& bb) override;
-
-
+  void onEnter(ActExecutorCtx &ctx, Blackboard &bb) override;
+  Status tick(ActExecutorCtx &ctx, Blackboard &bb) override;
 };
 
-#endif //MOVETOACTION_H
+#endif//MOVETOACTION_H
