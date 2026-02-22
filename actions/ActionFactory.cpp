@@ -27,25 +27,6 @@ std::shared_ptr<Action> ActionFactory::createFromEnum(Character::Act act) {
       seq->add(std::make_shared<WaitAction>(30));
       seq->add(std::make_shared<ChangeToAction>(Character::Act::Wander));
       break;
-    case Character::Act::Eat:
-      seq->add(std::make_shared<MoveToAction>(TargetKind::Food));
-      seq->add(std::make_shared<InteractAction>());
-      break;
-
-    case Character::Act::Sleep:
-      seq->add(std::make_shared<MoveToAction>(TargetKind::Bed));
-      seq->add(std::make_shared<InteractAction>());
-      break;
-
-    case Character::Act::UseComputer: {
-      seq->add(std::make_shared<MoveToAction>(TargetKind::Computer));
-      seq->add(std::make_shared<InteractAction>());
-      // 随机时间
-      int useTicks = AkRandom::randint(Cfg::time::min_use_computer, Cfg::time::max_use_computer) * Cfg::core::ticks_per_sec;
-      seq->add(std::make_shared<WaitAction>(useTicks));
-      break;
-    }
-
     case Character::Act::Wander:
       // 闲逛 = 走到随机点+发呆一会
       seq->add(std::make_shared<MoveToAction>(TargetKind::WanderPt));
@@ -57,7 +38,6 @@ std::shared_ptr<Action> ActionFactory::createFromEnum(Character::Act act) {
         seq->add(std::make_shared<ChangeToAction>(Character::Act::Talk));
       }
       break;
-
     case Character::Act::Stop:
       // 纯发呆
       seq->add(std::make_shared<WaitAction>(60));
@@ -66,6 +46,22 @@ std::shared_ptr<Action> ActionFactory::createFromEnum(Character::Act act) {
     case Character::Act::WaitAlways:
       seq->add(std::make_shared<WaitForChatAction>());
       break;
+  }
+  return seq;
+}
+std::shared_ptr<Action> ActionFactory::createFromSmartItem(const SmartItem* item) {
+  auto seq = std::make_shared<SequenceAction>();
+
+  for (const auto& desc : item->getSequence()) {
+    if (desc.name == "Interact") {
+      seq->add(std::make_shared<InteractAction>());
+    }
+    else if (desc.name == "Wait") {
+      seq->add(std::make_shared<WaitAction>(desc.intParam));
+    }
+    else if (desc.name == "MoveToTarget") {
+      seq->add(std::make_shared<MoveToAction>(TargetKind::Coordinate));
+    }
   }
   return seq;
 }

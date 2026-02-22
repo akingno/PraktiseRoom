@@ -38,13 +38,11 @@ public:
   }
 
   enum class Act {
-    Eat,
-    Sleep,
     Wander,
     Stop,
-    UseComputer,
     Talk,
-    WaitAlways
+    WaitAlways,
+    UseItem
   };
 
  //构造函数
@@ -66,9 +64,6 @@ public:
 
     if (_sleeping) {
       current_rates["fatigue"] = -Cfg::speed::sleep_recover; // 睡觉时疲劳下降
-    }
-    if (act_ == Act::UseComputer) {
-      current_rates["boredom"] = -Cfg::speed::computer_recover; // 玩电脑时无聊下降
     }
 
     // 3. 统一遍历应用
@@ -117,16 +112,10 @@ public:
 
   static const char* Act2Str(const Act a) {
     switch (a) {
-      case Act::Eat:
-        return "Eat";
       case Act::Wander:
         return "Wander";
-      case Act::Sleep:
-        return "Sleep";
       case Act::Stop:
         return "Stop";
-      case Act::UseComputer:
-        return "UseComputer";
       case Act::Talk:
         return "Talk";
       case Act::WaitAlways:

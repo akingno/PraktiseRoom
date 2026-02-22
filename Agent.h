@@ -8,8 +8,12 @@
 #include "ActionExecutor.h"
 #include "Blackboard.h"
 #include "Character.h"
-#include <string>
+#include "ItemRegistry.h"
+
 #include "actions/ActionFactory.h"
+
+#include <iostream>
+#include <string>
 class Room;
 class ItemLayer;
 class IPathfinder;
@@ -51,17 +55,33 @@ public:
   }
 
   // 应用得到的决策
-  void applyDecision(Character::Act act) {
-    // 将 Enum 转为 Action 对象
-    auto action = ActionFactory::createFromEnum(act);
+  void applyDecision(Character::Act act, const std::string& targetItemId = "", std::pair<int, int> targetPos = {-1, -1}) {
 
+    _bb.target_item_id = targetItemId;
+    _bb.target = targetPos;
+    _bb.target_valid = (targetPos.first != -1);
+
+    std::shared_ptr<Action> action = nullptr;
+
+    if (act == Character::Act::UseItem) {
+      if (Item* baseItem = ItemRegistry::inst().get(targetItemId)) {
+        if (auto* smartItem = dynamic_cast<SmartItem*>(baseItem)) {
+          action = ActionFactory::createFromSmartItem(smartItem);
+        }
+      }
+    }
+    // 其他走老管线
+    else {
+      action = ActionFactory::createFromEnum(act);
+    }
+
+    // 3. 推入队列执行
     if (action) {
       std::lock_guard<std::mutex> lk(_bb.queueMutex);
       _bb.actionQueue.push_back(std::move(action));
-      _bb.actNow = act; // 更新意图
+      _bb.actNow = act;
     }
 
-    // 2. 思考结束，恢复标记
     _bb.is_thinking = false;
   }
 
@@ -94,6 +114,10 @@ public:
 
   [[nodiscard]] std::vector<Agent *> get_other_agents(){
     return _other_agents;
+  }
+
+  std::string getTargetItemId() const {
+    return _bb.target_item_id;
   }
 private:
 

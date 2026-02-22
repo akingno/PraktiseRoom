@@ -15,7 +15,7 @@
 
 class Agent;
 class Action;
-enum class TargetKind { None, Food, Bed, WanderPt, Computer, Character};
+enum class TargetKind { None, Food, Bed, WanderPt, Computer, Character, Coordinate};
 
 struct Blackboard {
   Blackboard() = default;
@@ -23,6 +23,7 @@ struct Blackboard {
   // 目标
   std::pair<int,int> target{-1,-1};
   bool target_valid = false;
+  std::string target_item_id = "";
   TargetKind target_kind = TargetKind::None;
   // 小人之间交互
   Agent* target_agent = nullptr;

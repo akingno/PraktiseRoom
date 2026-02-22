@@ -98,7 +98,7 @@ int main() {
       }
 
       if (anyNeedsDecision) {
-        decisionMaker.requestBatchDecision(raw_agents_ptrs, tick_index);
+        decisionMaker.requestBatchDecision(raw_agents_ptrs, tick_index, items);
       }
     }
     decisionMaker.poll(raw_agents_ptrs);

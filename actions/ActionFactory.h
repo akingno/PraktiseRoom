@@ -10,10 +10,13 @@
 #include <memory>
 #include "../Character.h"
 #include "Action.h"
+#include "../SmartItem.h"
 
 class ActionFactory {
 public:
   static std::shared_ptr<Action> createFromEnum(Character::Act act);
+
+  static std::shared_ptr<Action> createFromSmartItem(const SmartItem* item);
 
   // 预留：static std::shared_ptr<Action> createFromJson(const nlohmann::json& j);
 };

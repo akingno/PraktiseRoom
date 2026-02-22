@@ -5,12 +5,15 @@
 #ifndef DECISIONMAKER_H
 #define DECISIONMAKER_H
 
+#include "Character.h"
+#include "ItemLayer.h"
+#include "SmartItem.h"
 
 #include <future>
-#include <vector>
 #include <map>
 #include <string>
-#include "Character.h"
+#include <vector>
+
 #include <nlohmann/json.hpp>
 
 class Agent;
@@ -27,21 +30,24 @@ class Agent;
 struct DecisionResult {
   Character::Act act;
   std::string thought;
+  std::string targetItemId;
+  std::pair<int, int> targetPos;
+};
+
+struct ItemSnapshot {
+  std::string id;
+  std::pair<int, int> pos;
+  const SmartItem* smartItemPtr;
 };
 
 // 线程安全的快照数据结构
 struct AgentSnapshot {
   std::string name;
   std::unordered_map<std::string, double> stats;
-
-  bool hasFood;
-  bool hasBed;
-  bool hasComputer;
-
   bool isBeingCalled;
-
   std::vector<std::string> memories;
   Character::Act currentAct;
+  std::string targetItemId;
 
   [[nodiscard]] double getStat(const std::string& key) const {
     auto it = stats.find(key);
@@ -62,7 +68,7 @@ public:
    * @param agents 所有需要参与决策的 Agent 指针
    * @param nowTick 当前时间 tick
    */
-  void requestBatchDecision(const std::vector<Agent*>& agents, uint64_t nowTick);
+  void requestBatchDecision(const std::vector<Agent*>& agents, uint64_t nowTick, const ItemLayer& items);
 
   /**
    * @brief 轮询结果 (主线程调用)
@@ -77,7 +83,9 @@ private:
   std::future<std::map<std::string, DecisionResult>> _fut;
 
   // 本地逻辑 (Fallback)
-  std::map<std::string, DecisionResult> localUtilityBatch(const std::vector<AgentSnapshot>& snapshots);
+  std::map<std::string, DecisionResult> localUtilityBatch(
+    const std::vector<AgentSnapshot>& snapshots,
+    const std::vector<ItemSnapshot>& availableItems);
 };
 
 

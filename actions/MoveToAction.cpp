@@ -16,19 +16,10 @@
             targetPos = bb.target;
             found = true;
             break;
-          case TargetKind::Food:
-            if (auto p = ctx.items.foodPos()) {
-              targetPos = {p->x, p->y}; found = true;
-            }
-            break;
-          case TargetKind::Bed:
-            if (auto p = ctx.items.bedPos()) {
-              targetPos = {p->x, p->y}; found = true;
-            }
-            break;
-          case TargetKind::Computer:
-            if (auto p = ctx.items.computerPos()) {
-              targetPos = {p->x, p->y}; found = true;
+          case TargetKind::Coordinate:
+            if (bb.target.first != -1) {
+              targetPos = bb.target;
+              found = true;
             }
             break;
           case TargetKind::WanderPt: {
