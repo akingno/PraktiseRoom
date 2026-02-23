@@ -24,6 +24,14 @@ class ItemRegistry {
     return it == items_.end() ? nullptr : it->second.get();
   }
 
+  const std::unordered_map<ItemId, std::unique_ptr<Item>> &getAllItems() const {
+    return items_;
+  }
+
+  //清空旧数据
+  void clear() {
+    items_.clear();
+  }
  private:
   std::unordered_map<ItemId, std::unique_ptr<Item>> items_;
 };

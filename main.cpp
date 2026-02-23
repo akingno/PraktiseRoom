@@ -28,7 +28,7 @@ int main() {
   // 初始化
   uint64_t seed = static_cast<uint64_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
   AkRandom::init(seed);
-  Cfg::Load("config.json");
+  Cfg::load("config.json");
   //初始化结束
 
   bool running = true;
@@ -37,7 +37,7 @@ int main() {
   std::string name_char1 = "张三";
   std::string name_char2 = "李四";
 
-  register_default_items();
+  loadItems("items.json");
   items.ensureBedPlaced();
   items.ensureFoodSpawned();
   items.ensureComputerPlaced();

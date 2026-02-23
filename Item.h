@@ -15,11 +15,11 @@ class Character;
 using ItemId = std::string;
 
 struct ItemProps {
-  int light = 0;
-  int hardness = 0;
   bool pickable = false;
-  bool blocks = false; // 是否阻挡移动
-  bool useable = false;// 可被使用
+  bool blocks = false;// 是否阻挡移动
+  bool useable = false;
+
+  std::string texture_name = "";
 };
 
 class Item {

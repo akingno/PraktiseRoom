@@ -33,6 +33,7 @@ private:
 
   // 纹理集合
   std::unordered_map<TileType, SDL_Texture*> tileTex_;
+  std::unordered_map<std::string, SDL_Texture*> itemTextures_;
   SDL_Texture* texCharacter_ = nullptr;
 
   // 字体（HUD）
@@ -47,7 +48,7 @@ private:
   // 禁拷贝
   SDL3Render(const SDL3Render&) = delete;
   SDL3Render& operator=(const SDL3Render&) = delete;
-};;
+};
 
 
 

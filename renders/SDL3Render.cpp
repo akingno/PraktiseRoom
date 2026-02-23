@@ -40,17 +40,27 @@ SDL3Render::SDL3Render(int viewW, int viewH, int tilePx, const std::string& titl
   tileTex_[TileType::Grass] = loadTexture(RES("grass.png"));
   tileTex_[TileType::WallH] = loadTexture(RES("wall_h.png"));
   tileTex_[TileType::WallV] = loadTexture(RES("wall_v.png"));
-  tileTex_[TileType::FOOD] = loadTexture(RES("food.png"));
-  tileTex_[TileType::BED] = loadTexture(RES("bed.png"));
-  tileTex_[TileType::COMPUTER] = loadTexture(RES("computer.png"));
   tileTex_[TileType::DOOR] = loadTexture(RES("door.png"));
   texCharacter_ = loadTexture(RES("character.png"));
 
+  // 载入动态定义的纹理
+  for (const auto& [id, itemPtr] : ItemRegistry::inst().getAllItems()) {
+    std::string texName = itemPtr->props().texture_name;
+    if (!texName.empty()) {
+      try {
+        itemTextures_[id] = loadTexture(RES(texName.c_str()));
+      } catch (const std::exception& e) {
+        std::cerr << "SDL3Render: Warning: Missing texture for item: " << id << ", " << e.what() << std::endl;
+      }
+    }
+  }
 
 }
 
 SDL3Render::~SDL3Render() {
   for (auto& kv : tileTex_) if (kv.second) SDL_DestroyTexture(kv.second);
+  for (auto& kv : itemTextures_) if (kv.second) SDL_DestroyTexture(kv.second);
+
   if (texCharacter_)  SDL_DestroyTexture(texCharacter_);
   if (font_)          TTF_CloseFont(font_);
 
@@ -128,13 +138,11 @@ void SDL3Render::render_frame(const ItemLayer& items_,const std::vector<std::uni
   for (auto& [key, iid] : items_.items()) {
     int x = key % Cfg::room::view_w;
     int y = key / Cfg::room::view_w;
-    SDL_Texture* tex = nullptr;
-    if (iid == "food") tex = tileTex_[TileType::FOOD];
-    else if (iid == "bed") tex = tileTex_[TileType::BED];
-    else if (iid == "computer") tex = tileTex_[TileType::COMPUTER];
 
-    // ... 未来更多
-    if (tex) drawTile(x, y, tex);
+    auto it = itemTextures_.find(iid);
+    if (it != itemTextures_.end()) {
+      drawTile(x, y, it->second);
+    }
   }
 
   // 2) 画角色（你这边是 pair<int,int> getLoc()）
