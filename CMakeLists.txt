@@ -11,14 +11,13 @@ add_subdirectory("third_party/SDL" "${CMAKE_BINARY_DIR}/_deps/SDL-build" EXCLUDE
 
 set(SDL3IMAGE_PNG ON CACHE BOOL "" FORCE)
 set(SDL3IMAGE_VENDORED ON CACHE BOOL "" FORCE)
-
 add_subdirectory("third_party/SDL_image" "${CMAKE_BINARY_DIR}/_deps/SDL_image-build" EXCLUDE_FROM_ALL)
 
 set(SDL3TTF_VENDORED ON CACHE BOOL "" FORCE)
-
 add_subdirectory("third_party/SDL_ttf" "${CMAKE_BINARY_DIR}/_deps/SDL_ttf-build" EXCLUDE_FROM_ALL)
 
-add_executable(room_temp main.cpp
+set(GAME_SOURCES
+        main.cpp
         Room.h
         Room.cpp
         Block.h
@@ -62,10 +61,31 @@ add_executable(room_temp main.cpp
         SmartItem.h
 )
 
+set(IMGUI_SOURCES
+        third_party/imgui/imgui.cpp
+        third_party/imgui/imgui_draw.cpp
+        third_party/imgui/imgui_tables.cpp
+        third_party/imgui/imgui_widgets.cpp
+        third_party/imgui/imgui_demo.cpp
+)
+
+set(IMGUI_BACKEND_SOURCES
+        third_party/imgui/backends/imgui_impl_sdl3.cpp
+        third_party/imgui/backends/imgui_impl_sdlrenderer3.cpp
+)
+
+add_executable(room_temp
+        ${GAME_SOURCES}
+        ${IMGUI_SOURCES}
+        ${IMGUI_BACKEND_SOURCES}
+)
+
 set_target_properties(room_temp PROPERTIES WIN32_EXECUTABLE OFF)
 
 target_include_directories(room_temp PRIVATE
         ${CMAKE_SOURCE_DIR}/third_party
+        ${CMAKE_SOURCE_DIR}/third_party/imgui
+        ${CMAKE_SOURCE_DIR}/third_party/imgui/backends
 )
 
 target_link_libraries(room_temp PRIVATE

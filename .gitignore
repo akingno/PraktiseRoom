@@ -1,7 +1,4 @@
 cmake-build-debug/
 cmake-build-release/
 .idea/
-third_party/SDL
-third_party/SDL_image
-third_party/SDL_ttf
 roadmap.doc
