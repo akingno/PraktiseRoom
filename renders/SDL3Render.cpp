@@ -144,6 +144,5 @@ void SDL3Render::render_frame(const ItemLayer& items_,const std::vector<std::uni
     drawTile(cx, cy, texCharacter_);
 }
 
-  present();
 }
 
