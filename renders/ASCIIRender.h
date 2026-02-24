@@ -4,7 +4,7 @@
 
 #ifndef ASCIIRENDER_H
 #define ASCIIRENDER_H
-
+/*
 #include "../Character.h"
 #include "../Room.h"
 #include "IRender.h"
@@ -26,9 +26,7 @@ class ASCIIRender : public IRender {
   char& buf_at(int sx, int sy){
     return frame[ sy * (Cfg::room::view_w + 1) + sx ];
   }
-  /**
-   * Output information at the last line
-   * */
+
   static void print_status_line(int row, const std::string& s) {
     std::cout << "\x1b[" << row << ";1H"   // 光标定位到 row 行 1 列
               << "\x1b[2K"                 // 清除整行
@@ -59,5 +57,5 @@ public:
 };
 
 
-
+*/
 #endif //ASCIIRENDER_H

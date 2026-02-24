@@ -21,7 +21,8 @@ public:
   ~SDL3Render() override;
 
   void render_frame(const ItemLayer& items_,const std::vector<std::unique_ptr<Agent>>& agents, const Room& room) override;
-  bool poll_quit() override;
+  SDL_Window* getWindow() override { return window_; }
+  SDL_Renderer* getRenderer() override { return renderer_; }
 
 private:
   SDL_Window*   window_   = nullptr;

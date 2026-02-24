@@ -10,14 +10,18 @@
 #include "../Room.h"
 #include <memory>
 
+struct SDL_Window;
+struct SDL_Renderer;
+
 class Agent;
 
 class IRender {
   public:
   virtual void render_frame(const ItemLayer&,const std::vector<std::unique_ptr<Agent>>&, const Room&) = 0;
   virtual ~IRender() = default;
-  virtual bool poll_quit() = 0;
 
+  virtual SDL_Window* getWindow() = 0;
+  virtual SDL_Renderer* getRenderer() = 0;
 };
 
 

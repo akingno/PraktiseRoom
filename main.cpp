@@ -7,10 +7,9 @@
 #include "tools/AStarPathfinder.h"
 #include <chrono>
 #include <thread>
-
 #include "Agent.h"
 #include "DecisionMaker.h"
-
+#include <SDL3/SDL.h>
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -62,43 +61,61 @@ int main() {
   DecisionMaker decisionMaker;
 
   //SDL3渲染器
-  std::unique_ptr<IRender> render = std::make_unique<SDL3Render>(Cfg::room::view_w, Cfg::room::view_h, Cfg::core::tile_px, "Little Room");
+  std::unique_ptr<IRender> render = std::make_unique<SDL3Render>(Cfg::room::view_w, Cfg::room::view_h, Cfg::core::tile_px, "Room Simulator");
 
   //计时器
   using clock = std::chrono::steady_clock;
   auto next_tick = clock::now();
   const auto dt = std::chrono::milliseconds(Cfg::core::tick_milli_int);
   uint64_t tick_index = 0;
+  bool is_paused = false;
 
   while (running) {
+    SDL_Event e;
+    // Input Process
+    while (SDL_PollEvent(&e)) {
+      // ImGui_ImplSDL3_ProcessEvent(&e); // TODO:下一步用ImGui事件接管
 
-    if (render->poll_quit()) break;
+      if (e.type == SDL_EVENT_QUIT) {
+        running = false;
+      }
+      if (e.type == SDL_EVENT_KEY_DOWN) {
+        if (e.key.key == SDLK_ESCAPE) running = false;
 
-    // 每循环固定刷新一下食物
-    items.ensureFoodSpawned();
-
-    //更新+移动
-    for (auto &agent : agents) {
-      // Pathfinder 已经在 Agent 内部了，不需要在这里传
-      agent->update(Cfg::core::tick_milli / 1000.0, tick_index, room, items, raw_agents_ptrs);
-    }
-
-    if (!decisionMaker.isThinking()) {
-      bool anyNeedsDecision = false;
-      // 检查是否有任何一个agent处于空闲缺策状态
-      for (auto *agent : raw_agents_ptrs) {
-        if (agent->needsNewDecision()) {
-          anyNeedsDecision = true;
-          // 标记为思考中防止下一帧重复触发
-          agent->markThinking();
+        //空格暂停
+        if (e.key.key == SDLK_SPACE) {
+          is_paused = !is_paused;
+          std::cout << (is_paused ? "System: Game Paused." : "System: Game Resumed.") << std::endl;
         }
       }
-
-      if (anyNeedsDecision) {
-        decisionMaker.requestBatchDecision(raw_agents_ptrs, tick_index, items);
-      }
     }
-    decisionMaker.poll(raw_agents_ptrs);
+    if (!running) break;
+
+    if (!is_paused) {
+      // 每循环固定刷新一下食物
+      items.ensureFoodSpawned();
+
+      //更新+移动
+      for (auto &agent : agents) {
+        agent->update(Cfg::core::tick_milli / 1000.0, tick_index, room, items, raw_agents_ptrs);
+      }
+
+      if (!decisionMaker.isThinking()) {
+        bool anyNeedsDecision = false;
+        for (auto *agent : raw_agents_ptrs) {
+          if (agent->needsNewDecision()) {
+            anyNeedsDecision = true;
+            agent->markThinking();
+          }
+        }
+        if (anyNeedsDecision) {
+          decisionMaker.requestBatchDecision(raw_agents_ptrs, tick_index, items);
+        }
+      }
+      decisionMaker.poll(raw_agents_ptrs);
+
+      ++tick_index; // tick 计数也放进不暂停的逻辑里
+    }
 
     //渲染
     render->render_frame(items, agents, room);

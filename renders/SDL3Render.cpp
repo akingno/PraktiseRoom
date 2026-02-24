@@ -22,9 +22,11 @@ SDL3Render::SDL3Render(int viewW, int viewH, int tilePx, const std::string& titl
   if (!SDL_Init(SDL_INIT_VIDEO)) {  // 返回bool：true成功 / false失败
     throw std::runtime_error(std::string("SDL_Init failed: ") + SDL_GetError());;
   }
+  const int gameW = viewW_ * tilePx_;
+  const int gameH = viewH_ * tilePx_;
 
-  const int winW = viewW_ * tilePx_;
-  const int winH = viewH_ * tilePx_;
+  const int winW = gameW + 350;
+  const int winH = gameH + 250;
 
   window_ = SDL_CreateWindow(title.c_str(), winW, winH, SDL_WINDOW_RESIZABLE);
   if (!window_) {
@@ -102,17 +104,6 @@ void SDL3Render::drawTile(int gx, int gy, SDL_Texture* tex) {
 }
 
 
-bool SDL3Render::poll_quit() {
-  SDL_Event e;
-  while (SDL_PollEvent(&e)) {
-    if (e.type == SDL_EVENT_QUIT) return true;
-
-    if (e.type == SDL_EVENT_KEY_DOWN && e.key.key == SDLK_ESCAPE) {
-      return true;
-    }
-  }
-  return false;
-}
 
 void SDL3Render::render_frame(const ItemLayer& items_,const std::vector<std::unique_ptr<Agent>>& agents, const Room& room) {
   clear();
