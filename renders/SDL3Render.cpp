@@ -105,7 +105,15 @@ void SDL3Render::drawTile(int gx, int gy, SDL_Texture* tex) {
 
 
 
-void SDL3Render::render_frame(const ItemLayer& items_,const std::vector<std::unique_ptr<Agent>>& agents, const Room& room) {
+void SDL3Render::render_frame(
+  const ItemLayer& items_,
+  const std::vector<std::unique_ptr<Agent>>& agents,
+  const Room& room,
+  const std::string& preview_item_id,
+  int preview_x,
+  int preview_y)
+{
+
   clear();
   // 先铺一层地板
   SDL_Texture* tex = tileTex_[TileType::Grass];
@@ -142,7 +150,19 @@ void SDL3Render::render_frame(const ItemLayer& items_,const std::vector<std::uni
     const int cx = c.getLoc().first;
     const int cy = c.getLoc().second;
     drawTile(cx, cy, texCharacter_);
-}
+  }
+
+  if (!preview_item_id.empty() && preview_x >= 0 && preview_y >= 0) {
+    auto it = itemTextures_.find(preview_item_id);
+    if (it != itemTextures_.end()) {
+      SDL_Texture* tex = it->second;
+      //设置纹理透明度,255:不透明,128:半透明
+      SDL_SetTextureAlphaMod(tex, 128);
+      drawTile(preview_x, preview_y, tex);
+      // 画完后把透明度恢复
+      SDL_SetTextureAlphaMod(tex, 255);
+    }
+  }
 
 }
 

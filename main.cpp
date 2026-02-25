@@ -14,6 +14,7 @@
 #include <windows.h>
 #endif
 #include "EditorUI.h"
+#include "InputController.h"
 
 #include <iostream>
 
@@ -38,9 +39,7 @@ int main() {
   std::string name_char2 = "李四";
 
   loadItems("items.json");
-  items.ensureBedPlaced();
-  items.ensureFoodSpawned();
-  items.ensureComputerPlaced();
+  items.initDefaultLayout();
 
   AStarPathfinder path_finder(
       {Cfg::room::view_w, Cfg::room::view_h},
@@ -73,60 +72,14 @@ int main() {
   const auto dt = std::chrono::milliseconds(Cfg::core::tick_milli_int);
   uint64_t tick_index = 0;
   bool is_paused = false;
+  InputController input;
 
   while (running) {
-    SDL_Event e;
-    // Input Process
-    while (SDL_PollEvent(&e)) {
-      if (editorUI.processEvent(&e)) {
-        continue;
-      }
+    input.handleEvents(running, is_paused ,editorUI, room, items, agents);
 
-      if (e.type == SDL_EVENT_QUIT) {
-        running = false;
-      }
-      if (e.type == SDL_EVENT_KEY_DOWN) {
-        if (e.key.key == SDLK_ESCAPE) running = false;
-
-        //空格暂停
-        if (e.key.key == SDLK_SPACE) {
-          is_paused = !is_paused;
-          std::cout << (is_paused ? "System: Game Paused." : "System: Game Resumed.") << std::endl;
-        }
-      }
-      if (e.type == SDL_EVENT_MOUSE_BUTTON_DOWN && e.button.button == SDL_BUTTON_LEFT) {
-        // 计算游戏原始画面的像素边界
-        int gameW = Cfg::room::view_w * Cfg::core::tile_px;
-        int gameH = Cfg::room::view_h * Cfg::core::tile_px;
-
-        float mx = e.button.x;
-        float my = e.button.y;
-
-        // 确保点击是在画面内，而不是在右侧或下方
-        if (mx >= 0 && mx < gameW && my >= 0 && my < gameH) {
-          // 像素坐标 -> 网格坐标
-          int gx = static_cast<int>(mx) / Cfg::core::tile_px;
-          int gy = static_cast<int>(my) / Cfg::core::tile_px;
-
-          Agent* clicked_agent = nullptr;
-
-          // 遍历寻找坐标匹配的小人
-          for (auto& a : agents) {
-            if (a->getCharacter().getLoc() == std::make_pair(gx, gy)) {
-              clicked_agent = a.get();
-              break; // 找到了就跳出循环
-            }
-          }
-
-          editorUI.setSelectedAgent(clicked_agent);
-        }
-      }
-    }
     if (!running) break;
 
     if (!is_paused) {
-      // 每循环固定刷新一下食物
-      items.ensureFoodSpawned();
 
       //更新+移动
       for (auto &agent : agents) {
@@ -150,10 +103,11 @@ int main() {
       ++tick_index; // tick 计数也放进不暂停的逻辑里
     }
 
-    //渲染到后台
-    render->render_frame(items, agents, room);
+    //渲染
+    std::string preview_id = (input.current_mode == EditorMode::Placement) ? input.selected_placement_item : "";
+    render->render_frame(items, agents, room, preview_id, input.mouse_gx, input.mouse_gy);
 
-    editorUI.render(is_paused, render->getRenderer());
+    editorUI.render(is_paused, render->getRenderer(),input.current_mode, input.selected_placement_item);
 
     SDL_RenderPresent(render->getRenderer());
 

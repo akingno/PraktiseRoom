@@ -33,21 +33,7 @@ class ItemLayer {
   std::optional<Pos> bedPos() const { return firstOf("bed"); }
   std::optional<Pos> computerPos() const { return firstOf("computer"); }
 
-  // Demo 生成/消耗
-  void ensureFoodSpawned() {
-    if (!hasFood()) place("food", Cfg::room::food_x, Cfg::room::food_y);
-  }
-  void consumeFood() {// 找到一个food就删
-    if (auto p = foodPos()) removeAt(p->x, p->y);
-  }
-
-  void ensureBedPlaced() {
-    if (!hasBed()) place("bed", Cfg::room::bed_x, Cfg::room::bed_y);
-  }
-
-  void ensureComputerPlaced() {
-    if (!hasComputer()) place("computer", Cfg::room::computer_x, Cfg::room::computer_y);
-  }
+  void initDefaultLayout();
 
   // 迭代用：给渲染器遍历
   const std::unordered_map<int, ItemId> &items() const { return items_; }

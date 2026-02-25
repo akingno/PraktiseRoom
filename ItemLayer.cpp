@@ -26,3 +26,8 @@ std::optional<Pos> ItemLayer::firstOf(const ItemId &id) const {
   }
   return std::nullopt;
 }
+void ItemLayer::initDefaultLayout() {
+  place("food", Cfg::room::food_x, Cfg::room::food_y);
+  place("bed", Cfg::room::bed_x, Cfg::room::bed_y);
+  place("computer", Cfg::room::computer_x, Cfg::room::computer_y);
+}

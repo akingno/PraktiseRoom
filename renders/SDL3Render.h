@@ -20,7 +20,7 @@ public:
   SDL3Render(int viewW, int viewH, int tilePx, const std::string& title = "Little Room");
   ~SDL3Render() override;
 
-  void render_frame(const ItemLayer& items_,const std::vector<std::unique_ptr<Agent>>& agents, const Room& room) override;
+  void render_frame(const ItemLayer& items_,const std::vector<std::unique_ptr<Agent>>& agents, const Room& room,const std::string& preview_item_id,int preview_x,int preview_y) override;
   SDL_Window* getWindow() override { return window_; }
   SDL_Renderer* getRenderer() override { return renderer_; }
 

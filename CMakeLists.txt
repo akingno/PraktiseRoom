@@ -74,6 +74,8 @@ set(IMGUI_BACKEND_SOURCES
         third_party/imgui/backends/imgui_impl_sdlrenderer3.cpp
         EditorUI.cpp
         EditorUI.h
+        InputController.cpp
+        InputController.h
 )
 
 add_executable(room_temp

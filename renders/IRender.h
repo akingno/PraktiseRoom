@@ -17,7 +17,15 @@ class Agent;
 
 class IRender {
   public:
-  virtual void render_frame(const ItemLayer&,const std::vector<std::unique_ptr<Agent>>&, const Room&) = 0;
+  virtual void render_frame(
+    const ItemLayer&,
+    const std::vector<std::unique_ptr<Agent>>&,
+    const Room&,
+    const std::string& preview_item_id = "",
+    int preview_x = -1,
+    int preview_y = -1
+    ) = 0;
+
   virtual ~IRender() = default;
 
   virtual SDL_Window* getWindow() = 0;
