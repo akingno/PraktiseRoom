@@ -23,6 +23,7 @@ public:
   void render_frame(const ItemLayer& items_,const std::vector<std::unique_ptr<Agent>>& agents, const Room& room,const std::string& preview_item_id,int preview_x,int preview_y) override;
   SDL_Window* getWindow() override { return window_; }
   SDL_Renderer* getRenderer() override { return renderer_; }
+  void loadDynamicTexture(const std::string& itemId, const std::string& textureName) override;
 
 private:
   SDL_Window*   window_   = nullptr;

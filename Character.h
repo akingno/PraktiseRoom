@@ -32,6 +32,15 @@ class Character {
   void modifyStat(const std::string &name, double delta) {
     setStat(name, getStat(name) + delta);
   }
+
+  // 注册新state
+  void registerNewStat(const std::string& name, double growth_rate) {
+    if (_stats.find(name) == _stats.end()) {
+      _stats[name] = 0.0;
+    }
+    _base_rates[name] = growth_rate;
+  }
+
   [[nodiscard]] const std::unordered_map<std::string, double> &getAllStats() const {
     return _stats;
   }

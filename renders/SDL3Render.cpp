@@ -103,7 +103,19 @@ void SDL3Render::drawTile(int gx, int gy, SDL_Texture* tex) {
   SDL_RenderTexture(renderer_, tex, nullptr, &dst);
 }
 
-
+void SDL3Render::loadDynamicTexture(const std::string& itemId, const std::string& textureName) {
+  if (textureName.empty()) return;
+  try {
+    //如果已经有了先删掉
+    if (itemTextures_.find(itemId) != itemTextures_.end()) {
+      SDL_DestroyTexture(itemTextures_[itemId]);
+    }
+    itemTextures_[itemId] = loadTexture(RES(textureName.c_str()));
+    std::cout << "Render: Hot-loaded texture for item: " << itemId << std::endl;
+  } catch (const std::exception& e) {
+    std::cerr << "Render: Failed to load texture for " << itemId << ": " << e.what() << std::endl;
+  }
+}
 
 void SDL3Render::render_frame(
   const ItemLayer& items_,

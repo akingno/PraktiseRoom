@@ -23,15 +23,6 @@ class ItemLayer {
 
   // 查询一类物品（第一个/任意一个）
   std::optional<Pos> firstOf(const ItemId &id) const;
-  bool anyOf(const ItemId &id) const { return firstOf(id).has_value(); }
-
-  bool hasFood() const { return anyOf("food"); }
-  bool hasBed() const { return anyOf("bed"); }
-  bool hasComputer() const { return anyOf("computer"); }
-
-  std::optional<Pos> foodPos() const { return firstOf("food"); }
-  std::optional<Pos> bedPos() const { return firstOf("bed"); }
-  std::optional<Pos> computerPos() const { return firstOf("computer"); }
 
   void initDefaultLayout();
 

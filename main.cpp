@@ -107,7 +107,7 @@ int main() {
     std::string preview_id = (input.current_mode == EditorMode::Placement) ? input.selected_placement_item : "";
     render->render_frame(items, agents, room, preview_id, input.mouse_gx, input.mouse_gy);
 
-    editorUI.render(is_paused, render->getRenderer(),input.current_mode, input.selected_placement_item);
+    editorUI.render(is_paused, render->getRenderer(), render.get(), input.current_mode, input.selected_placement_item, agents);
 
     SDL_RenderPresent(render->getRenderer());
 
