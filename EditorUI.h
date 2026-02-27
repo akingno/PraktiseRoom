@@ -8,6 +8,7 @@
 #include <SDL3/SDL.h>
 #include <string>
 #include "GameContentInit.h"
+#include "ItemLayer.h"
 
 enum class EditorMode {
   Observation,
@@ -33,7 +34,7 @@ public:
   void setSelectedAgent(Agent* agent) { selected_agent_ = agent; }
 
   // 主渲染逻辑
-  void render(bool& is_paused, SDL_Renderer *renderer, IRender* irender, EditorMode& mode, std::string& selected_item_id, const std::vector<std::unique_ptr<Agent>>& agents);
+  void render(bool& is_paused, SDL_Renderer *renderer, IRender* irender, EditorMode& mode, std::string& selected_item_id, const std::vector<std::unique_ptr<Agent>>& agents, ItemLayer& items);
 private:
   Agent* selected_agent_ = nullptr; // 当前被选中的小人
 

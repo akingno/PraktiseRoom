@@ -47,7 +47,7 @@ bool EditorUI::processEvent(const SDL_Event *event) {
   return false;
 }
 
-void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender, EditorMode &mode, std::string &selected_item_id, const std::vector<std::unique_ptr<Agent>> &agents) {
+void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender, EditorMode &mode, std::string &selected_item_id, const std::vector<std::unique_ptr<Agent>> &agents, ItemLayer &items) {
   ImGui_ImplSDLRenderer3_NewFrame();
   ImGui_ImplSDL3_NewFrame();
   ImGui::NewFrame();
@@ -119,24 +119,19 @@ void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender,
 
   ImGui::Spacing();
   // 按钮宽度填满
-  if (ImGui::Button(u8"应用新需求并保存", ImVec2(-1.0f, 30))) {
+
+  if (ImGui::Button(u8"应用新需求", ImVec2(-1.0f, 30))) {
     std::string needStr = new_need_name_;
     if (!needStr.empty()) {
-      // 查重防止用户连续点击添加了同名的需求
       bool exists = false;
       for (const auto &r : Cfg::need_rules) {
-        if (r.name == needStr) {
-          exists = true;
-          break;
-        }
+        if (r.name == needStr) { exists = true; break; }
       }
 
       if (!exists) {
         Cfg::NeedRule rule;
-        rule.name = needStr;
-        rule.growth_rate = new_need_growth_;
-        rule.enter_threshold = new_need_enter_;
-        rule.exit_threshold = new_need_exit_;
+        rule.name = needStr; rule.growth_rate = new_need_growth_;
+        rule.enter_threshold = new_need_enter_; rule.exit_threshold = new_need_exit_;
         rule.weight = new_need_weight_;
         Cfg::need_rules.push_back(rule);
 
@@ -144,14 +139,18 @@ void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender,
         for (auto &agent : agents) {
           agent->getCharacter().registerNewStat(needStr, new_need_growth_);
         }
-        Cfg::save("config.json");
-
-        // 清空输入框
         memset(new_need_name_, 0, sizeof(new_need_name_));
       } else {
-        std::cout << "[Editor] 需求 " << needStr << " 已经存在，无需重复添加。" << std::endl;
+        std::cout << "EditorUI: 需求" << needStr << "已经存在，无需重复添加。" << std::endl;
       }
     }
+  }
+
+  ImGui::Spacing();
+  // 手动保存按钮
+  if (ImGui::Button(u8"保存需求配置到文件", ImVec2(-1.0f, 30))) {
+    Cfg::save("config.json");
+    std::cout << "EditorUI: 需求配置已保存到 config.json" << std::endl;
   }
 
   ImGui::End();
@@ -178,6 +177,13 @@ void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender,
         }
         ImGui::EndCombo();
       }
+      ImGui::Spacing();
+      ImGui::Separator();
+      ImGui::Spacing();
+
+      if (ImGui::Button(u8"保存当前物品布局到world.json", ImVec2(300, 30))) {
+        items.saveToFile("world.json");
+      }
       ImGui::EndTabItem();
     }
 
@@ -195,7 +201,7 @@ void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender,
       ImGui::InputFloat(u8"属性变化数值 (如: -50)", &new_eff_value_);
 
       ImGui::Spacing();
-      if (ImGui::Button(u8"生成并热加载", ImVec2(200, 30))) {
+      if (ImGui::Button(u8"创建", ImVec2(200, 30))) {
         std::string idStr = new_item_id_;
         if (!idStr.empty()) {
           ItemProps props{false, new_item_blocks_, new_item_useable_, new_item_tex_};
@@ -213,10 +219,14 @@ void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender,
           // 渲染器热加载贴图
           irender->loadDynamicTexture(idStr, new_item_tex_);
 
-          saveItems("items.json");
           memset(new_item_id_, 0, sizeof(new_item_id_));
         }
       }
+      ImGui::SameLine();
+      if (ImGui::Button(u8"保存所有物品库到items.json", ImVec2(250, 30))) {
+        saveItems("items.json");
+      }
+
       ImGui::EndTabItem();
     }
 
