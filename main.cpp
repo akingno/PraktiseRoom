@@ -39,7 +39,7 @@ int main() {
   std::string name_char2 = "李四";
 
   loadItems("items.json");
-  items.initDefaultLayout();
+  items.loadFromFile("world.json");
 
   AStarPathfinder path_finder(
       {Cfg::room::view_w, Cfg::room::view_h},

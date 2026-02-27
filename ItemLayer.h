@@ -15,18 +15,18 @@ class ItemLayer {
 
  public:
   ItemLayer() = default;
-  // 基础操作
+
   bool place(const ItemId &id, int x, int y);// 放置/覆盖
-  bool removeAt(int x, int y);               // 移除
-  bool hasAt(int x, int y) const;
+  bool removeAt(int x, int y); // 移除
   std::optional<ItemId> idAt(int x, int y) const;
 
-  // 查询一类物品（第一个/任意一个）
-  std::optional<Pos> firstOf(const ItemId &id) const;
 
   void initDefaultLayout();
+  void clear();
+  void saveToFile(const std::string& filename = "world.json") const;
+  void loadFromFile(const std::string& filename = "world.json");
 
-  // 迭代用：给渲染器遍历
+  // 给渲染器遍历
   const std::unordered_map<int, ItemId> &items() const { return items_; }
 
  private:
