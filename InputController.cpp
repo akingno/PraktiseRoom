@@ -29,9 +29,13 @@ void InputController::handleEvents(bool &running,bool& is_paused, EditorUI &edit
     if (e.type == SDL_EVENT_MOUSE_MOTION) {
       int gameW = Cfg::room::view_w * Cfg::core::tile_px;
       int gameH = Cfg::room::view_h * Cfg::core::tile_px;
-      if (e.motion.x < gameW && e.motion.y < gameH) {
-        mouse_gx = static_cast<int>(e.motion.x) / Cfg::core::tile_px;
-        mouse_gy = static_cast<int>(e.motion.y) / Cfg::core::tile_px;
+
+      float mx = e.motion.x;
+      float my = e.motion.y - Cfg::room::menu_bar_h;
+
+      if (mx >= 0 && mx < gameW && my >= 0 && my < gameH) {
+        mouse_gx = static_cast<int>(mx) / Cfg::core::tile_px;
+        mouse_gy = static_cast<int>(my) / Cfg::core::tile_px;
       } else {
         mouse_gx = -1;
       }
@@ -42,7 +46,7 @@ void InputController::handleEvents(bool &running,bool& is_paused, EditorUI &edit
       int gameW = Cfg::room::view_w * Cfg::core::tile_px;
       int gameH = Cfg::room::view_h * Cfg::core::tile_px;
       float mx = e.button.x;
-      float my = e.button.y;
+      float my = e.button.y - Cfg::room::menu_bar_h;
       bool in_game_view = (mx >= 0 && mx < gameW && my >= 0 && my < gameH);
 
       if (e.button.button == SDL_BUTTON_RIGHT) {

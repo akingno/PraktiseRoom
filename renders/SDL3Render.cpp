@@ -26,7 +26,7 @@ SDL3Render::SDL3Render(int viewW, int viewH, int tilePx, const std::string& titl
   const int gameH = viewH_ * tilePx_;
 
   const int winW = gameW + 350;
-  const int winH = gameH + 250;
+  const int winH = gameH + 250 + Cfg::room::menu_bar_h;
 
   window_ = SDL_CreateWindow(title.c_str(), winW, winH, SDL_WINDOW_RESIZABLE);
   if (!window_) {
@@ -97,7 +97,7 @@ void SDL3Render::drawTile(int gx, int gy, SDL_Texture* tex) {
   if (!tex) return;
   SDL_FRect dst;
   dst.x = static_cast<float>(gx * tilePx_);
-  dst.y = static_cast<float>(gy * tilePx_);
+  dst.y = static_cast<float>(gy * tilePx_ + Cfg::room::menu_bar_h);
   dst.w = static_cast<float>(tilePx_);
   dst.h = static_cast<float>(tilePx_);
   SDL_RenderTexture(renderer_, tex, nullptr, &dst);

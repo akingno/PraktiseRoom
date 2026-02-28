@@ -38,6 +38,7 @@ int main() {
   std::string name_char1 = "张三";
   std::string name_char2 = "李四";
 
+  //物品加载和读取
   loadItems("items.json");
   items.loadFromFile("world.json");
 
@@ -49,9 +50,11 @@ int main() {
   agents.push_back(std::make_unique<Agent>(name_char1, 5, 5, &path_finder));
   agents.push_back(std::make_unique<Agent>(name_char2, 1, 1, &path_finder));
 
+  // 用于debug打印
   const Character &character1 = agents[0]->getCharacter();
   const Character &character2 = agents[1]->getCharacter();
 
+  // decision那边需要一个指针
   std::vector<Agent *> raw_agents_ptrs;
   for (auto &a : agents) {
     raw_agents_ptrs.push_back(a.get());

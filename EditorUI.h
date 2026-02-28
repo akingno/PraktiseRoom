@@ -35,6 +35,7 @@ public:
 
   // 主渲染逻辑
   void render(bool& is_paused, SDL_Renderer *renderer, IRender* irender, EditorMode& mode, std::string& selected_item_id, const std::vector<std::unique_ptr<Agent>>& agents, ItemLayer& items);
+
 private:
   Agent* selected_agent_ = nullptr; // 当前被选中的小人
 
@@ -54,6 +55,11 @@ private:
   float new_need_enter_ = 50.0f;
   float new_need_exit_ = 0.0f;
   float new_need_weight_ = 1.0f;
+
+
+  void renderMenuBar(ItemLayer& items);
+  void renderRightPanel(bool& is_paused, EditorMode& mode, const std::vector<std::unique_ptr<Agent>>& agents);
+  void renderBottomPanel(IRender* irender, EditorMode& mode, std::string& selected_item_id, ItemLayer& items);
 };
 
 

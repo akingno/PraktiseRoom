@@ -36,6 +36,7 @@ inline int ticks_per_sec = 20;
 }// namespace core
 
 namespace room {
+inline int menu_bar_h = 20;
 inline int view_w = 40;
 inline int view_h = 30;
 inline int door_x = 20;

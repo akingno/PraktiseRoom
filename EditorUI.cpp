@@ -47,19 +47,43 @@ bool EditorUI::processEvent(const SDL_Event *event) {
   return false;
 }
 
-void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender, EditorMode &mode, std::string &selected_item_id, const std::vector<std::unique_ptr<Agent>> &agents, ItemLayer &items) {
-  ImGui_ImplSDLRenderer3_NewFrame();
-  ImGui_ImplSDL3_NewFrame();
-  ImGui::NewFrame();
+void EditorUI::renderMenuBar(ItemLayer& items) {
+  // 顶部菜单栏
+  if (ImGui::BeginMainMenuBar()) {
+    if (ImGui::BeginMenu(u8"文件 (File)")) {
+      if (ImGui::MenuItem(u8"保存全部 (Save All World & Config)")) {
+        saveItems("items.json");
+        Cfg::save("config.json");
+        items.saveToFile("world.json");
+        std::cout << "EditorUI: 保存了所有更改！" << std::endl;
+      }
 
+      ImGui::Separator();
+
+      if (ImGui::MenuItem(u8"读取物品")) {
+        loadItems("items.json");
+      }
+      if (ImGui::MenuItem(u8"读取配置")) {
+        Cfg::load("config.json");
+      }
+      if (ImGui::MenuItem(u8"读取世界")) {
+        items.loadFromFile("world.json");
+      }
+      ImGui::EndMenu();
+    }
+    ImGui::EndMainMenuBar();
+  }
+}
+void EditorUI::renderRightPanel(bool& is_paused, EditorMode& mode, const std::vector<std::unique_ptr<Agent>>& agents) {
   int gameW = Cfg::room::view_w * Cfg::core::tile_px;
   int gameH = Cfg::room::view_h * Cfg::core::tile_px;
+  float menuHeight = static_cast<float>(Cfg::room::menu_bar_h);
 
-  //属性检视
-  ImGui::SetNextWindowPos(ImVec2(gameW, 0), ImGuiCond_Always);
+  ImGui::SetNextWindowPos(ImVec2(gameW, menuHeight), ImGuiCond_Always);
   ImGui::SetNextWindowSize(ImVec2(350, gameH + 250), ImGuiCond_Always);
   ImGui::Begin(u8"属性检视", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-  //状态显示
+
+  // 状态显示
   if (mode == EditorMode::Observation) {
     ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), u8"当前模式: 观察 (左键查看小人)");
   } else if (mode == EditorMode::Placement) {
@@ -94,14 +118,9 @@ void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender,
     ImGui::TextDisabled(u8"点击地图上的小人以查看其属性");
   }
 
-  ImGui::Spacing();
-  ImGui::Separator();
-  ImGui::Spacing();
-
+  ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
   ImGui::TextColored(ImVec4(0.5f, 0.8f, 1.0f, 1.0f), u8"【全局需求定义】");
-
   ImGui::InputText(u8"需求名(如:thirst)", new_need_name_, IM_ARRAYSIZE(new_need_name_));
-
   ImGui::InputFloat(u8"每秒增长率", &new_need_growth_, 0.1f, 1.0f, "%.1f");
   ImGui::InputFloat(u8"触发进入阈值", &new_need_enter_, 1.0f, 10.0f, "%.1f");
   ImGui::InputFloat(u8"满足退出阈值", &new_need_exit_, 1.0f, 10.0f, "%.1f");
@@ -113,13 +132,9 @@ void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender,
   if (new_need_exit_ < 0.0f) new_need_exit_ = 0.0f;
   if (new_need_exit_ > 100.0f) new_need_exit_ = 100.0f;
   if (new_need_weight_ < 0.0f) new_need_weight_ = 0.0f;
-  if (new_need_exit_ > new_need_enter_) {
-    new_need_exit_ = new_need_enter_;
-  }
+  if (new_need_exit_ > new_need_enter_) { new_need_exit_ = new_need_enter_; }
 
   ImGui::Spacing();
-  // 按钮宽度填满
-
   if (ImGui::Button(u8"应用新需求", ImVec2(-1.0f, 30))) {
     std::string needStr = new_need_name_;
     if (!needStr.empty()) {
@@ -127,15 +142,12 @@ void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender,
       for (const auto &r : Cfg::need_rules) {
         if (r.name == needStr) { exists = true; break; }
       }
-
       if (!exists) {
         Cfg::NeedRule rule;
         rule.name = needStr; rule.growth_rate = new_need_growth_;
         rule.enter_threshold = new_need_enter_; rule.exit_threshold = new_need_exit_;
         rule.weight = new_need_weight_;
         Cfg::need_rules.push_back(rule);
-
-        // 热加载给所有小人
         for (auto &agent : agents) {
           agent->getCharacter().registerNewStat(needStr, new_need_growth_);
         }
@@ -145,24 +157,21 @@ void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender,
       }
     }
   }
-
-  ImGui::Spacing();
-  // 手动保存按钮
-  if (ImGui::Button(u8"保存需求配置到文件", ImVec2(-1.0f, 30))) {
-    Cfg::save("config.json");
-    std::cout << "EditorUI: 需求配置已保存到 config.json" << std::endl;
-  }
-
   ImGui::End();
+}
 
-  //物品区
-  ImGui::SetNextWindowPos(ImVec2(0, gameH), ImGuiCond_Always);
+
+void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string& selected_item_id, ItemLayer& items) {
+  int gameW = Cfg::room::view_w * Cfg::core::tile_px;
+  int gameH = Cfg::room::view_h * Cfg::core::tile_px;
+
+  float startY = static_cast<float>(gameH + Cfg::room::menu_bar_h);
+
+  ImGui::SetNextWindowPos(ImVec2(0, startY), ImGuiCond_Always);
   ImGui::SetNextWindowSize(ImVec2(gameW, 250), ImGuiCond_Always);
   ImGui::Begin(u8"物品创建和放置/需求创建", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
   if (ImGui::BeginTabBar("BottomTabs")) {
-
-    // 物品放置
     if (ImGui::BeginTabItem(u8" 物品放置")) {
       ImGui::Spacing();
       std::string combo_preview = selected_item_id.empty() ? u8"请选择物品..." : selected_item_id;
@@ -170,31 +179,21 @@ void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender,
         for (const auto &[id, item] : ItemRegistry::inst().getAllItems()) {
           bool is_selected = (selected_item_id == id);
           if (ImGui::Selectable(id.c_str(), is_selected)) {
-            selected_item_id = id;
-            mode = EditorMode::Placement;
+            selected_item_id = id; mode = EditorMode::Placement;
           }
           if (is_selected) ImGui::SetItemDefaultFocus();
         }
         ImGui::EndCombo();
       }
-      ImGui::Spacing();
-      ImGui::Separator();
-      ImGui::Spacing();
-
-      if (ImGui::Button(u8"保存当前物品布局到world.json", ImVec2(300, 30))) {
-        items.saveToFile("world.json");
-      }
       ImGui::EndTabItem();
     }
 
-    // 创造新物品
     if (ImGui::BeginTabItem(u8" 创造物品")) {
       ImGui::InputText(u8"物品 ID (如: water)", new_item_id_, IM_ARRAYSIZE(new_item_id_));
       ImGui::InputText(u8"贴图名 (如: water.png)", new_item_tex_, IM_ARRAYSIZE(new_item_tex_));
       ImGui::Checkbox(u8"可被使用", &new_item_useable_);
       ImGui::SameLine();
       ImGui::Checkbox(u8"阻挡寻路", &new_item_blocks_);
-
       ImGui::Separator();
       ImGui::Text(u8"添加效果");
       ImGui::InputText(u8"目标属性 (如: thirst)", new_eff_target_, IM_ARRAYSIZE(new_eff_target_));
@@ -206,33 +205,32 @@ void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender,
         if (!idStr.empty()) {
           ItemProps props{false, new_item_blocks_, new_item_useable_, new_item_tex_};
           auto smartItem = std::make_unique<SmartItem>(idStr, props);
-
-          // 效果
           std::string targetStr = new_eff_target_;
           if (!targetStr.empty()) {
             smartItem->addEffect({EffectType::ModifyStat, targetStr, static_cast<double>(new_eff_value_)});
           }
-          // 默认配一个Interact动作保证能被使用
           smartItem->setSequence({{"MoveToTarget", 0, ""}, {"Interact", 0, ""}});
           ItemRegistry::inst().register_item(std::move(smartItem));
-
-          // 渲染器热加载贴图
           irender->loadDynamicTexture(idStr, new_item_tex_);
-
           memset(new_item_id_, 0, sizeof(new_item_id_));
         }
       }
-      ImGui::SameLine();
-      if (ImGui::Button(u8"保存所有物品库到items.json", ImVec2(250, 30))) {
-        saveItems("items.json");
-      }
-
       ImGui::EndTabItem();
     }
-
     ImGui::EndTabBar();
   }
   ImGui::End();
+}
+
+void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender, EditorMode &mode, std::string &selected_item_id, const std::vector<std::unique_ptr<Agent>> &agents, ItemLayer &items) {
+  ImGui_ImplSDLRenderer3_NewFrame();
+  ImGui_ImplSDL3_NewFrame();
+  ImGui::NewFrame();
+
+  // 渲染顶部菜单、右边菜单和底部菜单
+  renderMenuBar(items);
+  renderRightPanel(is_paused, mode, agents);
+  renderBottomPanel(irender, mode, selected_item_id, items);
 
   ImGui::Render();
   ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
