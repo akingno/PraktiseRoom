@@ -45,6 +45,16 @@ inline const std::vector<std::string> kComputerFeed = {
     {u8"读到励志故事"},
     {u8"无聊地发呆"},
 };
+
+inline void generateDefaultTerrains() {
+  TerrainRegistry::inst().clear();
+  TerrainRegistry::inst().register_terrain({"grass", "grass.png", false});
+  TerrainRegistry::inst().register_terrain({"wall", "wall_h.png", true});
+  TerrainRegistry::inst().register_terrain({"door", "door.png", false});
+
+  std::cout << "GameInit:TerrainLoader: Generated default terrains in memory.\n";
+}
+
 inline void generateDefaultItems() {
   ItemRegistry::inst().clear();
 
@@ -68,7 +78,50 @@ inline void generateDefaultItems() {
   computer->setSequence({{"MoveToTarget", 0, ""}, {"Interact", 0, ""}, {"Wait", useTicks, ""}});
   ItemRegistry::inst().register_item(std::move(computer));
 
-  std::cout << "[ItemLoader] Generated default items in memory.\n";
+  std::cout << "GameInit:ItemLoader: Generated default items in memory.\n";
+}
+
+inline void saveTerrains(const std::string& filename = "terrains.json") {
+  json jArray = json::array();
+  for (const auto& [id, def] : TerrainRegistry::inst().getAllTerrains()) {
+    json j;
+    j["id"] = def.id;
+    j["texture_name"] = def.texture_name;
+    j["blocks"] = def.blocks;
+    jArray.push_back(j);
+  }
+  std::ofstream out(filename);
+  if (out.is_open()) {
+    out << jArray.dump(4);
+    std::cout << "GameInit:TerrainLoader: Saved terrains to " << filename << std::endl;
+  }
+}
+
+inline void loadTerrains(const std::string& filename = "terrains.json") {
+  std::ifstream file(filename);
+  if (!file.is_open()) {
+    std::cout << "GameInit:TerrainLoader: " << filename << " not found, triggering fallback..." << std::endl;
+    generateDefaultTerrains();
+    saveTerrains(filename);
+    return;
+  }
+  try {
+    json jArray;
+    file >> jArray;
+    TerrainRegistry::inst().clear();
+    for (const auto& jItem : jArray) {
+      TerrainDef def;
+      def.id = jItem.value("id", "");
+      def.texture_name = jItem.value("texture_name", "");
+      def.blocks = jItem.value("blocks", false);
+      if (!def.id.empty()) {
+        TerrainRegistry::inst().register_terrain(def);
+      }
+    }
+    std::cout << "GameInit:TerrainLoader: Loaded " << jArray.size() << " terrains from " << filename << std::endl;
+  } catch (const std::exception& e) {
+    std::cerr << "GameInit:TerrainLoader: Failed to parse JSON: " << e.what() << std::endl;
+  }
 }
 
 inline void saveItems(const std::string &filename = "items.json") {
@@ -113,7 +166,7 @@ inline void saveItems(const std::string &filename = "items.json") {
   std::ofstream out(filename);
   if (out.is_open()) {
     out << jArray.dump(4);
-    std::cout << "[ItemLoader] Saved items to " << filename << std::endl;
+    std::cout << "GameInit:ItemLoader: Saved items to " << filename << std::endl;
   }
 }
 
@@ -122,7 +175,7 @@ inline void loadItems(const std::string &filename = "items.json") {
 
   // 如果文件不存在，先生成默认数据保存到硬盘，再读取
   if (!file.is_open()) {
-    std::cout << "[ItemLoader] " << filename << " not found, triggering fallback..." << std::endl;
+    std::cout << "GameInit:ItemLoader: " << filename << " not found, triggering fallback..." << std::endl;
     generateDefaultItems();
     saveItems(filename);
     return;
@@ -171,8 +224,8 @@ inline void loadItems(const std::string &filename = "items.json") {
 
       ItemRegistry::inst().register_item(std::move(smart_item));
     }
-    std::cout << "[ItemLoader] Loaded " << j.size() << " items from " << filename << std::endl;
+    std::cout << "GameInit:ItemLoader: Loaded " << j.size() << " items from " << filename << std::endl;
   } catch (const std::exception &e) {
-    std::cerr << "[ItemLoader] Failed to parse JSON: " << e.what() << std::endl;
+    std::cerr << "GameInit:ItemLoader: Failed to parse JSON: " << e.what() << std::endl;
   }
 }

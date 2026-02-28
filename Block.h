@@ -1,10 +1,11 @@
 //
 // Created by jacob on 2025/9/10.
+// Deleted now
 //
 
 #ifndef WORLD_TEMP__BLOCK_H_
 #define WORLD_TEMP__BLOCK_H_
-
+/*
 enum class TileType{
   Grass = 0,
   WallV = 1,
@@ -20,7 +21,7 @@ class Block {
  public:
   explicit Block(TileType tileType){
       _tile_type = tileType;
-  }
+  }*/
 
 /*
  * Used by ascii render and not used now
@@ -38,11 +39,8 @@ class Block {
     }
   }*/
 
-  /*
-   *
-   * TODO: NOUSE
-   */
-  static TileType Int2Tile(int num){
+
+  /*static TileType Int2Tile(int num){
     switch (num) {
       case 0:
         return TileType::Grass;
@@ -76,4 +74,5 @@ class Block {
 
 };
 
+*/
 #endif//WORLD_TEMP__BLOCK_H_

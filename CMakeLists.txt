@@ -76,6 +76,7 @@ set(IMGUI_BACKEND_SOURCES
         EditorUI.h
         InputController.cpp
         InputController.h
+        TerrainRegistry.h
 )
 
 add_executable(room_temp

@@ -3,44 +3,80 @@
 //
 
 #include "Room.h"
-TileType Room::getBlocksType(const int x, const int y) const{
-  if (x < 0 || x >= Cfg::room::view_w || y < 0 || y >= Cfg::room::view_h) {
-    return TileType::WallH;
-  }
-  return _blocks[y * Cfg::room::view_w + x].getTileType();
+#include <fstream>
+#include <iostream>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
+
+Room::Room(int w, int h) : width_(w), height_(h), _door{w/2, 0} {
+  _blocks.assign(width_ * height_, "grass");
 }
-bool Room::setBlock(const TileType type,const int x,const int y) {
-  if (x < 0 || x >= Cfg::room::view_w || y < 0 || y >= Cfg::room::view_h) return false;
-  _blocks[y * Cfg::room::view_w + x].setTileType(type);
+
+TileId Room::getBlocksType(const int x, const int y) const {
+  if (x < 0 || x >= width_ || y < 0 || y >= height_) return "wall"; // 越界视为墙壁
+  return _blocks[y * width_ + x];
+}
+
+bool Room::setBlock(const TileId& typeId, const int x, const int y) {
+  if (x < 0 || x >= width_ || y < 0 || y >= height_) return false;
+  _blocks[y * width_ + x] = typeId;
   return true;
-}
-Room::Room() {
-  _blocks.assign(Cfg::room::view_w * Cfg::room::view_h, Block(TileType::Grass));
-  // 四周置墙
-  for (int y=0; y<Cfg::room::view_h; ++y) {
-    _blocks[y * Cfg::room::view_w + 0].setTileType(TileType::WallV);
-    _blocks[y * Cfg::room::view_w + (Cfg::room::view_w-1)].setTileType(TileType::WallV);
-  }
-  for (int x=0; x<Cfg::room::view_w; ++x) {
-    _blocks[x].setTileType(TileType::WallH);
-    _blocks[(Cfg::room::view_h-1) * Cfg::room::view_w + x].setTileType(TileType::WallH);
-  }
-
-  // 物品：床、墙、食物等
-  _blocks[Cfg::room::door_x].setTileType(TileType::DOOR);
-
 }
 
 bool Room::isPassable(int x, int y) const{
   // 越界一律不可走
-  if (x < 0 || x >= Cfg::room::view_w || y < 0 || y >= Cfg::room::view_h) return false;
+  if (x < 0 || x >= width_ || y < 0 || y >= height_) return false;
 
-  TileType t = getBlocksType(x, y);
-  switch (t) {
-    case TileType::WallV:
-    case TileType::WallH:
-      return false;
-    default:
-      return true;
+  TileId id = getBlocksType(x, y);
+  const TerrainDef* def = TerrainRegistry::inst().get(id);
+  if (def) { // 如果存在
+    return !def->blocks;
+  }
+  return true;//默认可走
+}
+void Room::initDefaultLayout() {
+  _blocks.assign(width_ * height_, "grass");
+  for (int y = 0; y < height_; ++y) {
+    setBlock("wall", 0, y);
+    setBlock("wall", width_ - 1, y);
+  }
+  for (int x = 0; x < width_; ++x) {
+    setBlock("wall", x, 0);
+    setBlock("wall", x, height_ - 1);
+  }
+  setBlock("door", _door.x, _door.y);
+}
+
+void Room::saveToFile(const std::string& filename) const {
+  json j;
+  j["width"] = width_;
+  j["height"] = height_;
+  j["door"] = { {"x", _door.x}, {"y", _door.y} };
+  j["tiles"] = _blocks;
+
+  std::ofstream out(filename);
+  if (out.is_open()) {
+    out << j.dump(4);
+    std::cout << "Room: Saved terrain to " << filename << std::endl;
+  }
+}
+
+void Room::loadFromFile(const std::string& filename) {
+  std::ifstream file(filename);
+  if (!file.is_open()) {
+    initDefaultLayout();
+    saveToFile(filename);
+    return;
+  }
+  json j; file >> j;
+  width_ = j.value("width", width_);
+  height_ = j.value("height", height_);
+  if (j.contains("door")) {
+    _door.x = j["door"].value("x", _door.x);
+    _door.y = j["door"].value("y", _door.y);
+  }
+  if (j.contains("tiles")) {
+    _blocks = j["tiles"].get<std::vector<TileId>>();
   }
 }

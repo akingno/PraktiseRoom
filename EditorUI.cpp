@@ -55,6 +55,7 @@ void EditorUI::renderMenuBar(ItemLayer& items) {
         saveItems("items.json");
         Cfg::save("config.json");
         items.saveToFile("world.json");
+        saveTerrains("terrains.json");
         std::cout << "EditorUI: 保存了所有更改！" << std::endl;
       }
 
@@ -68,6 +69,9 @@ void EditorUI::renderMenuBar(ItemLayer& items) {
       }
       if (ImGui::MenuItem(u8"读取世界")) {
         items.loadFromFile("world.json");
+      }
+      if (ImGui::MenuItem(u8"读取地形")) {
+        loadTerrains("terrains.json");
       }
       ImGui::EndMenu();
     }
@@ -161,7 +165,7 @@ void EditorUI::renderRightPanel(bool& is_paused, EditorMode& mode, const std::ve
 }
 
 
-void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string& selected_item_id, ItemLayer& items) {
+void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string& selected_item_id, std::string& selected_terrain_id,ItemLayer& items) {
   int gameW = Cfg::room::view_w * Cfg::core::tile_px;
   int gameH = Cfg::room::view_h * Cfg::core::tile_px;
 
@@ -217,12 +221,47 @@ void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string
       }
       ImGui::EndTabItem();
     }
+    if (ImGui::BeginTabItem(u8"地形画笔")) {
+      ImGui::Spacing();
+      std::string combo_preview = selected_terrain_id.empty() ? u8"请选择笔刷..." : selected_terrain_id;
+      if (ImGui::BeginCombo(u8"地形笔刷", combo_preview.c_str())) {
+        for (const auto &[id, def] : TerrainRegistry::inst().getAllTerrains()) {
+          bool is_selected = (selected_terrain_id == id);
+          if (ImGui::Selectable(id.c_str(), is_selected)) {
+            selected_terrain_id = id;
+            mode = EditorMode::TerrainPaint;
+          }
+          if (is_selected) ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+      }
+
+      ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+
+      ImGui::TextColored(ImVec4(0.5f, 0.8f, 1.0f, 1.0f), u8"【创造新地形】");
+      ImGui::InputText(u8"地形 ID (如: lava)", new_terrain_id_, IM_ARRAYSIZE(new_terrain_id_));
+      ImGui::InputText(u8"地形贴图 (如: lava.png)", new_terrain_tex_, IM_ARRAYSIZE(new_terrain_tex_));
+      ImGui::Checkbox(u8"阻挡寻路 (无法通行)", &new_terrain_blocks_);
+
+      ImGui::Spacing();
+      if (ImGui::Button(u8"生成地形并热加载", ImVec2(200, 30))) {
+        std::string idStr = new_terrain_id_;
+        if (!idStr.empty()) {
+          TerrainDef def{idStr, new_terrain_tex_, new_terrain_blocks_};
+          TerrainRegistry::inst().register_terrain(def);
+          irender->loadTerrainTexture(idStr, new_terrain_tex_);
+          memset(new_terrain_id_, 0, sizeof(new_terrain_id_));
+        }
+      }
+
+      ImGui::EndTabItem();
+    }
     ImGui::EndTabBar();
   }
   ImGui::End();
 }
 
-void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender, EditorMode &mode, std::string &selected_item_id, const std::vector<std::unique_ptr<Agent>> &agents, ItemLayer &items) {
+void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender, EditorMode &mode, std::string &selected_item_id, std::string& selected_terrain_id,const std::vector<std::unique_ptr<Agent>> &agents, ItemLayer &items) {
   ImGui_ImplSDLRenderer3_NewFrame();
   ImGui_ImplSDL3_NewFrame();
   ImGui::NewFrame();
@@ -230,7 +269,7 @@ void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender,
   // 渲染顶部菜单、右边菜单和底部菜单
   renderMenuBar(items);
   renderRightPanel(is_paused, mode, agents);
-  renderBottomPanel(irender, mode, selected_item_id, items);
+  renderBottomPanel(irender, mode, selected_item_id,selected_terrain_id, items);
 
   ImGui::Render();
   ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);

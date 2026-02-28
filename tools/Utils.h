@@ -5,12 +5,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-// 判断房间坐标(x,y)是否可走
-inline bool is_passable(const Room& room, int x, int y) {
-  auto t = room.getBlocksType(x, y);
-  // 可通行：不是墙
-  return t != TileType::WallV && t != TileType::WallH;
-}
 
 inline double clamp01(double x){ return x<0?0:(x>1?1:x); }
 
@@ -22,10 +16,10 @@ inline int manhattan(std::pair<int,int> a, std::pair<int,int> b){
 
 
 // 通用需求打分函数
-// currentValue:当前属性值 (比如 hunger 是 80)
-// thresholdEnter:开始想去解决的阈值 (比如 hunger > 60 才开始想吃)
+// currentValue:当前属性值
+// thresholdEnter:开始想去解决的阈值
 // hasItem:环境里有没有能解决这个需求的物品？
-// isDoingIt:当前是不是正在执行这个动作？(用于增加粘性 Stickiness)
+// isDoingIt:当前是不是正在执行这个动作？ 用于增加粘性
 // weight:自定义需求可以设置不同的权重，比如求生需求权重高，娱乐需求权重低，默认给 1.0
 inline double CalcScoreGeneric(double currentValue, double thresholdEnter,double thresholdExit,
                                bool hasItem, bool isDoingIt, double weight = 1.0)

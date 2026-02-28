@@ -24,6 +24,7 @@ public:
   SDL_Window* getWindow() override { return window_; }
   SDL_Renderer* getRenderer() override { return renderer_; }
   void loadDynamicTexture(const std::string& itemId, const std::string& textureName) override;
+  void loadTerrainTexture(const std::string& tileId, const std::string& textureName) override;
 
 private:
   SDL_Window*   window_   = nullptr;
@@ -34,7 +35,7 @@ private:
   int tilePx_;
 
   // 纹理集合
-  std::unordered_map<TileType, SDL_Texture*> tileTex_;
+  std::unordered_map<std::string, SDL_Texture*> terrainTextures_;
   std::unordered_map<std::string, SDL_Texture*> itemTextures_;
   SDL_Texture* texCharacter_ = nullptr;
 

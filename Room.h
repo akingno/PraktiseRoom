@@ -8,23 +8,31 @@
 #include "Block.h"
 #include <vector>
 #include "Config.h"
-
+#include "TerrainRegistry.h"
 
 
 class Room {
  public:
-  Room();
-  [[nodiscard]] TileType getBlocksType(int x, int y) const;
-  bool setBlock(TileType type, int x, int y);
+  Room(int w, int h);
+  int getWidth() const { return width_; }
+  int getHeight() const { return height_; }
+
+  TileId getBlocksType(int x, int y) const;
+  bool setBlock(const TileId& typeId, int x, int y);;
 
   bool isPassable(int x, int y) const;
 
   const Pos& doorPos()  const { return _door;}
 
+  void saveToFile(const std::string& filename = "room_map.json") const;
+  void loadFromFile(const std::string& filename = "room_map.json");
+  void initDefaultLayout();
 
  private:
-  std::vector<Block>  _blocks;
-  Pos  _door{Cfg::room::door_x, Cfg::room::door_y};
+  int width_;
+  int height_;
+  std::vector<TileId> _blocks;
+  Pos _door;
 
 };
 

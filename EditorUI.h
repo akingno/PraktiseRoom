@@ -12,7 +12,8 @@
 
 enum class EditorMode {
   Observation,
-  Placement
+  Placement,
+  TerrainPaint
 };
 
 class IRender;
@@ -34,7 +35,15 @@ public:
   void setSelectedAgent(Agent* agent) { selected_agent_ = agent; }
 
   // 主渲染逻辑
-  void render(bool& is_paused, SDL_Renderer *renderer, IRender* irender, EditorMode& mode, std::string& selected_item_id, const std::vector<std::unique_ptr<Agent>>& agents, ItemLayer& items);
+  void render(
+    bool& is_paused,
+    SDL_Renderer *renderer,
+    IRender* irender, EditorMode& mode,
+    std::string& selected_item_id,
+    std::string& selected_terrain_id,
+    const std::vector<std::unique_ptr<Agent>>& agents,
+    ItemLayer& items
+    );
 
 private:
   Agent* selected_agent_ = nullptr; // 当前被选中的小人
@@ -56,10 +65,14 @@ private:
   float new_need_exit_ = 0.0f;
   float new_need_weight_ = 1.0f;
 
+  char new_terrain_id_[64] = "";
+  char new_terrain_tex_[64] = "";
+  bool new_terrain_blocks_ = false;
+
 
   void renderMenuBar(ItemLayer& items);
   void renderRightPanel(bool& is_paused, EditorMode& mode, const std::vector<std::unique_ptr<Agent>>& agents);
-  void renderBottomPanel(IRender* irender, EditorMode& mode, std::string& selected_item_id, ItemLayer& items);
+  void renderBottomPanel(IRender* irender, EditorMode& mode, std::string& selected_item_id, std::string& selected_terrain_id,ItemLayer& items);
 };
 
 

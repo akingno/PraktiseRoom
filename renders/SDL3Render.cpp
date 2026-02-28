@@ -38,29 +38,46 @@ SDL3Render::SDL3Render(int viewW, int viewH, int tilePx, const std::string& titl
     throw std::runtime_error(std::string("SDL_CreateRenderer failed: ") + SDL_GetError());
   }
 
-  // 载入纹理
-  tileTex_[TileType::Grass] = loadTexture(RES("grass.png"));
-  tileTex_[TileType::WallH] = loadTexture(RES("wall_h.png"));
-  tileTex_[TileType::WallV] = loadTexture(RES("wall_v.png"));
-  tileTex_[TileType::DOOR] = loadTexture(RES("door.png"));
   texCharacter_ = loadTexture(RES("character.png"));
 
-  // 载入动态定义的纹理
+  //载入物品纹理
   for (const auto& [id, itemPtr] : ItemRegistry::inst().getAllItems()) {
     std::string texName = itemPtr->props().texture_name;
     if (!texName.empty()) {
       try {
         itemTextures_[id] = loadTexture(RES(texName.c_str()));
       } catch (const std::exception& e) {
-        std::cerr << "SDL3Render: Warning: Missing texture for item: " << id << ", " << e.what() << std::endl;
+        std::cerr << "SDL3Render: Missing texture for item: " << id << std::endl;
+      }
+    }
+  }
+
+  // 载入地形纹理
+  for (const auto& [id, def] : TerrainRegistry::inst().getAllTerrains()) {
+    if (!def.texture_name.empty()) {
+      try {
+        terrainTextures_[id] = loadTexture(RES(def.texture_name.c_str()));
+      } catch (const std::exception& e) {
+        std::cerr << "SDL3Render: Missing texture for terrain: " << id << std::endl;
       }
     }
   }
 
 }
 
+void SDL3Render::loadTerrainTexture(const std::string& tileId, const std::string& textureName) {
+  if (textureName.empty()) return;
+  try {
+    if (terrainTextures_.find(tileId) != terrainTextures_.end()) {
+      SDL_DestroyTexture(terrainTextures_[tileId]);
+    }
+    terrainTextures_[tileId] = loadTexture(RES(textureName.c_str()));
+  } catch (const std::exception& e) {
+    std::cerr << "SDL3Render: Failed to hot-load terrain texture: " << e.what() << std::endl;
+  }
+}
+
 SDL3Render::~SDL3Render() {
-  for (auto& kv : tileTex_) if (kv.second) SDL_DestroyTexture(kv.second);
   for (auto& kv : itemTextures_) if (kv.second) SDL_DestroyTexture(kv.second);
 
   if (texCharacter_)  SDL_DestroyTexture(texCharacter_);
@@ -127,21 +144,13 @@ void SDL3Render::render_frame(
 {
 
   clear();
-  // 先铺一层地板
-  SDL_Texture* tex = tileTex_[TileType::Grass];
-
-  for (int y = 0; y < Cfg::room::view_h; ++y) {
-    for (int x = 0; x < Cfg::room::view_w; ++x) {
-      drawTile(x, y, tex);
-    }
-  }
-
-  // 1) 画地面/墙/门
-  for (int y=0; y < Cfg::room::view_h; ++y) {
-    for (int x=0; x < Cfg::room::view_w; ++x) {
-      TileType t = room.getBlocksType(x, y);
-      auto tex = tileTex_[t];
-      if (tex) drawTile(x, y, tex);
+  for (int y = 0; y < room.getHeight(); ++y) {
+    for (int x = 0; x < room.getWidth(); ++x) {
+      std::string tId = room.getBlocksType(x, y);
+      auto it = terrainTextures_.find(tId);
+      if (it != terrainTextures_.end()) {
+        drawTile(x, y, it->second);
+      }
     }
   }
 

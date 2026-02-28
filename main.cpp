@@ -33,17 +33,22 @@ int main() {
   //初始化结束
 
   bool running = true;
-  Room room;
-  ItemLayer items;
   std::string name_char1 = "张三";
   std::string name_char2 = "李四";
 
   //物品加载和读取
   loadItems("items.json");
+  loadTerrains("terrains.json");
+
+  //世界初始化
+  Room room(Cfg::room::view_w, Cfg::room::view_h);
+  room.loadFromFile("room_map.json");
+
+  ItemLayer items;
   items.loadFromFile("world.json");
 
   AStarPathfinder path_finder(
-      {Cfg::room::view_w, Cfg::room::view_h},
+      {room.getWidth(), room.getHeight()},
       [&](int x, int y) { return room.isPassable(x, y); });
 
   std::vector<std::unique_ptr<Agent>> agents;
@@ -64,7 +69,7 @@ int main() {
   DecisionMaker decisionMaker;
 
   //SDL3渲染器
-  std::unique_ptr<IRender> render = std::make_unique<SDL3Render>(Cfg::room::view_w, Cfg::room::view_h, Cfg::core::tile_px, "Room Simulator");
+  std::unique_ptr<IRender> render = std::make_unique<SDL3Render>(Cfg::room::view_w, Cfg::room::view_h, Cfg::core::tile_px, "Room Engine");
   //ImGui初始化
   EditorUI editorUI;
   editorUI.init(render.get());
@@ -110,7 +115,7 @@ int main() {
     std::string preview_id = (input.current_mode == EditorMode::Placement) ? input.selected_placement_item : "";
     render->render_frame(items, agents, room, preview_id, input.mouse_gx, input.mouse_gy);
 
-    editorUI.render(is_paused, render->getRenderer(), render.get(), input.current_mode, input.selected_placement_item, agents, items);
+    editorUI.render(is_paused, render->getRenderer(), render.get(), input.current_mode, input.selected_placement_item,input.selected_terrain_id, agents, items);
 
     SDL_RenderPresent(render->getRenderer());
 

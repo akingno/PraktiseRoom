@@ -31,6 +31,7 @@ class IRender {
   virtual SDL_Window* getWindow() = 0;
   virtual SDL_Renderer* getRenderer() = 0;
   virtual void loadDynamicTexture(const std::string& itemId, const std::string& textureName) = 0;
+  virtual void loadTerrainTexture(const std::string& tileId, const std::string& textureName) = 0;
 };
 
 

@@ -5,12 +5,15 @@
 #include "InputController.h"
 #include <iostream>
 
-void InputController::handleEvents(bool &running,bool& is_paused, EditorUI &editorUI, const Room &room, ItemLayer &items, const std::vector<std::unique_ptr<Agent>> &agents) {
+void InputController::handleEvents(bool &running,bool& is_paused, EditorUI &editorUI, Room &room, ItemLayer &items, const std::vector<std::unique_ptr<Agent>> &agents) {
   SDL_Event e;
   while (SDL_PollEvent(&e)) {
     // 优先喂给 UI，如果被截获则跳过逻辑
     if (editorUI.processEvent(&e)) {
       continue;
+    }
+    if (e.type == SDL_EVENT_MOUSE_BUTTON_UP && e.button.button == SDL_BUTTON_LEFT) {
+      is_left_mouse_down = false;
     }
 
     // 基础控制
@@ -36,6 +39,11 @@ void InputController::handleEvents(bool &running,bool& is_paused, EditorUI &edit
       if (mx >= 0 && mx < gameW && my >= 0 && my < gameH) {
         mouse_gx = static_cast<int>(mx) / Cfg::core::tile_px;
         mouse_gy = static_cast<int>(my) / Cfg::core::tile_px;
+
+        // 长按绘制tile
+        if (is_left_mouse_down && current_mode == EditorMode::TerrainPaint) {
+          room.setBlock(selected_terrain_id, mouse_gx, mouse_gy);
+        }
       } else {
         mouse_gx = -1;
       }
@@ -49,11 +57,12 @@ void InputController::handleEvents(bool &running,bool& is_paused, EditorUI &edit
       float my = e.button.y - Cfg::room::menu_bar_h;
       bool in_game_view = (mx >= 0 && mx < gameW && my >= 0 && my < gameH);
 
+      if (e.button.button == SDL_BUTTON_LEFT) {
+        is_left_mouse_down = true;
+      }
+
       if (e.button.button == SDL_BUTTON_RIGHT) {
-        if (current_mode == EditorMode::Placement) {
-          current_mode = EditorMode::Observation;
-          selected_placement_item = "";
-        }
+        current_mode = EditorMode::Observation;
       } else if (e.button.button == SDL_BUTTON_LEFT && in_game_view) {
         int gx = static_cast<int>(mx) / Cfg::core::tile_px;
         int gy = static_cast<int>(my) / Cfg::core::tile_px;
@@ -68,11 +77,13 @@ void InputController::handleEvents(bool &running,bool& is_paused, EditorUI &edit
           }
           editorUI.setSelectedAgent(clicked_agent);
         } else if (current_mode == EditorMode::Placement) {
-          if (!selected_placement_item.empty() && room.getBlocksType(gx, gy) != TileType::WallH && room.getBlocksType(gx, gy) != TileType::WallV) {
-
+          if (!selected_placement_item.empty() && room.isPassable(gx, gy)) {
             items.place(selected_placement_item, gx, gy);
-            std::cout << "[Editor] Placed " << selected_placement_item << " at " << gx << "," << gy << std::endl;
+            std::cout << "InputController: Placed " << selected_placement_item << " at " << gx << "," << gy << std::endl;
           }
+        }
+        else if (current_mode == EditorMode::TerrainPaint) {
+          room.setBlock(selected_terrain_id, gx, gy);
         }
       }
     }
