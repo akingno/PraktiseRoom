@@ -43,7 +43,8 @@ public:
     std::string& selected_terrain_id,
     std::vector<std::unique_ptr<Agent>>& agents,
     ItemLayer& items,
-    IPathfinder *pf
+    IPathfinder *pf,
+    Room& room
     );
 
 private:
@@ -78,7 +79,7 @@ private:
   char new_agent_tex_[64] = "";
 
 
-  void renderMenuBar(ItemLayer& items, std::vector<std::unique_ptr<Agent>>& agents, IPathfinder* pf, IRender* irender);
+  void renderMenuBar(ItemLayer& items, std::vector<std::unique_ptr<Agent>>& agents, IPathfinder* pf, IRender* irender, Room& room);
   void renderRightPanel(bool& is_paused, EditorMode& mode, const std::vector<std::unique_ptr<Agent>>& agents);
   void renderBottomPanel(IRender* irender,
     EditorMode& mode,

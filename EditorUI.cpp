@@ -47,7 +47,7 @@ bool EditorUI::processEvent(const SDL_Event *event) {
   return false;
 }
 
-void EditorUI::renderMenuBar(ItemLayer& items, std::vector<std::unique_ptr<Agent>>& agents, IPathfinder* pf, IRender* irender) {
+void EditorUI::renderMenuBar(ItemLayer& items, std::vector<std::unique_ptr<Agent>>& agents, IPathfinder* pf, IRender* irender, Room& room) {
   // 顶部菜单栏
   if (ImGui::BeginMainMenuBar()) {
     if (ImGui::BeginMenu(u8"文件 (File)")) {
@@ -56,6 +56,7 @@ void EditorUI::renderMenuBar(ItemLayer& items, std::vector<std::unique_ptr<Agent
         Cfg::save("config.json");
         items.saveToFile("world.json");
         saveTerrains("terrains.json");
+        room.saveToFile("room_map.json");
         saveAgents(agents, "agents.json");
         std::cout << "EditorUI: 保存了所有更改！" << std::endl;
       }
@@ -73,6 +74,9 @@ void EditorUI::renderMenuBar(ItemLayer& items, std::vector<std::unique_ptr<Agent
       }
       if (ImGui::MenuItem(u8"读取地形")) {
         loadTerrains("terrains.json");
+      }
+      if (ImGui::MenuItem(u8"读取房间地图")) {
+        room.loadFromFile("room_map.json");
       }
       if (ImGui::MenuItem(u8"读取实体")) {
         loadAgents(agents, pf, irender, "agents.json");
@@ -292,13 +296,24 @@ void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string
   ImGui::End();
 }
 
-void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender, EditorMode &mode, std::string &selected_item_id, std::string& selected_terrain_id,std::vector<std::unique_ptr<Agent>> &agents, ItemLayer &items, IPathfinder *pf) {
+void EditorUI::render(bool &is_paused,
+  SDL_Renderer *renderer,
+  IRender *irender,
+  EditorMode &mode,
+  std::string &selected_item_id,
+  std::string& selected_terrain_id,
+  std::vector<std::unique_ptr<Agent>> &agents,
+  ItemLayer &items,
+  IPathfinder *pf,
+  Room& room
+  ) {
+
   ImGui_ImplSDLRenderer3_NewFrame();
   ImGui_ImplSDL3_NewFrame();
   ImGui::NewFrame();
 
   // 渲染顶部菜单、右边菜单和底部菜单
-  renderMenuBar(items, agents, pf, irender);
+  renderMenuBar(items, agents, pf, irender, room);
   renderRightPanel(is_paused, mode, agents);
   renderBottomPanel(irender, mode, selected_item_id,selected_terrain_id, items, agents, pf);
 
