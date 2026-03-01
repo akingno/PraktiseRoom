@@ -25,6 +25,7 @@ public:
   SDL_Renderer* getRenderer() override { return renderer_; }
   void loadDynamicTexture(const std::string& itemId, const std::string& textureName) override;
   void loadTerrainTexture(const std::string& tileId, const std::string& textureName) override;
+  void loadAgentTexture(const std::string& textureName) override;
 
 private:
   SDL_Window*   window_   = nullptr;
@@ -37,12 +38,13 @@ private:
   // 纹理集合
   std::unordered_map<std::string, SDL_Texture*> terrainTextures_;
   std::unordered_map<std::string, SDL_Texture*> itemTextures_;
+  std::unordered_map<std::string, SDL_Texture*> agentTextures_;
   SDL_Texture* texCharacter_ = nullptr;
 
   // 字体（HUD）
   TTF_Font* font_ = nullptr;
 
-private:
+
   SDL_Texture* loadTexture(const std::string& pngPath);
   void drawTile(int gridX, int gridY, SDL_Texture* tex);
   void clear();

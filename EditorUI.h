@@ -75,9 +75,10 @@ private:
   int new_agent_x_ = 0;
   int new_agent_y_ = 0;
   int new_agent_type_idx_ = 1;
+  char new_agent_tex_[64] = "";
 
 
-  void renderMenuBar(ItemLayer& items);
+  void renderMenuBar(ItemLayer& items, std::vector<std::unique_ptr<Agent>>& agents, IPathfinder* pf, IRender* irender);
   void renderRightPanel(bool& is_paused, EditorMode& mode, const std::vector<std::unique_ptr<Agent>>& agents);
   void renderBottomPanel(IRender* irender,
     EditorMode& mode,

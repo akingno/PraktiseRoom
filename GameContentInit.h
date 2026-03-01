@@ -3,10 +3,12 @@
 //
 #pragma once
 
+#include "Agent.h"
 #include "Character.h"
 #include "Config.h"
 #include "ItemRegistry.h"
 #include "SmartItem.h"
+#include "renders/IRender.h"
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -227,5 +229,49 @@ inline void loadItems(const std::string &filename = "items.json") {
     std::cout << "GameInit:ItemLoader: Loaded " << j.size() << " items from " << filename << std::endl;
   } catch (const std::exception &e) {
     std::cerr << "GameInit:ItemLoader: Failed to parse JSON: " << e.what() << std::endl;
+  }
+}
+
+inline void saveAgents(const std::vector<std::unique_ptr<Agent>>& agents, const std::string& filename = "agents.json") {
+  json jArray = json::array();
+  for (const auto& a : agents) {
+    json j;
+    j["name"] = a->getName();
+    j["id"] = a->getId();
+    j["x"] = a->getCharacter().getLoc().first;
+    j["y"] = a->getCharacter().getLoc().second;
+    j["ai_type"] = static_cast<int>(a->getAIType());
+    j["texture_name"] = a->getTextureName();
+    jArray.push_back(j);
+  }
+  std::ofstream out(filename);
+  if (out.is_open()) {
+    out << jArray.dump(4);
+    std::cout << "[AgentLoader] Saved agents to " << filename << std::endl;
+  }
+}
+
+inline void loadAgents(std::vector<std::unique_ptr<Agent>>& agents, IPathfinder* pf, IRender* render, const std::string& filename = "agents.json") {
+  std::ifstream file(filename);
+  if (!file.is_open()) return;
+
+  try {
+    json jArray;
+    file >> jArray;
+    agents.clear(); // 清空旧小人
+    for (const auto& jItem : jArray) {
+      std::string name = jItem.value("name", "Unknown");
+      std::string id = jItem.value("id", "npc_unknown");
+      int x = jItem.value("x", 0);
+      int y = jItem.value("y", 0);
+      AIType type = static_cast<AIType>(jItem.value("ai_type", 1));
+      std::string tex = jItem.value("texture_name", "character.png");
+
+      agents.push_back(std::make_unique<Agent>(name, id, x, y, pf, type, tex));
+      render->loadAgentTexture(tex); // 确保贴图被载入显存
+    }
+    std::cout << "[AgentLoader] Loaded " << agents.size() << " agents from " << filename << std::endl;
+  } catch (const std::exception& e) {
+    std::cerr << "[AgentLoader] Failed to parse JSON: " << e.what() << std::endl;
   }
 }

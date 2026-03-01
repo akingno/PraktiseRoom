@@ -77,6 +77,17 @@ void SDL3Render::loadTerrainTexture(const std::string& tileId, const std::string
   }
 }
 
+void SDL3Render::loadAgentTexture(const std::string& textureName) {
+  if (textureName.empty()) return;
+  try {
+    if (agentTextures_.find(textureName) != agentTextures_.end()) return;
+    agentTextures_[textureName] = loadTexture(RES(textureName.c_str()));
+    std::cout << "SDL3Render:  Loaded agent texture: " << textureName << std::endl;
+  } catch (const std::exception& e) {
+    std::cerr << "SDL3Render: Failed to load agent texture: " << e.what() << std::endl;
+  }
+}
+
 SDL3Render::~SDL3Render() {
   for (auto& kv : itemTextures_) if (kv.second) SDL_DestroyTexture(kv.second);
 
@@ -86,8 +97,7 @@ SDL3Render::~SDL3Render() {
   if (renderer_) SDL_DestroyRenderer(renderer_);
   if (window_)   SDL_DestroyWindow(window_);
 
-  TTF_Quit();          // SDL3_ttf 仍需 Quit
-  // IMG_Quit();       // SDL3_image 3.x 已无此函数，千万别调用
+  TTF_Quit();
   SDL_Quit();
 }
 
@@ -128,9 +138,9 @@ void SDL3Render::loadDynamicTexture(const std::string& itemId, const std::string
       SDL_DestroyTexture(itemTextures_[itemId]);
     }
     itemTextures_[itemId] = loadTexture(RES(textureName.c_str()));
-    std::cout << "Render: Hot-loaded texture for item: " << itemId << std::endl;
+    std::cout << "SDL3Render: Hot-loaded texture for item: " << itemId << std::endl;
   } catch (const std::exception& e) {
-    std::cerr << "Render: Failed to load texture for " << itemId << ": " << e.what() << std::endl;
+    std::cerr << "SDL3Render: Failed to load texture for " << itemId << ": " << e.what() << std::endl;
   }
 }
 
@@ -165,12 +175,18 @@ void SDL3Render::render_frame(
     }
   }
 
-  // 2) 画角色（你这边是 pair<int,int> getLoc()）
   for (const auto& agent : agents) {
     const auto& c = agent->getCharacter();
     const int cx = c.getLoc().first;
     const int cy = c.getLoc().second;
-    drawTile(cx, cy, texCharacter_);
+
+    std::string texName = agent->getTextureName();
+    auto it = agentTextures_.find(texName);
+    if (it != agentTextures_.end()) {
+      drawTile(cx, cy, it->second);
+    } else {
+      drawTile(cx, cy, texCharacter_);
+    }
   }
 
   if (!preview_item_id.empty() && preview_x >= 0 && preview_y >= 0) {

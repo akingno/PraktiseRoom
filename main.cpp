@@ -30,11 +30,10 @@ int main() {
   uint64_t seed = static_cast<uint64_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
   AkRandom::init(seed);
   Cfg::load("config.json");
+
   //初始化结束
 
   bool running = true;
-  std::string name_char1 = "张三";
-  std::string name_char2 = "李四";
 
   //物品加载和读取
   loadItems("items.json");
@@ -44,16 +43,27 @@ int main() {
   Room room(Cfg::room::view_w, Cfg::room::view_h);
   room.loadFromFile("room_map.json");
 
+  //物品初始化
   ItemLayer items;
   items.loadFromFile("world.json");
 
+  //寻路器，agent使用，需要房间作参数
   AStarPathfinder path_finder(
       {room.getWidth(), room.getHeight()},
       [&](int x, int y) { return room.isPassable(x, y); });
 
+  //agents
   std::vector<std::unique_ptr<Agent>> agents;
-  agents.push_back(std::make_unique<Agent>(name_char1, "npc_zhang", 5, 5, &path_finder, AIType::Utility));
-  agents.push_back(std::make_unique<Agent>(name_char2, "npc_li", 1, 1, &path_finder, AIType::Utility));
+  //SDL3渲染器
+  std::unique_ptr<IRender> render = std::make_unique<SDL3Render>(Cfg::room::view_w, Cfg::room::view_h, Cfg::core::tile_px, "Room Engine");
+
+  loadAgents(agents, &path_finder, render.get(), "agents.json");
+
+
+  if (agents.empty()) {
+    agents.push_back(std::make_unique<Agent>("张三", "npc_zhang", 5, 5, &path_finder, AIType::Utility, "character.png"));
+    agents.push_back(std::make_unique<Agent>("李四", "npc_li", 1, 1, &path_finder, AIType::Utility, "character.png"));
+  }
 
   // 用于debug打印
   const Character &character1 = agents[0]->getCharacter();
@@ -62,8 +72,7 @@ int main() {
   //全局决策器
   DecisionMaker decisionMaker;
 
-  //SDL3渲染器
-  std::unique_ptr<IRender> render = std::make_unique<SDL3Render>(Cfg::room::view_w, Cfg::room::view_h, Cfg::core::tile_px, "Room Engine");
+
   //ImGui初始化
   EditorUI editorUI;
   editorUI.init(render.get());
@@ -119,7 +128,7 @@ int main() {
     SDL_RenderPresent(render->getRenderer());
 
 #ifndef NDEBUG
-    if (tick_index % 20 == 0 && !is_paused) {
+    if (tick_index % 20 == 0 && !is_paused && !agents.empty()) {
       const auto &c1 = agents[0]->getCharacter();
       std::cout << "[Tick " << tick_index << "] " << agents[0]->getName() << " Inner Hunger: " + std::to_string(character1.getStat("hunger")) << "\n"
                 << " Inner Fatigue: " + std::to_string(character1.getStat("fatigue")) << "\n"

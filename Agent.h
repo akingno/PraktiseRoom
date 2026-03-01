@@ -25,8 +25,8 @@ class IPathfinder;
 
 class Agent {
  public:
-  Agent(std::string &name, std::string id, int start_x, int start_y, IPathfinder *pf, AIType ai_type = AIType::Utility)
-      : _name(name), _id(std::move(id)), _pf(pf), _ai_type(ai_type){
+  Agent(std::string name, std::string id, int start_x, int start_y, IPathfinder *pf, AIType ai_type = AIType::Utility, std::string texture_name = "character.png")
+      : _name(name), _id(std::move(id)), _pf(pf), _ai_type(ai_type), _texture_name(std::move(texture_name)){
     _ch.setLoc(start_x, start_y);
     _executor = std::make_unique<ActionExecutor>();
   }
@@ -38,6 +38,7 @@ class Agent {
   [[nodiscard]] const std::string &getName() const { return _name; }
   [[nodiscard]] const std::string &getId() const { return _id; }
   [[nodiscard]] AIType getAIType() const { return _ai_type; }
+  [[nodiscard]] const std::string &getTextureName() const { return _texture_name; }
 
   //是否在被呼叫？
   [[nodiscard]] bool isBeingCalled() const {
@@ -134,6 +135,7 @@ class Agent {
   IPathfinder *_pf;
   std::unique_ptr<ActionExecutor> _executor;
   std::vector<Agent *> _other_agents;
+  std::string _texture_name;
 };
 
 #endif//AGENT_H

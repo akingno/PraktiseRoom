@@ -47,7 +47,7 @@ bool EditorUI::processEvent(const SDL_Event *event) {
   return false;
 }
 
-void EditorUI::renderMenuBar(ItemLayer& items) {
+void EditorUI::renderMenuBar(ItemLayer& items, std::vector<std::unique_ptr<Agent>>& agents, IPathfinder* pf, IRender* irender) {
   // 顶部菜单栏
   if (ImGui::BeginMainMenuBar()) {
     if (ImGui::BeginMenu(u8"文件 (File)")) {
@@ -56,6 +56,7 @@ void EditorUI::renderMenuBar(ItemLayer& items) {
         Cfg::save("config.json");
         items.saveToFile("world.json");
         saveTerrains("terrains.json");
+        saveAgents(agents, "agents.json");
         std::cout << "EditorUI: 保存了所有更改！" << std::endl;
       }
 
@@ -72,6 +73,9 @@ void EditorUI::renderMenuBar(ItemLayer& items) {
       }
       if (ImGui::MenuItem(u8"读取地形")) {
         loadTerrains("terrains.json");
+      }
+      if (ImGui::MenuItem(u8"读取实体")) {
+        loadAgents(agents, pf, irender, "agents.json");
       }
       ImGui::EndMenu();
     }
@@ -259,6 +263,7 @@ void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string
       ImGui::Spacing();
       ImGui::InputText(u8"实体名字 (如: 王五)", new_agent_name_, IM_ARRAYSIZE(new_agent_name_));
       ImGui::InputText(u8"实体id (如: npc_01)", new_agent_id_, IM_ARRAYSIZE(new_agent_id_));
+      ImGui::InputText(u8"实体贴图 (如: character.png)", new_agent_tex_, IM_ARRAYSIZE(new_agent_tex_));
       ImGui::InputInt(u8"坐标X", &new_agent_x_);
       ImGui::InputInt(u8"坐标Y", &new_agent_y_);
 
@@ -266,18 +271,15 @@ void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string
       ImGui::Combo(u8"大脑类型", &new_agent_type_idx_, ai_types, IM_ARRAYSIZE(ai_types));
 
       ImGui::Spacing();
-      if (ImGui::Button(u8"在指定坐标生成实体", ImVec2(200, 30))) {
+      if (ImGui::Button(u8"在指定位置创造该实体", ImVec2(200, 30))) {
         std::string nameStr = new_agent_name_;
         std::string idStr = new_agent_id_;
+        std::string texStr = new_agent_tex_;
         if (!nameStr.empty() && pf) {
           AIType type = static_cast<AIType>(new_agent_type_idx_);
           // TODO：只有效用ai放agent里，或者进行agent的通用化
-          agents.push_back(std::make_unique<Agent>(nameStr, idStr, new_agent_x_, new_agent_y_, pf, type));
-          if (type == AIType::Utility) {
-            for (const auto &r : Cfg::need_rules) {
-              agents.back()->getCharacter().registerNewStat(r.name, r.growth_rate);
-            }
-          }
+          agents.push_back(std::make_unique<Agent>(nameStr, idStr, new_agent_x_, new_agent_y_, pf, type, texStr));
+          irender->loadAgentTexture(texStr);
           std::cout << "[Editor] Spawned Agent: " << nameStr << " at " << new_agent_x_ << "," << new_agent_y_ << "\n";
           memset(new_agent_name_, 0, sizeof(new_agent_name_));
           memset(new_agent_id_, 0, sizeof(new_agent_id_));
@@ -296,7 +298,7 @@ void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender,
   ImGui::NewFrame();
 
   // 渲染顶部菜单、右边菜单和底部菜单
-  renderMenuBar(items);
+  renderMenuBar(items, agents, pf, irender);
   renderRightPanel(is_paused, mode, agents);
   renderBottomPanel(irender, mode, selected_item_id,selected_terrain_id, items, agents, pf);
 
