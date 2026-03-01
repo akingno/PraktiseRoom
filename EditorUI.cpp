@@ -165,7 +165,7 @@ void EditorUI::renderRightPanel(bool& is_paused, EditorMode& mode, const std::ve
 }
 
 
-void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string& selected_item_id, std::string& selected_terrain_id,ItemLayer& items) {
+void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string& selected_item_id, std::string& selected_terrain_id,ItemLayer& items,std::vector<std::unique_ptr<Agent>> &agents, IPathfinder *pf) {
   int gameW = Cfg::room::view_w * Cfg::core::tile_px;
   int gameH = Cfg::room::view_h * Cfg::core::tile_px;
 
@@ -235,10 +235,10 @@ void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string
         }
         ImGui::EndCombo();
       }
-
-      ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
-
-      ImGui::TextColored(ImVec4(0.5f, 0.8f, 1.0f, 1.0f), u8"【创造新地形】");
+      ImGui::EndTabItem();
+    }
+    if (ImGui::BeginTabItem(u8"创造地形")){
+      ImGui::Spacing();
       ImGui::InputText(u8"地形 ID (如: lava)", new_terrain_id_, IM_ARRAYSIZE(new_terrain_id_));
       ImGui::InputText(u8"地形贴图 (如: lava.png)", new_terrain_tex_, IM_ARRAYSIZE(new_terrain_tex_));
       ImGui::Checkbox(u8"阻挡寻路 (无法通行)", &new_terrain_blocks_);
@@ -253,7 +253,36 @@ void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string
           memset(new_terrain_id_, 0, sizeof(new_terrain_id_));
         }
       }
+      ImGui::EndTabItem();
+    }
+    if (ImGui::BeginTabItem(u8"创造实体")) {
+      ImGui::Spacing();
+      ImGui::InputText(u8"实体名字 (如: 王五)", new_agent_name_, IM_ARRAYSIZE(new_agent_name_));
+      ImGui::InputText(u8"实体id (如: npc_01)", new_agent_id_, IM_ARRAYSIZE(new_agent_id_));
+      ImGui::InputInt(u8"坐标X", &new_agent_x_);
+      ImGui::InputInt(u8"坐标Y", &new_agent_y_);
 
+      const char* ai_types[] = { "Static(静态NPC)", "Utility(效用AI)", "LLM(大模型驱动)", "Player(玩家控制)"};
+      ImGui::Combo(u8"大脑类型", &new_agent_type_idx_, ai_types, IM_ARRAYSIZE(ai_types));
+
+      ImGui::Spacing();
+      if (ImGui::Button(u8"在指定坐标生成实体", ImVec2(200, 30))) {
+        std::string nameStr = new_agent_name_;
+        std::string idStr = new_agent_id_;
+        if (!nameStr.empty() && pf) {
+          AIType type = static_cast<AIType>(new_agent_type_idx_);
+          // TODO：只有效用ai放agent里，或者进行agent的通用化
+          agents.push_back(std::make_unique<Agent>(nameStr, idStr, new_agent_x_, new_agent_y_, pf, type));
+          if (type == AIType::Utility) {
+            for (const auto &r : Cfg::need_rules) {
+              agents.back()->getCharacter().registerNewStat(r.name, r.growth_rate);
+            }
+          }
+          std::cout << "[Editor] Spawned Agent: " << nameStr << " at " << new_agent_x_ << "," << new_agent_y_ << "\n";
+          memset(new_agent_name_, 0, sizeof(new_agent_name_));
+          memset(new_agent_id_, 0, sizeof(new_agent_id_));
+        }
+      }
       ImGui::EndTabItem();
     }
     ImGui::EndTabBar();
@@ -261,7 +290,7 @@ void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string
   ImGui::End();
 }
 
-void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender, EditorMode &mode, std::string &selected_item_id, std::string& selected_terrain_id,const std::vector<std::unique_ptr<Agent>> &agents, ItemLayer &items) {
+void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender, EditorMode &mode, std::string &selected_item_id, std::string& selected_terrain_id,std::vector<std::unique_ptr<Agent>> &agents, ItemLayer &items, IPathfinder *pf) {
   ImGui_ImplSDLRenderer3_NewFrame();
   ImGui_ImplSDL3_NewFrame();
   ImGui::NewFrame();
@@ -269,7 +298,7 @@ void EditorUI::render(bool &is_paused, SDL_Renderer *renderer, IRender *irender,
   // 渲染顶部菜单、右边菜单和底部菜单
   renderMenuBar(items);
   renderRightPanel(is_paused, mode, agents);
-  renderBottomPanel(irender, mode, selected_item_id,selected_terrain_id, items);
+  renderBottomPanel(irender, mode, selected_item_id,selected_terrain_id, items, agents, pf);
 
   ImGui::Render();
   ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);

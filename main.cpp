@@ -52,18 +52,12 @@ int main() {
       [&](int x, int y) { return room.isPassable(x, y); });
 
   std::vector<std::unique_ptr<Agent>> agents;
-  agents.push_back(std::make_unique<Agent>(name_char1, 5, 5, &path_finder));
-  agents.push_back(std::make_unique<Agent>(name_char2, 1, 1, &path_finder));
+  agents.push_back(std::make_unique<Agent>(name_char1, "npc_zhang", 5, 5, &path_finder, AIType::Utility));
+  agents.push_back(std::make_unique<Agent>(name_char2, "npc_li", 1, 1, &path_finder, AIType::Utility));
 
   // 用于debug打印
   const Character &character1 = agents[0]->getCharacter();
   const Character &character2 = agents[1]->getCharacter();
-
-  // decision那边需要一个指针
-  std::vector<Agent *> raw_agents_ptrs;
-  for (auto &a : agents) {
-    raw_agents_ptrs.push_back(a.get());
-  }
 
   //全局决策器
   DecisionMaker decisionMaker;
@@ -88,6 +82,11 @@ int main() {
     if (!running) break;
 
     if (!is_paused) {
+      //重新构造当前的小人指针（因为可能加了新的）
+      std::vector<Agent*> raw_agents_ptrs;
+      for (auto &a : agents) {
+        raw_agents_ptrs.push_back(a.get());
+      }
 
       //更新+移动
       for (auto &agent : agents) {
@@ -115,7 +114,7 @@ int main() {
     std::string preview_id = (input.current_mode == EditorMode::Placement) ? input.selected_placement_item : "";
     render->render_frame(items, agents, room, preview_id, input.mouse_gx, input.mouse_gy);
 
-    editorUI.render(is_paused, render->getRenderer(), render.get(), input.current_mode, input.selected_placement_item,input.selected_terrain_id, agents, items);
+    editorUI.render(is_paused, render->getRenderer(), render.get(), input.current_mode, input.selected_placement_item,input.selected_terrain_id, agents, items, &path_finder);
 
     SDL_RenderPresent(render->getRenderer());
 

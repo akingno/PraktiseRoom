@@ -9,28 +9,35 @@
 #include "Blackboard.h"
 #include "Character.h"
 #include "ItemRegistry.h"
-
 #include "actions/ActionFactory.h"
-
 #include <iostream>
 #include <string>
+enum class AIType {
+  Static,// 静态NPC
+  Utility, // 效用AI
+  LLM, // 大模型
+  Player // 玩家控制
+};
+
 class Room;
 class ItemLayer;
 class IPathfinder;
 
 class Agent {
  public:
-  Agent(std::string &name, int start_x, int start_y, IPathfinder *pf)
-      : _name(name), _pf(pf) {
+  Agent(std::string &name, std::string id, int start_x, int start_y, IPathfinder *pf, AIType ai_type = AIType::Utility)
+      : _name(name), _id(std::move(id)), _pf(pf), _ai_type(ai_type){
     _ch.setLoc(start_x, start_y);
     _executor = std::make_unique<ActionExecutor>();
   }
-  Agent();
+  Agent() = default;
 
   [[nodiscard]] const Character &getCharacter() const { return _ch; }
   [[nodiscard]] Character &getCharacter() { return _ch; }
 
   [[nodiscard]] const std::string &getName() const { return _name; }
+  [[nodiscard]] const std::string &getId() const { return _id; }
+  [[nodiscard]] AIType getAIType() const { return _ai_type; }
 
   //是否在被呼叫？
   [[nodiscard]] bool isBeingCalled() const {
@@ -120,6 +127,8 @@ class Agent {
 
  private:
   std::string _name;
+  std::string _id;
+  AIType _ai_type;
   Character _ch;
   Blackboard _bb;
   IPathfinder *_pf;

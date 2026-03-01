@@ -41,8 +41,9 @@ public:
     IRender* irender, EditorMode& mode,
     std::string& selected_item_id,
     std::string& selected_terrain_id,
-    const std::vector<std::unique_ptr<Agent>>& agents,
-    ItemLayer& items
+    std::vector<std::unique_ptr<Agent>>& agents,
+    ItemLayer& items,
+    IPathfinder *pf
     );
 
 private:
@@ -69,10 +70,22 @@ private:
   char new_terrain_tex_[64] = "";
   bool new_terrain_blocks_ = false;
 
+  char new_agent_name_[64] = "";
+  char new_agent_id_[64] = "";
+  int new_agent_x_ = 0;
+  int new_agent_y_ = 0;
+  int new_agent_type_idx_ = 1;
+
 
   void renderMenuBar(ItemLayer& items);
   void renderRightPanel(bool& is_paused, EditorMode& mode, const std::vector<std::unique_ptr<Agent>>& agents);
-  void renderBottomPanel(IRender* irender, EditorMode& mode, std::string& selected_item_id, std::string& selected_terrain_id,ItemLayer& items);
+  void renderBottomPanel(IRender* irender,
+    EditorMode& mode,
+    std::string& selected_item_id,
+    std::string& selected_terrain_id,
+    ItemLayer& items,
+    std::vector<std::unique_ptr<Agent>> &agents,
+    IPathfinder *pf);
 };
 
 
