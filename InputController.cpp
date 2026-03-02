@@ -4,6 +4,7 @@
 
 #include "InputController.h"
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 void InputController::handleEvents(bool &running,bool& is_paused, EditorUI &editorUI, Room &room, ItemLayer &items, const std::vector<std::unique_ptr<Agent>> &agents) {
   SDL_Event e;
@@ -24,7 +25,11 @@ void InputController::handleEvents(bool &running,bool& is_paused, EditorUI &edit
       if (e.key.key == SDLK_ESCAPE) running = false;
       if (e.key.key == SDLK_SPACE) {
         is_paused = !is_paused;
-        std::cout << (is_paused ? "System: Game Paused." : "System: Game Resumed.") << std::endl;
+        if (is_paused) {
+          spdlog::info("System: Game Paused.");
+        } else {
+          spdlog::info("System: Game Resumed.");
+        }
       }
     }
 
@@ -79,7 +84,7 @@ void InputController::handleEvents(bool &running,bool& is_paused, EditorUI &edit
         } else if (current_mode == EditorMode::Placement) {
           if (!selected_placement_item.empty() && room.isPassable(gx, gy)) {
             items.place(selected_placement_item, gx, gy);
-            std::cout << "InputController: Placed " << selected_placement_item << " at " << gx << "," << gy << std::endl;
+            spdlog::info("InputCtrler: Placed {} at {},{}", selected_placement_item, gx, gy);
           }
         }
         else if (current_mode == EditorMode::TerrainPaint) {

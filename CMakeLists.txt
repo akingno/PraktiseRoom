@@ -95,6 +95,7 @@ target_include_directories(room_temp PRIVATE
         ${CMAKE_SOURCE_DIR}/third_party
         ${CMAKE_SOURCE_DIR}/third_party/imgui
         ${CMAKE_SOURCE_DIR}/third_party/imgui/backends
+        ${CMAKE_SOURCE_DIR}/third_party/spd/include
 )
 
 target_link_libraries(room_temp PRIVATE

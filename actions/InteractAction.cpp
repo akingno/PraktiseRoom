@@ -32,8 +32,8 @@ bool try_use_item_at(ActExecutorCtx &ctx, int x, int y) {
         }
       }
       return true;
-    } else {
-      std::cout << "Interact Action: Impossible branch happen" << std::endl;
+    } else [[unlikely]]{
+      spdlog::warn("Interact Action: Impossible branch happen");
     }
   }
   return false;

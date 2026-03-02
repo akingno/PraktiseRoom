@@ -34,9 +34,6 @@ struct EventBus {
   // args: name, growth, enter, exit, weight
   inline static Signal<std::string, float, float, float, float> onUI_ApplyNewNeed;
 
-  // signal3: 产生了一条要打印的日志
-  // args: 日志级别, 具体消息内容
-  inline static Signal<std::string, std::string> onSystemLog;
 
 };
 

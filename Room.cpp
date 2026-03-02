@@ -3,6 +3,9 @@
 //
 
 #include "Room.h"
+
+#include "spdlog/spdlog.h"
+
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -58,7 +61,7 @@ void Room::saveToFile(const std::string& filename) const {
   std::ofstream out(filename);
   if (out.is_open()) {
     out << j.dump(4);
-    std::cout << "Room: Saved terrain to " << filename << std::endl;
+    spdlog::info("Room: Saved terrain to " + filename);
   }
 }
 

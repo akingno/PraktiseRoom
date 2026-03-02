@@ -17,9 +17,31 @@
 #include "InputController.h"
 #include "event_bus/EventBindings.h"
 #include <iostream>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/basic_file_sink.h>
+
+void initLogger() {
+  try {
+    auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("engine.log", true);
+
+    spdlog::sinks_init_list sink_list = {console_sink, file_sink};
+    auto logger = std::make_shared<spdlog::logger>("engine", sink_list.begin(), sink_list.end());
+
+    spdlog::set_default_logger(logger);
+
+    spdlog::set_pattern("[%Y-%m-%d %H:%M:%S] [%^%l%$] %v");
+    spdlog::set_level(spdlog::level::debug);
+
+    spdlog::info("Spdlog initialized successfully! Welcome.");
+  } catch (const spdlog::spdlog_ex& ex) {
+    std::cout << "Log initialization failed: " << ex.what() << std::endl;
+  }
+}
 
 int main() {
-
+  initLogger();
 #ifdef _WIN32
   SetConsoleOutputCP(CP_UTF8);
   SetConsoleCP(CP_UTF8);
@@ -138,13 +160,15 @@ int main() {
 #ifndef NDEBUG
     if (tick_index % 20 == 0 && !is_paused && !agents.empty()) {
       const auto &c1 = agents[0]->getCharacter();
-      std::cout << "[Tick " << tick_index << "] " << agents[0]->getName() << " Inner Hunger: " + std::to_string(character1.getStat("hunger")) << "\n"
-                << " Inner Fatigue: " + std::to_string(character1.getStat("fatigue")) << "\n"
-                << " Bored: " + std::to_string(character1.getStat("boredom")) << "\n"
-                << " Mem: " << c1.get_short_memory().to_string() << std::endl
-                << std::endl;
-    }
 
+      spdlog::debug("[Tick {}] {} Inner Hunger: {:.2f} | Inner Fatigue: {:.2f} | Bored: {:.2f} | Mem: {}",
+                    tick_index,
+                    agents[0]->getName(),
+                    character1.getStat("hunger"),
+                    character1.getStat("fatigue"),
+                    character1.getStat("boredom"),
+                    c1.get_short_memory().to_string());
+    }
 #endif
 
     next_tick += dt;

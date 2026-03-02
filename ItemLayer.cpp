@@ -3,6 +3,9 @@
 //
 
 #include "ItemLayer.h"
+
+#include "spdlog/spdlog.h"
+
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -52,9 +55,9 @@ void ItemLayer::saveToFile(const std::string& filename) const {
   std::ofstream out(filename);
   if (out.is_open()) {
     out << jArray.dump(4);
-    std::cout << "ItemLayer: Saved world layout to " << filename << std::endl;
+    spdlog::info("ItemLayer: Saved world layout to " + filename);
   } else {
-    std::cerr << "ItemLayer: Error saving world layout to " << filename << std::endl;
+    spdlog::warn("ItemLayer: Failed to open file " + filename);
   }
 }
 
@@ -63,7 +66,7 @@ void ItemLayer::loadFromFile(const std::string& filename) {
 
   // 如果文件不存在，则调用默认布局并保存
   if (!file.is_open()) {
-    std::cout << "[ItemLayer] " << filename << " not found, generating default layout..." << std::endl;
+    spdlog::info("ItemLayer: Failed to load default layout, generating default layout...");
     clear();
     initDefaultLayout();
     saveToFile(filename);
@@ -84,8 +87,8 @@ void ItemLayer::loadFromFile(const std::string& filename) {
         place(id, x, y);
       }
     }
-    std::cout << "ItemLayer: Loaded layout from " << filename << std::endl;
+    spdlog::info("ItemLayer: Loaded layout from "+filename);
   } catch (const std::exception& e) {
-    std::cerr << "ItemLayer: Failed to parse JSON: " << e.what() << std::endl;
+    spdlog::error("ItemLayer: Failed to parse JSON: {} ", e.what());
   }
 }

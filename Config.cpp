@@ -2,6 +2,9 @@
 // Created by jacob on 26-2-19.
 //
 #include "Config.h"
+
+#include "spdlog/spdlog.h"
+
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -12,7 +15,7 @@ void Cfg::load(const std::string &filename) {
   std::ifstream file(filename);
 
   if (!file.is_open()) {
-    std::cout << "[Config] " << filename << " not found, generating default config..." << std::endl;
+    spdlog::info("Config: Failed to load from {}, generating default config...", filename);
 
     if (need_rules.empty()) {
       need_rules.push_back({"hunger", 2.0, 60.0, 0.0, 1.5});
@@ -89,9 +92,9 @@ void Cfg::load(const std::string &filename) {
       item::play_computer_entertain = j["item"].value("play_computer_entertain", item::play_computer_entertain);
     }
 
-    std::cout << "[Config] Loaded configuration from " << filename << std::endl;
+    spdlog::info("Config: Loaded configuration from" + filename);
   } catch (const std::exception &e) {
-    std::cerr << "[Config] Failed to parse JSON: " << e.what() << std::endl;
+    spdlog::error("Config: Failed to parse JSON");
   }
 }
 
@@ -152,8 +155,8 @@ void Cfg::save(const std::string &filename) {
   std::ofstream file(filename);
   if (file.is_open()) {
     file << j.dump(4);
-    std::cout << "[Config] Saved configuration to " << filename << std::endl;
+    spdlog::info("Config: saved configuration to " + filename);
   } else {
-    std::cerr << "[Config] Error saving configuration to " << filename << std::endl;
+    spdlog::error("Config: Error saving configuration to " + filename);
   }
 }

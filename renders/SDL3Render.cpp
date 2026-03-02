@@ -2,14 +2,13 @@
 // Created by jacob on 25-10-18.
 //
 #include "SDL3Render.h"
-
 #include <stdexcept>
 #include <string>
-
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include "../ItemLayer.h"
+#include "spdlog/spdlog.h"
 
 static std::string RES(const char* name) {
   return std::string("res/") + name;
@@ -47,7 +46,7 @@ SDL3Render::SDL3Render(int viewW, int viewH, int tilePx, const std::string& titl
       try {
         itemTextures_[id] = loadTexture(RES(texName.c_str()));
       } catch (const std::exception& e) {
-        std::cerr << "SDL3Render: Missing texture for item: " << id << std::endl;
+        spdlog::error("SDL3Render: Missing texture for item: {}", id);
       }
     }
   }
@@ -58,7 +57,7 @@ SDL3Render::SDL3Render(int viewW, int viewH, int tilePx, const std::string& titl
       try {
         terrainTextures_[id] = loadTexture(RES(def.texture_name.c_str()));
       } catch (const std::exception& e) {
-        std::cerr << "SDL3Render: Missing texture for terrain: " << id << std::endl;
+        spdlog::error("SDL3Render: Missing texture for terrain: {}", id);
       }
     }
   }
@@ -73,7 +72,7 @@ void SDL3Render::loadTerrainTexture(const std::string& tileId, const std::string
     }
     terrainTextures_[tileId] = loadTexture(RES(textureName.c_str()));
   } catch (const std::exception& e) {
-    std::cerr << "SDL3Render: Failed to hot-load terrain texture: " << e.what() << std::endl;
+    spdlog::error("SDL3Render: Failed to load terrain texture: {}", tileId);
   }
 }
 
@@ -82,9 +81,9 @@ void SDL3Render::loadAgentTexture(const std::string& textureName) {
   try {
     if (agentTextures_.find(textureName) != agentTextures_.end()) return;
     agentTextures_[textureName] = loadTexture(RES(textureName.c_str()));
-    std::cout << "SDL3Render:  Loaded agent texture: " << textureName << std::endl;
+    spdlog::info("SDL3Render:  Loaded agent texture: {}", textureName);
   } catch (const std::exception& e) {
-    std::cerr << "SDL3Render: Failed to load agent texture: " << e.what() << std::endl;
+    spdlog::error("SDL3Render: Failed to load agent texture: {}", textureName);
   }
 }
 
@@ -138,9 +137,9 @@ void SDL3Render::loadDynamicTexture(const std::string& itemId, const std::string
       SDL_DestroyTexture(itemTextures_[itemId]);
     }
     itemTextures_[itemId] = loadTexture(RES(textureName.c_str()));
-    std::cout << "SDL3Render: Hot-loaded texture for item: " << itemId << std::endl;
+    spdlog::info("SDL3Render: Loaded texture: {}", itemId);
   } catch (const std::exception& e) {
-    std::cerr << "SDL3Render: Failed to load texture for " << itemId << ": " << e.what() << std::endl;
+    spdlog::error("SDL3Render: Failed to load texture: {}", itemId);
   }
 }
 

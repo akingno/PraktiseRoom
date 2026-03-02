@@ -12,6 +12,7 @@
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include "spdlog/spdlog.h"
 
 using json = nlohmann::json;
 
@@ -54,7 +55,7 @@ inline void generateDefaultTerrains() {
   TerrainRegistry::inst().register_terrain({"wall", "wall_h.png", true});
   TerrainRegistry::inst().register_terrain({"door", "door.png", false});
 
-  std::cout << "GameInit:TerrainLoader: Generated default terrains in memory.\n";
+  spdlog::info("GameInit:TerrainLoader: Generated default terrains in memory");
 }
 
 inline void generateDefaultItems() {
@@ -80,7 +81,7 @@ inline void generateDefaultItems() {
   computer->setSequence({{"MoveToTarget", 0, ""}, {"Interact", 0, ""}, {"Wait", useTicks, ""}});
   ItemRegistry::inst().register_item(std::move(computer));
 
-  std::cout << "GameInit:ItemLoader: Generated default items in memory.\n";
+  spdlog::info("GameInit:ItemLoader: Generated default items in memory.");
 }
 
 inline void saveTerrains(const std::string& filename = "terrains.json") {
@@ -95,14 +96,14 @@ inline void saveTerrains(const std::string& filename = "terrains.json") {
   std::ofstream out(filename);
   if (out.is_open()) {
     out << jArray.dump(4);
-    std::cout << "GameInit:TerrainLoader: Saved terrains to " << filename << std::endl;
+    spdlog::info("GameInit:TerrainLoader: Saved to file {}", filename);
   }
 }
 
 inline void loadTerrains(const std::string& filename = "terrains.json") {
   std::ifstream file(filename);
   if (!file.is_open()) {
-    std::cout << "GameInit:TerrainLoader: " << filename << " not found, triggering fallback..." << std::endl;
+    spdlog::info("GameInit:TerrainLoader: Failed to load from{}, generating terrains...", filename);
     generateDefaultTerrains();
     saveTerrains(filename);
     return;
@@ -120,9 +121,9 @@ inline void loadTerrains(const std::string& filename = "terrains.json") {
         TerrainRegistry::inst().register_terrain(def);
       }
     }
-    std::cout << "GameInit:TerrainLoader: Loaded " << jArray.size() << " terrains from " << filename << std::endl;
+    spdlog::info("GameInit:TerrainLoader: Loaded {} terrains from {}", jArray.size(), filename);
   } catch (const std::exception& e) {
-    std::cerr << "GameInit:TerrainLoader: Failed to parse JSON: " << e.what() << std::endl;
+    spdlog::error("GameInit:TerrainLoader: Failed to parse JSON: {}", e.what());
   }
 }
 
@@ -168,7 +169,7 @@ inline void saveItems(const std::string &filename = "items.json") {
   std::ofstream out(filename);
   if (out.is_open()) {
     out << jArray.dump(4);
-    std::cout << "GameInit:ItemLoader: Saved items to " << filename << std::endl;
+    spdlog::info("GameInit:ItemLoader: Saved to file {}", filename);
   }
 }
 
@@ -177,7 +178,7 @@ inline void loadItems(const std::string &filename = "items.json") {
 
   // 如果文件不存在，先生成默认数据保存到硬盘，再读取
   if (!file.is_open()) {
-    std::cout << "GameInit:ItemLoader: " << filename << " not found, triggering fallback..." << std::endl;
+    spdlog::info("GameInit:ItemLoader: Failed to load {}, generate default items", filename);
     generateDefaultItems();
     saveItems(filename);
     return;
@@ -226,9 +227,9 @@ inline void loadItems(const std::string &filename = "items.json") {
 
       ItemRegistry::inst().register_item(std::move(smart_item));
     }
-    std::cout << "GameInit:ItemLoader: Loaded " << j.size() << " items from " << filename << std::endl;
+    spdlog::info("ItemLoader: Loaded {} items from {}", j.size(), filename);
   } catch (const std::exception &e) {
-    std::cerr << "GameInit:ItemLoader: Failed to parse JSON: " << e.what() << std::endl;
+    spdlog::error("ItemLoader: Failed to parse JSON: {}", e.what());
   }
 }
 
@@ -247,7 +248,7 @@ inline void saveAgents(const std::vector<std::unique_ptr<Agent>>& agents, const 
   std::ofstream out(filename);
   if (out.is_open()) {
     out << jArray.dump(4);
-    std::cout << "[AgentLoader] Saved agents to " << filename << std::endl;
+    spdlog::info("GameInit:AgentLoader: Saved to file {}", filename);
   }
 }
 
@@ -270,8 +271,8 @@ inline void loadAgents(std::vector<std::unique_ptr<Agent>>& agents, IPathfinder*
       agents.push_back(std::make_unique<Agent>(name, id, x, y, pf, type, tex));
       render->loadAgentTexture(tex); // 确保贴图被载入显存
     }
-    std::cout << "[AgentLoader] Loaded " << agents.size() << " agents from " << filename << std::endl;
+    spdlog::info("GameInit:AgentLoader: Loaded {} agents from {} successfully",agents.size(),filename);
   } catch (const std::exception& e) {
-    std::cerr << "[AgentLoader] Failed to parse JSON: " << e.what() << std::endl;
+    spdlog::error("GameInit:AgentLoader: Failed to parse JSON: {}", e.what());
   }
 }
