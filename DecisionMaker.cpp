@@ -14,7 +14,7 @@ DecisionMaker::~DecisionMaker() {
 void DecisionMaker::requestBatchDecision(const std::vector<Agent *> &agents, uint64_t nowTick, const ItemLayer &items) {
   if (_fut.valid()) return;
 
-  // 【新增】扫描地图，收集所有可用的智能物品
+  // 扫描地图，收集所有可用的物品
   std::vector<ItemSnapshot> itemSnapshots;
   for (const auto &[key, id] : items.items()) {
     if (Item *baseItem = ItemRegistry::inst().get(id)) {
@@ -168,7 +168,7 @@ std::map<std::string, DecisionResult> DecisionMaker::localUtilityBatch(
     for (const auto &rule : Cfg::need_rules) {
       double currentStat = agent.getStat(rule.name);
 
-      // 如果还没达到阈值，就不用找了
+      // 如果还没达到阈值，就不找了
       if (currentStat <= rule.enter_threshold) continue;
 
       // 在全地图扫描能满足该rule.name的物品
@@ -202,7 +202,7 @@ std::map<std::string, DecisionResult> DecisionMaker::localUtilityBatch(
       }
     }
 
-    // 最后比对一下 Talk
+    // 最后比对一下说话的分数得到分数
     if (scoreTalk > best) {
       best = scoreTalk;
       chosen = Character::Act::Talk;

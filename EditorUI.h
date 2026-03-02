@@ -5,10 +5,10 @@
 #ifndef EDITORUI_H
 #define EDITORUI_H
 #include "Agent.h"
+#include "GameContentInit.h"
+#include "event_bus/EventBus.h"
 #include <SDL3/SDL.h>
 #include <string>
-#include "GameContentInit.h"
-#include "ItemLayer.h"
 
 enum class EditorMode {
   Observation,
@@ -36,15 +36,11 @@ public:
 
   // 主渲染逻辑
   void render(
-    bool& is_paused,
+    bool is_paused,
     SDL_Renderer *renderer,
-    IRender* irender, EditorMode& mode,
+    EditorMode& mode,
     std::string& selected_item_id,
-    std::string& selected_terrain_id,
-    std::vector<std::unique_ptr<Agent>>& agents,
-    ItemLayer& items,
-    IPathfinder *pf,
-    Room& room
+    std::string& selected_terrain_id
     );
 
 private:
@@ -79,15 +75,12 @@ private:
   char new_agent_tex_[64] = "";
 
 
-  void renderMenuBar(ItemLayer& items, std::vector<std::unique_ptr<Agent>>& agents, IPathfinder* pf, IRender* irender, Room& room);
-  void renderRightPanel(bool& is_paused, EditorMode& mode, const std::vector<std::unique_ptr<Agent>>& agents);
-  void renderBottomPanel(IRender* irender,
+  void renderMenuBar();
+  void renderRightPanel(bool is_paused, EditorMode& mode);
+  void renderBottomPanel(
     EditorMode& mode,
     std::string& selected_item_id,
-    std::string& selected_terrain_id,
-    ItemLayer& items,
-    std::vector<std::unique_ptr<Agent>> &agents,
-    IPathfinder *pf);
+    std::string& selected_terrain_id);
 };
 
 

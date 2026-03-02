@@ -15,7 +15,7 @@
 #endif
 #include "EditorUI.h"
 #include "InputController.h"
-
+#include "event_bus/EventBindings.h"
 #include <iostream>
 
 int main() {
@@ -83,7 +83,10 @@ int main() {
   const auto dt = std::chrono::milliseconds(Cfg::core::tick_milli_int);
   uint64_t tick_index = 0;
   bool is_paused = false;
+
+  // 输入处理
   InputController input;
+  SystemBindings::bindAllUIEvents(room, items, agents, &path_finder, render.get());
 
   while (running) {
     input.handleEvents(running, is_paused ,editorUI, room, items, agents);
@@ -125,14 +128,9 @@ int main() {
 
     editorUI.render(is_paused,
       render->getRenderer(),
-      render.get(),
       input.current_mode,
       input.selected_placement_item,
-      input.selected_terrain_id,
-      agents,
-      items,
-      &path_finder,
-      room
+      input.selected_terrain_id
       );
 
     SDL_RenderPresent(render->getRenderer());

@@ -47,46 +47,40 @@ bool EditorUI::processEvent(const SDL_Event *event) {
   return false;
 }
 
-void EditorUI::renderMenuBar(ItemLayer& items, std::vector<std::unique_ptr<Agent>>& agents, IPathfinder* pf, IRender* irender, Room& room) {
+void EditorUI::renderMenuBar() {
   // 顶部菜单栏
   if (ImGui::BeginMainMenuBar()) {
     if (ImGui::BeginMenu(u8"文件 (File)")) {
       if (ImGui::MenuItem(u8"保存全部 (Save All World & Config)")) {
-        saveItems("items.json");
-        Cfg::save("config.json");
-        items.saveToFile("world.json");
-        saveTerrains("terrains.json");
-        room.saveToFile("room_map.json");
-        saveAgents(agents, "agents.json");
-        std::cout << "EditorUI: 保存了所有更改！" << std::endl;
+        EventBus::onUI_SaveAllRequested.emit();
       }
 
       ImGui::Separator();
 
       if (ImGui::MenuItem(u8"读取物品")) {
-        loadItems("items.json");
+        EventBus::onUI_LoadItemsRequested.emit();;
       }
       if (ImGui::MenuItem(u8"读取配置")) {
-        Cfg::load("config.json");
+        EventBus::onUI_LoadConfigRequested.emit();
       }
       if (ImGui::MenuItem(u8"读取世界")) {
-        items.loadFromFile("world.json");
+        EventBus::onUI_LoadWorldRequested.emit();
       }
       if (ImGui::MenuItem(u8"读取地形")) {
-        loadTerrains("terrains.json");
+        EventBus::onUI_LoadTerrainsRequested.emit();
       }
       if (ImGui::MenuItem(u8"读取房间地图")) {
-        room.loadFromFile("room_map.json");
+        EventBus::onUI_LoadRoomMapRequested.emit();
       }
       if (ImGui::MenuItem(u8"读取实体")) {
-        loadAgents(agents, pf, irender, "agents.json");
+        EventBus::onUI_LoadAgentsRequested.emit();
       }
       ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
   }
 }
-void EditorUI::renderRightPanel(bool& is_paused, EditorMode& mode, const std::vector<std::unique_ptr<Agent>>& agents) {
+void EditorUI::renderRightPanel(bool is_paused, EditorMode& mode) {
   int gameW = Cfg::room::view_w * Cfg::core::tile_px;
   int gameH = Cfg::room::view_h * Cfg::core::tile_px;
   float menuHeight = static_cast<float>(Cfg::room::menu_bar_h);
@@ -150,30 +144,15 @@ void EditorUI::renderRightPanel(bool& is_paused, EditorMode& mode, const std::ve
   if (ImGui::Button(u8"应用新需求", ImVec2(-1.0f, 30))) {
     std::string needStr = new_need_name_;
     if (!needStr.empty()) {
-      bool exists = false;
-      for (const auto &r : Cfg::need_rules) {
-        if (r.name == needStr) { exists = true; break; }
-      }
-      if (!exists) {
-        Cfg::NeedRule rule;
-        rule.name = needStr; rule.growth_rate = new_need_growth_;
-        rule.enter_threshold = new_need_enter_; rule.exit_threshold = new_need_exit_;
-        rule.weight = new_need_weight_;
-        Cfg::need_rules.push_back(rule);
-        for (auto &agent : agents) {
-          agent->getCharacter().registerNewStat(needStr, new_need_growth_);
-        }
-        memset(new_need_name_, 0, sizeof(new_need_name_));
-      } else {
-        std::cout << "EditorUI: 需求" << needStr << "已经存在，无需重复添加。" << std::endl;
-      }
+      EventBus::onUI_ApplyNewNeed.emit(needStr, new_need_growth_, new_need_enter_, new_need_exit_, new_need_weight_);
+      memset(new_need_name_, 0, sizeof(new_need_name_));
     }
   }
   ImGui::End();
 }
 
 
-void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string& selected_item_id, std::string& selected_terrain_id,ItemLayer& items,std::vector<std::unique_ptr<Agent>> &agents, IPathfinder *pf) {
+void EditorUI::renderBottomPanel(EditorMode& mode, std::string& selected_item_id, std::string& selected_terrain_id) {
   int gameW = Cfg::room::view_w * Cfg::core::tile_px;
   int gameH = Cfg::room::view_h * Cfg::core::tile_px;
 
@@ -213,17 +192,8 @@ void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string
 
       ImGui::Spacing();
       if (ImGui::Button(u8"创建", ImVec2(200, 30))) {
-        std::string idStr = new_item_id_;
-        if (!idStr.empty()) {
-          ItemProps props{false, new_item_blocks_, new_item_useable_, new_item_tex_};
-          auto smartItem = std::make_unique<SmartItem>(idStr, props);
-          std::string targetStr = new_eff_target_;
-          if (!targetStr.empty()) {
-            smartItem->addEffect({EffectType::ModifyStat, targetStr, static_cast<double>(new_eff_value_)});
-          }
-          smartItem->setSequence({{"MoveToTarget", 0, ""}, {"Interact", 0, ""}});
-          ItemRegistry::inst().register_item(std::move(smartItem));
-          irender->loadDynamicTexture(idStr, new_item_tex_);
+        if (new_item_id_[0]!='\0') {
+          EventBus::onUI_CreateItem.emit(new_item_id_, new_item_tex_, new_item_useable_, new_item_blocks_, new_eff_target_, new_eff_value_);
           memset(new_item_id_, 0, sizeof(new_item_id_));
         }
       }
@@ -253,11 +223,8 @@ void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string
 
       ImGui::Spacing();
       if (ImGui::Button(u8"生成地形并热加载", ImVec2(200, 30))) {
-        std::string idStr = new_terrain_id_;
-        if (!idStr.empty()) {
-          TerrainDef def{idStr, new_terrain_tex_, new_terrain_blocks_};
-          TerrainRegistry::inst().register_terrain(def);
-          irender->loadTerrainTexture(idStr, new_terrain_tex_);
+        if (new_terrain_id_[0]!='\0') {
+          EventBus::onUI_CreateTerrain.emit(new_terrain_id_, new_terrain_tex_, new_terrain_blocks_);
           memset(new_terrain_id_, 0, sizeof(new_terrain_id_));
         }
       }
@@ -276,15 +243,9 @@ void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string
 
       ImGui::Spacing();
       if (ImGui::Button(u8"在指定位置创造该实体", ImVec2(200, 30))) {
-        std::string nameStr = new_agent_name_;
-        std::string idStr = new_agent_id_;
-        std::string texStr = new_agent_tex_;
-        if (!nameStr.empty() && pf) {
-          AIType type = static_cast<AIType>(new_agent_type_idx_);
-          // TODO：只有效用ai放agent里，或者进行agent的通用化
-          agents.push_back(std::make_unique<Agent>(nameStr, idStr, new_agent_x_, new_agent_y_, pf, type, texStr));
-          irender->loadAgentTexture(texStr);
-          std::cout << "[Editor] Spawned Agent: " << nameStr << " at " << new_agent_x_ << "," << new_agent_y_ << "\n";
+        if (new_agent_name_[0] != '\0') {
+          auto type = static_cast<AIType>(new_agent_type_idx_);
+          EventBus::onUI_CreateAgent.emit(new_agent_name_, new_agent_id_, new_agent_x_, new_agent_y_, type, new_agent_tex_);
           memset(new_agent_name_, 0, sizeof(new_agent_name_));
           memset(new_agent_id_, 0, sizeof(new_agent_id_));
         }
@@ -296,16 +257,11 @@ void EditorUI::renderBottomPanel(IRender* irender, EditorMode& mode, std::string
   ImGui::End();
 }
 
-void EditorUI::render(bool &is_paused,
+void EditorUI::render(bool is_paused,
   SDL_Renderer *renderer,
-  IRender *irender,
   EditorMode &mode,
   std::string &selected_item_id,
-  std::string& selected_terrain_id,
-  std::vector<std::unique_ptr<Agent>> &agents,
-  ItemLayer &items,
-  IPathfinder *pf,
-  Room& room
+  std::string& selected_terrain_id
   ) {
 
   ImGui_ImplSDLRenderer3_NewFrame();
@@ -313,9 +269,9 @@ void EditorUI::render(bool &is_paused,
   ImGui::NewFrame();
 
   // 渲染顶部菜单、右边菜单和底部菜单
-  renderMenuBar(items, agents, pf, irender, room);
-  renderRightPanel(is_paused, mode, agents);
-  renderBottomPanel(irender, mode, selected_item_id,selected_terrain_id, items, agents, pf);
+  renderMenuBar();
+  renderRightPanel(is_paused, mode);
+  renderBottomPanel(mode, selected_item_id,selected_terrain_id);
 
   ImGui::Render();
   ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);

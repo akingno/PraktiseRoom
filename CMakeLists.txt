@@ -77,6 +77,10 @@ set(IMGUI_BACKEND_SOURCES
         InputController.cpp
         InputController.h
         TerrainRegistry.h
+        event_bus/Signal.h
+        event_bus/EventBus.h
+        event_bus/EventBindings.cpp
+        event_bus/EventBindings.h
 )
 
 add_executable(room_temp
