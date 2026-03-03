@@ -21,7 +21,11 @@ void LLMBrain::think(Agent* body, double dt_sec, uint64_t tick_index, Room& room
 }
 
 void PlayerBrain::think(Agent* body, double dt_sec, uint64_t tick_index, Room& room, ItemLayer& items, const std::vector<Agent*>& others) {
-  // 预留给玩家输入
+  // 玩家输入
+  if (!body->isReadyForAction()) {
+    return;
+  }
+
   const bool* state = SDL_GetKeyboardState(NULL);
   auto pos = body->getCharacter().getLoc();
 

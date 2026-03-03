@@ -111,7 +111,9 @@ int main() {
       //重新构造当前的小人指针（因为可能加了新的）
       std::vector<Agent*> raw_agents_ptrs;
       for (auto &a : agents) {
-        raw_agents_ptrs.push_back(a.get());
+        if (a->getAIType()!=AIType::Player) {
+          raw_agents_ptrs.push_back(a.get());
+        }
       }
 
       //更新+移动
@@ -120,15 +122,15 @@ int main() {
       }
 
       if (!decisionMaker.isThinking()) {
-        bool anyNeedsDecision = false;
+        std::vector<Agent*> thinking_agents;
         for (auto *agent : raw_agents_ptrs) {
           if (agent->needsNewDecision()) {
-            anyNeedsDecision = true;
             agent->markThinking();
+            thinking_agents.push_back(agent);
           }
         }
-        if (anyNeedsDecision) {
-          decisionMaker.requestBatchDecision(raw_agents_ptrs, tick_index, items);
+        if (!thinking_agents.empty()) {
+          decisionMaker.requestBatchDecision(thinking_agents, tick_index, items);
         }
       }
       decisionMaker.poll(raw_agents_ptrs);

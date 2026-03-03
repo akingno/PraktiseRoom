@@ -36,6 +36,10 @@ class Agent {
   [[nodiscard]] AIType getAIType() const { return _brain->getType(); }
   [[nodiscard]] const std::string &getTextureName() const { return _texture_name; }
 
+  [[nodiscard]] bool isReadyForAction() const {
+    return _bb.actionQueue.empty() && !_bb.currentAction;
+  }
+
   //是否在被呼叫？
   [[nodiscard]] bool isBeingCalled() const {
     return _bb.is_being_called;
@@ -55,7 +59,7 @@ class Agent {
     if (_bb.is_being_called) return false;
 
     //检查队列是否为空且当前无动作
-    return _bb.actionQueue.empty() && !_bb.currentAction;
+    return isReadyForAction();
   }
 
   void markThinking() {
