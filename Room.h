@@ -6,10 +6,10 @@
 #define ROOM_TEMP_ROOM_H_
 
 #include "Block.h"
-#include <vector>
 #include "Config.h"
 #include "TerrainRegistry.h"
-
+#include "tools/AStarPathfinder.h"
+#include <vector>
 
 class Room {
  public:
@@ -28,12 +28,18 @@ class Room {
   void loadFromFile(const std::string& filename = "room_map.json");
   void initDefaultLayout();
 
+  IPathfinder* getPathfinder() const { return pathfinder_.get(); }
+
  private:
   int width_;
   int height_;
   std::vector<TileId> _blocks;
   Pos _door;
 
+  std::unique_ptr<AStarPathfinder> pathfinder_;
+
+
+  void buildPathfinder();
 };
 
 #endif//ROOM_TEMP_ROOM_H_

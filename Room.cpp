@@ -14,6 +14,14 @@ using json = nlohmann::json;
 
 Room::Room(int w, int h) : width_(w), height_(h), _door{w/2, 0} {
   _blocks.assign(width_ * height_, "grass");
+  buildPathfinder();
+}
+
+void Room::buildPathfinder() {
+  pathfinder_ = std::make_unique<AStarPathfinder>(
+    GridSize{width_, height_},
+      [this](int x, int y) { return this->isPassable(x, y); }
+      );
 }
 
 TileId Room::getBlocksType(const int x, const int y) const {
@@ -82,4 +90,5 @@ void Room::loadFromFile(const std::string& filename) {
   if (j.contains("tiles")) {
     _blocks = j["tiles"].get<std::vector<TileId>>();
   }
+  buildPathfinder(); // 因为高和宽可能发生变化故重建寻路器
 }

@@ -25,8 +25,8 @@ class IPathfinder;
 
 class Agent {
  public:
-  Agent(std::string name, std::string id, int start_x, int start_y, IPathfinder *pf, AIType ai_type = AIType::Utility, std::string texture_name = "character.png")
-      : _name(name), _id(std::move(id)), _pf(pf), _ai_type(ai_type), _texture_name(std::move(texture_name)){
+  Agent(std::string name, std::string id, int start_x, int start_y, AIType ai_type = AIType::Utility, std::string texture_name = "character.png")
+      : _name(name), _id(std::move(id)), _ai_type(ai_type), _texture_name(std::move(texture_name)){
     _ch.setLoc(start_x, start_y);
     _executor = std::make_unique<ActionExecutor>();
   }
@@ -98,7 +98,7 @@ class Agent {
     _ch.tickNeeds(dt_sec);
 
     // 构建瞬时的context
-    ActExecutorCtx ctx{room, _ch, tick_index, *_pf, items, this};
+    ActExecutorCtx ctx{room, _ch, tick_index, *room.getPathfinder(), items, this};
 
     _executor->tick(ctx, _bb);
   }
@@ -132,7 +132,6 @@ class Agent {
   AIType _ai_type;
   Character _ch;
   Blackboard _bb;
-  IPathfinder *_pf;
   std::unique_ptr<ActionExecutor> _executor;
   std::vector<Agent *> _other_agents;
   std::string _texture_name;

@@ -69,27 +69,19 @@ int main() {
   ItemLayer items;
   items.loadFromFile("world.json");
 
-  //寻路器，agent使用，需要房间作参数
-  AStarPathfinder path_finder(
-      {room.getWidth(), room.getHeight()},
-      [&](int x, int y) { return room.isPassable(x, y); });
-
   //agents
   std::vector<std::unique_ptr<Agent>> agents;
   //SDL3渲染器
   std::unique_ptr<IRender> render = std::make_unique<SDL3Render>(Cfg::room::view_w, Cfg::room::view_h, Cfg::core::tile_px, "Room Engine");
 
-  loadAgents(agents, &path_finder, render.get(), "agents.json");
+  loadAgents(agents, render.get(), "agents.json");
 
 
   if (agents.empty()) {
-    agents.push_back(std::make_unique<Agent>("张三", "npc_zhang", 5, 5, &path_finder, AIType::Utility, "character.png"));
-    agents.push_back(std::make_unique<Agent>("李四", "npc_li", 1, 1, &path_finder, AIType::Utility, "character.png"));
+    agents.push_back(std::make_unique<Agent>("张三", "npc_zhang", 5, 5, AIType::Utility, "character.png"));
+    agents.push_back(std::make_unique<Agent>("李四", "npc_li", 1, 1, AIType::Utility, "character.png"));
   }
 
-  // 用于debug打印
-  const Character &character1 = agents[0]->getCharacter();
-  const Character &character2 = agents[1]->getCharacter();
 
   //全局决策器
   DecisionMaker decisionMaker;
@@ -108,7 +100,7 @@ int main() {
 
   // 输入处理
   InputController input;
-  SystemBindings::bindAllUIEvents(room, items, agents, &path_finder, render.get());
+  SystemBindings::bindAllUIEvents(room, items, agents, render.get());
 
   while (running) {
     input.handleEvents(running, is_paused ,editorUI, room, items, agents);
@@ -164,9 +156,9 @@ int main() {
       spdlog::debug("[Tick {}] {} Inner Hunger: {:.2f} | Inner Fatigue: {:.2f} | Bored: {:.2f} | Mem: {}",
                     tick_index,
                     agents[0]->getName(),
-                    character1.getStat("hunger"),
-                    character1.getStat("fatigue"),
-                    character1.getStat("boredom"),
+                    c1.getStat("hunger"),
+                    c1.getStat("fatigue"),
+                    c1.getStat("boredom"),
                     c1.get_short_memory().to_string());
     }
 #endif

@@ -9,12 +9,11 @@
 #include "../ItemLayer.h"
 #include "../Room.h"
 #include "../renders/IRender.h"
-#include "../tools/AStarPathfinder.h"
 #include <memory>
 #include <vector>
 
 namespace SystemBindings {
-void bindAllUIEvents(Room &room, ItemLayer &items, std::vector<std::unique_ptr<Agent>> &agents, IPathfinder *pf, IRender *render);
+void bindAllUIEvents(Room &room, ItemLayer &items, std::vector<std::unique_ptr<Agent>> &agents, IRender *render);
 }
 
 #endif//EVENTBINDINGS_H

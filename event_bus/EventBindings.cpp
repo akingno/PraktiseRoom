@@ -7,7 +7,7 @@
 #include "EventBus.h"
 #include <iostream>
 
-void SystemBindings::bindAllUIEvents(Room &room, ItemLayer &items, std::vector<std::unique_ptr<Agent>> &agents, IPathfinder *pf, IRender *render) {
+void SystemBindings::bindAllUIEvents(Room &room, ItemLayer &items, std::vector<std::unique_ptr<Agent>> &agents, IRender *render) {
 
   EventBus::onUI_SaveAllRequested.connect([&room, &items, &agents]() {
     saveItems("items.json");
@@ -24,8 +24,8 @@ void SystemBindings::bindAllUIEvents(Room &room, ItemLayer &items, std::vector<s
   EventBus::onUI_LoadWorldRequested.connect([&items]() { items.loadFromFile("world.json"); });
   EventBus::onUI_LoadTerrainsRequested.connect([]() { loadTerrains("terrains.json"); });
   EventBus::onUI_LoadRoomMapRequested.connect([&room]() { room.loadFromFile("room_map.json"); });
-  EventBus::onUI_LoadAgentsRequested.connect([&agents, pf, render]() {
-    loadAgents(agents, pf, render, "agents.json");
+  EventBus::onUI_LoadAgentsRequested.connect([&agents, render]() {
+    loadAgents(agents, render, "agents.json");
   });
 
   EventBus::onUI_ApplyNewNeed.connect([&agents](std::string name, float growth, float enter, float exit, float weight) {
@@ -59,8 +59,8 @@ void SystemBindings::bindAllUIEvents(Room &room, ItemLayer &items, std::vector<s
     spdlog::info("EventBus: 热加载地形: {}", id);
   });
 
-  EventBus::onUI_CreateAgent.connect([&agents, pf, render](std::string name, std::string id, int x, int y, AIType type, std::string tex) {
-    agents.push_back(std::make_unique<Agent>(name, id, x, y, pf, type, tex));
+  EventBus::onUI_CreateAgent.connect([&agents, render](std::string name, std::string id, int x, int y, AIType type, std::string tex) {
+    agents.push_back(std::make_unique<Agent>(name, id, x, y, type, tex));
     if (type == AIType::Utility) {
       for (const auto &r : Cfg::need_rules) agents.back()->getCharacter().registerNewStat(r.name, r.growth_rate);
     }

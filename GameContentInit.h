@@ -252,7 +252,7 @@ inline void saveAgents(const std::vector<std::unique_ptr<Agent>>& agents, const 
   }
 }
 
-inline void loadAgents(std::vector<std::unique_ptr<Agent>>& agents, IPathfinder* pf, IRender* render, const std::string& filename = "agents.json") {
+inline void loadAgents(std::vector<std::unique_ptr<Agent>>& agents, IRender* render, const std::string& filename = "agents.json") {
   std::ifstream file(filename);
   if (!file.is_open()) return;
 
@@ -268,7 +268,7 @@ inline void loadAgents(std::vector<std::unique_ptr<Agent>>& agents, IPathfinder*
       AIType type = static_cast<AIType>(jItem.value("ai_type", 1));
       std::string tex = jItem.value("texture_name", "character.png");
 
-      agents.push_back(std::make_unique<Agent>(name, id, x, y, pf, type, tex));
+      agents.push_back(std::make_unique<Agent>(name, id, x, y, type, tex));
       render->loadAgentTexture(tex); // 确保贴图被载入显存
     }
     spdlog::info("GameInit:AgentLoader: Loaded {} agents from {} successfully",agents.size(),filename);
