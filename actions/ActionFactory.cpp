@@ -41,9 +41,14 @@ std::shared_ptr<Action> ActionFactory::createFromEnum(Character::Act act) {
       // 纯发呆
       seq->add(std::make_shared<WaitAction>(60));
       break;
-
     case Character::Act::WaitAlways:
       seq->add(std::make_shared<WaitForChatAction>());
+      break;
+    case Character::Act::PlayerMove:
+      seq->add(std::make_shared<MoveToAction>(TargetKind::Coordinate));
+      break;
+    case Character::Act::PlayerInteract:
+      seq->add(std::make_shared<InteractAction>());
       break;
   }
   return seq;

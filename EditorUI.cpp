@@ -47,7 +47,7 @@ bool EditorUI::processEvent(const SDL_Event *event) {
   return false;
 }
 
-void EditorUI::renderMenuBar() {
+void EditorUI::renderMenuBar(EditorMode& mode) {
   // 顶部菜单栏
   if (ImGui::BeginMainMenuBar()) {
     if (ImGui::BeginMenu(u8"文件 (File)")) {
@@ -74,6 +74,16 @@ void EditorUI::renderMenuBar() {
       }
       if (ImGui::MenuItem(u8"读取实体")) {
         EventBus::onUI_LoadAgentsRequested.emit();
+      }
+      ImGui::EndMenu();
+    }
+
+    if (ImGui::BeginMenu(u8"模式切换")) {
+      if (ImGui::MenuItem(u8"上帝模式")) {
+        mode = EditorMode::Observation;
+      }
+      if (ImGui::MenuItem(u8"游玩模式")) {
+        mode = EditorMode::Play;
       }
       ImGui::EndMenu();
     }
@@ -123,9 +133,10 @@ void EditorUI::renderRightPanel(bool is_paused, EditorMode& mode) {
   } else {
     ImGui::TextDisabled(u8"点击地图上的小人以查看其属性");
   }
-
+  // 需求自定义区
+  if (mode != EditorMode::Play) {
   ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
-  ImGui::TextColored(ImVec4(0.5f, 0.8f, 1.0f, 1.0f), u8"【全局需求定义】");
+  ImGui::TextColored(ImVec4(0.5f, 0.8f, 1.0f, 1.0f), u8"【创造新需求】");
   ImGui::InputText(u8"需求名(如:thirst)", new_need_name_, IM_ARRAYSIZE(new_need_name_));
   ImGui::InputFloat(u8"每秒增长率", &new_need_growth_, 0.1f, 1.0f, "%.1f");
   ImGui::InputFloat(u8"触发进入阈值", &new_need_enter_, 1.0f, 10.0f, "%.1f");
@@ -148,6 +159,7 @@ void EditorUI::renderRightPanel(bool is_paused, EditorMode& mode) {
       memset(new_need_name_, 0, sizeof(new_need_name_));
     }
   }
+  }
   ImGui::End();
 }
 
@@ -157,9 +169,18 @@ void EditorUI::renderBottomPanel(EditorMode& mode, std::string& selected_item_id
   int gameH = Cfg::room::view_h * Cfg::core::tile_px;
 
   float startY = static_cast<float>(gameH + Cfg::room::menu_bar_h);
-
   ImGui::SetNextWindowPos(ImVec2(0, startY), ImGuiCond_Always);
   ImGui::SetNextWindowSize(ImVec2(gameW, 250), ImGuiCond_Always);
+
+  if (mode == EditorMode::Play) {
+    ImGui::Begin(u8"【游玩模式】", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+
+    ImGui::TextWrapped(u8"操作说明：\n - [W][A][S][D] 移动\n - [J] 与脚下物品交互\n - [鼠标左键] 点击地图上的人查看属性");
+
+    ImGui::End();
+    return;
+  }
+
   ImGui::Begin(u8"物品创建和放置/需求创建", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
   if (ImGui::BeginTabBar("BottomTabs")) {
@@ -180,15 +201,15 @@ void EditorUI::renderBottomPanel(EditorMode& mode, std::string& selected_item_id
     }
 
     if (ImGui::BeginTabItem(u8" 创造物品")) {
-      ImGui::InputText(u8"物品 ID (如: water)", new_item_id_, IM_ARRAYSIZE(new_item_id_));
-      ImGui::InputText(u8"贴图名 (如: water.png)", new_item_tex_, IM_ARRAYSIZE(new_item_tex_));
+      ImGui::InputText(u8"物品 ID(如:water)", new_item_id_, IM_ARRAYSIZE(new_item_id_));
+      ImGui::InputText(u8"贴图名(如:water.png)", new_item_tex_, IM_ARRAYSIZE(new_item_tex_));
       ImGui::Checkbox(u8"可被使用", &new_item_useable_);
       ImGui::SameLine();
       ImGui::Checkbox(u8"阻挡寻路", &new_item_blocks_);
       ImGui::Separator();
       ImGui::Text(u8"添加效果");
-      ImGui::InputText(u8"目标属性 (如: thirst)", new_eff_target_, IM_ARRAYSIZE(new_eff_target_));
-      ImGui::InputFloat(u8"属性变化数值 (如: -50)", &new_eff_value_);
+      ImGui::InputText(u8"目标属性(如:thirst)", new_eff_target_, IM_ARRAYSIZE(new_eff_target_));
+      ImGui::InputFloat(u8"属性变化数值 (如:-50)", &new_eff_value_);
 
       ImGui::Spacing();
       if (ImGui::Button(u8"创建", ImVec2(200, 30))) {
@@ -269,7 +290,7 @@ void EditorUI::render(bool is_paused,
   ImGui::NewFrame();
 
   // 渲染顶部菜单、右边菜单和底部菜单
-  renderMenuBar();
+  renderMenuBar(mode);
   renderRightPanel(is_paused, mode);
   renderBottomPanel(mode, selected_item_id,selected_terrain_id);
 

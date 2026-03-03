@@ -50,7 +50,9 @@ class Character {
     Stop,
     Talk,
     WaitAlways,
-    UseItem
+    UseItem,
+    PlayerMove,
+    PlayerInteract
   };
 
   //构造函数

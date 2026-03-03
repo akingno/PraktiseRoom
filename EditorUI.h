@@ -13,7 +13,8 @@
 enum class EditorMode {
   Observation,
   Placement,
-  TerrainPaint
+  TerrainPaint,
+  Play
 };
 
 class IRender;
@@ -75,7 +76,7 @@ private:
   char new_agent_tex_[64] = "";
 
 
-  void renderMenuBar();
+  void renderMenuBar(EditorMode& mode);
   void renderRightPanel(bool is_paused, EditorMode& mode);
   void renderBottomPanel(
     EditorMode& mode,

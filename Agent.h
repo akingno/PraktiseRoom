@@ -45,7 +45,7 @@ class Agent {
   [[nodiscard]] bool needsNewDecision() const {
     //只有utility ai和llm ai要决策
     AIType type = getAIType();
-    if (type != AIType::Utility && type != AIType::LLM) {
+    if (type == AIType::Static || type == AIType::Player) {
       return false;
     }
     //如果正在等待回复，不需要新决策
