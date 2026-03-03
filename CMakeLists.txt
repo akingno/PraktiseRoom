@@ -15,17 +15,10 @@ add_subdirectory("third_party/SDL_image" "${CMAKE_BINARY_DIR}/_deps/SDL_image-bu
 
 set(SDL3TTF_VENDORED ON CACHE BOOL "" FORCE)
 add_subdirectory("third_party/SDL_ttf" "${CMAKE_BINARY_DIR}/_deps/SDL_ttf-build" EXCLUDE_FROM_ALL)
-
-set(SPDLOG_BUILD_EXAMPLE OFF CACHE BOOL "" FORCE)
-set(SPDLOG_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-
-add_subdirectory("third_party/spd" "${CMAKE_BINARY_DIR}/_deps/spdlog-build" EXCLUDE_FROM_ALL)
-
 set(GAME_SOURCES
         main.cpp
         Room.h
         Room.cpp
-        Block.h
         tools/Utils.h
         tools/Random.h
         renders/IRender.h
@@ -86,6 +79,9 @@ set(IMGUI_BACKEND_SOURCES
         event_bus/EventBus.h
         event_bus/EventBindings.cpp
         event_bus/EventBindings.h
+        IBrain.h
+        BrainImplement.h
+        BrainImplement.cpp
 )
 
 add_executable(room_temp
@@ -100,13 +96,13 @@ target_include_directories(room_temp PRIVATE
         ${CMAKE_SOURCE_DIR}/third_party
         ${CMAKE_SOURCE_DIR}/third_party/imgui
         ${CMAKE_SOURCE_DIR}/third_party/imgui/backends
+        ${CMAKE_SOURCE_DIR}/third_party/spd/include
 )
 
 target_link_libraries(room_temp PRIVATE
         SDL3::SDL3
         SDL3_image::SDL3_image
         SDL3_ttf::SDL3_ttf
-        spdlog::spdlog
         ws2_32
 )
 target_compile_definitions(room_temp PRIVATE _WIN32_WINNT=0x0A00)

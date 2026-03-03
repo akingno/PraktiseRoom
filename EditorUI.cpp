@@ -238,7 +238,7 @@ void EditorUI::renderBottomPanel(EditorMode& mode, std::string& selected_item_id
       ImGui::InputInt(u8"坐标X", &new_agent_x_);
       ImGui::InputInt(u8"坐标Y", &new_agent_y_);
 
-      const char* ai_types[] = { "Static(静态NPC)", "Utility(效用AI)", "LLM(大模型驱动)", "Player(玩家控制)"};
+      const char* ai_types[] = { "Static NPC", "Utility AI", "LLM", "玩家控制"};
       ImGui::Combo(u8"大脑类型", &new_agent_type_idx_, ai_types, IM_ARRAYSIZE(ai_types));
 
       ImGui::Spacing();

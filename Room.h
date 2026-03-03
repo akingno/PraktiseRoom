@@ -5,7 +5,6 @@
 #ifndef ROOM_TEMP_ROOM_H_
 #define ROOM_TEMP_ROOM_H_
 
-#include "Block.h"
 #include "Config.h"
 #include "TerrainRegistry.h"
 #include "tools/AStarPathfinder.h"

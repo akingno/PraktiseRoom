@@ -12,12 +12,7 @@
 #include "actions/ActionFactory.h"
 #include <iostream>
 #include <string>
-enum class AIType {
-  Static,// 静态NPC
-  Utility, // 效用AI
-  LLM, // 大模型
-  Player // 玩家控制
-};
+#include "BrainImplement.h"
 
 class Room;
 class ItemLayer;
@@ -26,9 +21,10 @@ class IPathfinder;
 class Agent {
  public:
   Agent(std::string name, std::string id, int start_x, int start_y, AIType ai_type = AIType::Utility, std::string texture_name = "character.png")
-      : _name(name), _id(std::move(id)), _ai_type(ai_type), _texture_name(std::move(texture_name)){
+      : _name(name), _id(std::move(id)), _texture_name(std::move(texture_name)){
     _ch.setLoc(start_x, start_y);
     _executor = std::make_unique<ActionExecutor>();
+    _brain = createBrain(ai_type);
   }
   Agent() = default;
 
@@ -37,7 +33,7 @@ class Agent {
 
   [[nodiscard]] const std::string &getName() const { return _name; }
   [[nodiscard]] const std::string &getId() const { return _id; }
-  [[nodiscard]] AIType getAIType() const { return _ai_type; }
+  [[nodiscard]] AIType getAIType() const { return _brain->getType(); }
   [[nodiscard]] const std::string &getTextureName() const { return _texture_name; }
 
   //是否在被呼叫？
@@ -47,10 +43,15 @@ class Agent {
 
   //是否需要发起新的决策
   [[nodiscard]] bool needsNewDecision() const {
-    //如果正在等待 Brain 回复，就不需要新决策
+    //只有utility ai和llm ai要决策
+    AIType type = getAIType();
+    if (type != AIType::Utility && type != AIType::LLM) {
+      return false;
+    }
+    //如果正在等待回复，不需要新决策
     if (_bb.is_thinking) return false;
 
-    //如果正在被呼叫，也不需要主动决策
+    //如果正在被呼叫，不需要主动决策
     if (_bb.is_being_called) return false;
 
     //检查队列是否为空且当前无动作
@@ -95,7 +96,13 @@ class Agent {
   void update(double dt_sec, uint64_t tick_index, Room &room, ItemLayer &items, std::vector<Agent *> &others) {
     _other_agents = others;
     // 需求更新
-    _ch.tickNeeds(dt_sec);
+    if (getAIType() != AIType::Static) {
+      _ch.tickNeeds(dt_sec);
+    }
+
+    if (_brain) {
+      _brain->think(this, dt_sec, tick_index, room, items, others);
+    }
 
     // 构建瞬时的context
     ActExecutorCtx ctx{room, _ch, tick_index, *room.getPathfinder(), items, this};
@@ -129,8 +136,8 @@ class Agent {
  private:
   std::string _name;
   std::string _id;
-  AIType _ai_type;
   Character _ch;
+  std::unique_ptr<IBrain> _brain;
   Blackboard _bb;
   std::unique_ptr<ActionExecutor> _executor;
   std::vector<Agent *> _other_agents;
