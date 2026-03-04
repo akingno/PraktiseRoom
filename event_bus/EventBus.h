@@ -17,6 +17,7 @@ struct EventBus {
   inline static Signal<> onUI_LoadTerrainsRequested;
   inline static Signal<> onUI_LoadRoomMapRequested;
   inline static Signal<> onUI_LoadAgentsRequested;
+  inline static Signal<std::string, std::string> onTriggerStepped;
 
   // signal1: UI请求创建一个新的agent
   // args: 名字, ID, X, Y, ai类型, 贴图名字

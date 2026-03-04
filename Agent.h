@@ -7,12 +7,16 @@
 
 #include "ActionExecutor.h"
 #include "Blackboard.h"
+#include "BrainImplement.h"
 #include "Character.h"
 #include "ItemRegistry.h"
+#include "TriggerManager.h"
 #include "actions/ActionFactory.h"
+#include "event_bus/EventBus.h"
+#include "spdlog/spdlog.h"
+
 #include <iostream>
 #include <string>
-#include "BrainImplement.h"
 
 class Room;
 class ItemLayer;
@@ -108,6 +112,23 @@ class Agent {
       _brain->think(this, dt_sec, tick_index, room, items, others);
     }
 
+    auto pos = _ch.getLoc();
+    int current_level = 0; // 暂时硬编码为 0
+    const TriggerDef* trg = TriggerManager::inst().getTriggerAt(current_level, pos.first, pos.second);
+
+    if (trg) {
+      // 当这次踩到的trigger和上一次记录的不同时，才发射信号
+      if (_last_stepped_trigger != trg->id) {
+        _last_stepped_trigger = trg->id;
+        EventBus::onTriggerStepped.emit(trg->id, _id);
+        spdlog::debug("Agent {} stepped on trigger: {}", _name, trg->id);
+      }
+    } else {
+      // 脚下没有触发器，清空记录。
+      _last_stepped_trigger = "";
+    }
+
+
     // 构建瞬时的context
     ActExecutorCtx ctx{room, _ch, tick_index, *room.getPathfinder(), items, this};
 
@@ -146,6 +167,8 @@ class Agent {
   std::unique_ptr<ActionExecutor> _executor;
   std::vector<Agent *> _other_agents;
   std::string _texture_name;
+
+  std::string _last_stepped_trigger = ""; //用于防抖
 };
 
 #endif//AGENT_H

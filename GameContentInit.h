@@ -8,11 +8,12 @@
 #include "Config.h"
 #include "ItemRegistry.h"
 #include "SmartItem.h"
+#include "TriggerManager.h"
 #include "renders/IRender.h"
+#include "spdlog/spdlog.h"
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include "spdlog/spdlog.h"
 
 using json = nlohmann::json;
 
@@ -274,5 +275,56 @@ inline void loadAgents(std::vector<std::unique_ptr<Agent>>& agents, IRender* ren
     spdlog::info("GameInit:AgentLoader: Loaded {} agents from {} successfully",agents.size(),filename);
   } catch (const std::exception& e) {
     spdlog::error("GameInit:AgentLoader: Failed to parse JSON: {}", e.what());
+  }
+}
+
+
+inline void saveTriggers(const std::string& filename = "triggers.json") {
+  json jArray = json::array();
+  for (const auto& [id, def] : TriggerManager::inst().getAllTriggers()) {
+    json j;
+    j["id"] = def.id;
+    j["level"] = def.level;
+    j["x"] = def.x;
+    j["y"] = def.y;
+    j["type"] = static_cast<int>(def.type);
+    j["target_id"] = def.target_id;
+    jArray.push_back(j);
+  }
+  std::ofstream out(filename);
+  if (out.is_open()) {
+    out << jArray.dump(4);
+    spdlog::info("GameInit:TriggerLoader: Saved triggers to {}", filename);
+  }
+}
+
+inline void loadTriggers(const std::string& filename = "triggers.json") {
+  std::ifstream file(filename);
+  if (!file.is_open()) {
+    //第一次是没有的，如果找不到不管
+    spdlog::info("GameInit:TriggerLoader: {} not found, skipping.", filename);
+    return;
+  }
+
+  try {
+    json jArray;
+    file >> jArray;
+    TriggerManager::inst().clear();
+    for (const auto& jItem : jArray) {
+      TriggerDef def;
+      def.id = jItem.value("id", "");
+      def.level = jItem.value("level", 0);
+      def.x = jItem.value("x", 0);
+      def.y = jItem.value("y", 0);
+      def.type = static_cast<TriggerType>(jItem.value("type", 0));
+      def.target_id = jItem.value("target_id", "");
+
+      if (!def.id.empty()) {
+        TriggerManager::inst().addTrigger(def);
+      }
+    }
+    spdlog::info("GameInit:TriggerLoader: Loaded {} triggers from {}", jArray.size(), filename);
+  } catch (const std::exception& e) {
+    spdlog::error("GameInit:TriggerLoader: Failed to parse JSON: {}", e.what());
   }
 }

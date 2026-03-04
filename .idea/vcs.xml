@@ -4,7 +4,25 @@
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/third_party/SDL" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/third_party/SDL_image" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_image/external/aom" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_image/external/dav1d" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_image/external/jpeg" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_image/external/libavif" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_image/external/libjxl" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_image/external/libjxl/testdata" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_image/external/libjxl/third_party/brotli" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_image/external/libjxl/third_party/googletest" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_image/external/libpng" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_image/external/libtiff" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_image/external/libwebp" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_image/external/zlib" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/third_party/SDL_ttf" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_ttf/external/freetype" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_ttf/external/freetype/subprojects/dlg" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_ttf/external/harfbuzz" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_ttf/external/plutosvg" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_ttf/external/plutosvg/plutovg" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/SDL_ttf/external/plutovg" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/third_party/imgui" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/third_party/spd" vcs="Git" />
   </component>

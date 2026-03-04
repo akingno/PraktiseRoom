@@ -4,17 +4,32 @@ project(room_temp)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if(MSVC)
+    add_compile_options(/MP /utf-8)
+endif()
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>")
 
+# SDL3
 add_subdirectory("third_party/SDL" "${CMAKE_BINARY_DIR}/_deps/SDL-build" EXCLUDE_FROM_ALL)
 
 set(SDL3IMAGE_PNG ON CACHE BOOL "" FORCE)
 set(SDL3IMAGE_VENDORED ON CACHE BOOL "" FORCE)
+set(SDL3IMAGE_AVIF OFF CACHE BOOL "" FORCE)
+set(SDLIMAGE_AVIF OFF CACHE BOOL "" FORCE)
 add_subdirectory("third_party/SDL_image" "${CMAKE_BINARY_DIR}/_deps/SDL_image-build" EXCLUDE_FROM_ALL)
 
 set(SDL3TTF_VENDORED ON CACHE BOOL "" FORCE)
 add_subdirectory("third_party/SDL_ttf" "${CMAKE_BINARY_DIR}/_deps/SDL_ttf-build" EXCLUDE_FROM_ALL)
+
+
+# spdlog
+set(SPDLOG_BUILD_SHARED OFF CACHE BOOL "Build spdlog as static library" FORCE)
+set(SPDLOG_BUILD_EXAMPLE OFF CACHE BOOL "" FORCE)
+set(SPDLOG_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+add_subdirectory("third_party/spd" "${CMAKE_BINARY_DIR}/_deps/spdlog-build" EXCLUDE_FROM_ALL)
+
 set(GAME_SOURCES
         main.cpp
         Room.h
@@ -82,6 +97,7 @@ set(IMGUI_BACKEND_SOURCES
         IBrain.h
         BrainImplement.h
         BrainImplement.cpp
+        TriggerManager.h
 )
 
 add_executable(room_temp
@@ -103,9 +119,7 @@ target_link_libraries(room_temp PRIVATE
         SDL3::SDL3
         SDL3_image::SDL3_image
         SDL3_ttf::SDL3_ttf
+        spdlog::spdlog
         ws2_32
 )
-target_compile_definitions(room_temp PRIVATE _WIN32_WINNT=0x0A00)
-if (MINGW)
-    target_link_options(room_temp PRIVATE -static -static-libstdc++ -static-libgcc)
-endif ()
+target_compile_definitions(room_temp PRIVATE _WIN32_WINNT=0x0A00 SPDLOG_COMPILED_LIB)

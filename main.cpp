@@ -60,6 +60,7 @@ int main() {
   //物品加载和读取
   loadItems("items.json");
   loadTerrains("terrains.json");
+  loadTriggers("triggers.json");
 
   //世界初始化
   Room room(Cfg::room::view_w, Cfg::room::view_h);

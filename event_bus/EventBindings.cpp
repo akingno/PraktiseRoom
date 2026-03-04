@@ -16,6 +16,7 @@ void SystemBindings::bindAllUIEvents(Room &room, ItemLayer &items, std::vector<s
     saveTerrains("terrains.json");
     room.saveToFile("room_map.json");
     saveAgents(agents, "agents.json");
+    saveTriggers("triggers.json");
     spdlog::info("EventBus: 保存了所有更改");
   });
 
