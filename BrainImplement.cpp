@@ -10,7 +10,9 @@ void StaticBrain::think(Agent* body, double dt_sec, uint64_t tick_index, Room& r
   // 没事干就原地发呆
   body->applyDecision(Character::Act::Stop);
 }
-
+void StaticBrain::onTriggerNotified(Agent* body, const std::string& triggerer_id) {
+  spdlog::info("StaticBrain [{}] says: I was notified that [{}] stepped on my trigger!", body->getName(), triggerer_id);
+}
 void UtilityBrain::think(Agent* body, double dt_sec, uint64_t tick_index, Room& room, ItemLayer& items, const std::vector<Agent*>& others) {
   // Decisionmaker处理
 }

@@ -68,4 +68,22 @@ void SystemBindings::bindAllUIEvents(Room &room, ItemLayer &items, std::vector<s
     render->loadAgentTexture(tex);
     spdlog::info("EventBus: 创造新实体: {} at {}, {}.", name, x, y);
   });
+
+  EventBus::onTriggerStepped.connect([&agents](const std::string& trigger_id, const std::string& triggerer_id) {
+        //根据 id得到 trigger
+        const auto& all_triggers = TriggerManager::inst().getAllTriggers();
+        auto it = all_triggers.find(trigger_id);
+
+        if (it != all_triggers.end()) {
+            //拿到trigger信息和绑定信息
+            const TriggerDef& def = it->second;
+
+            for (auto& agent : agents) {
+                if (agent->getId() == def.target_id) {
+                    agent->receiveTrigger(triggerer_id);
+                    break;
+                }
+            }
+        }
+    });
 }

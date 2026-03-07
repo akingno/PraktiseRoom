@@ -121,7 +121,6 @@ class Agent {
       if (_last_stepped_trigger != trg->id) {
         _last_stepped_trigger = trg->id;
         EventBus::onTriggerStepped.emit(trg->id, _id);
-        spdlog::debug("Agent {} stepped on trigger: {}", _name, trg->id);
       }
     } else {
       // 脚下没有触发器，清空记录。
@@ -148,6 +147,12 @@ class Agent {
     _bb.is_being_called = false;
     _bb.caller_agent = nullptr;
     _ch.setAct(Character::Act::Wander);
+  }
+
+  void receiveTrigger(const std::string& triggerer_id) {
+    if (_brain) {
+      _brain->onTriggerNotified(this, triggerer_id);
+    }
   }
 
   [[nodiscard]] std::vector<Agent *> get_other_agents() {

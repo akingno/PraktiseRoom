@@ -20,7 +20,7 @@ struct TriggerDef {
   int x;
   int y;
   TriggerType type;
-  std::string target_id;   // 绑定的Static AI或Item的ID
+  std::string target_id;   // 绑定的Static AI或Item的id
 };
 
 class TriggerManager {

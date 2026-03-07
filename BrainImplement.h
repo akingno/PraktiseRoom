@@ -6,12 +6,14 @@
 #define BRAINIMPLEMENT_H
 #include "IBrain.h"
 #include <memory>
+#include <string>
 
 // weak ai triggered by triggers, no need, no complext action sequence, no decision
 class StaticBrain : public IBrain {
 public:
     void think(Agent* body, double dt_sec, uint64_t tick_index, Room& room, ItemLayer& items, const std::vector<Agent*>& others) override;
     AIType getType() const override { return AIType::Static; }
+    void onTriggerNotified(Agent* body, const std::string& triggerer_id) override;
 };
 
 // utility 计算

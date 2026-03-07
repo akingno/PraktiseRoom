@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <cstdint>
+#include <string>
 
 // 提前声明需要的类，避免循环包含
 class Agent;
@@ -29,5 +30,7 @@ public:
   virtual void think(Agent* body, double dt_sec, uint64_t tick_index, Room& room, ItemLayer& items, const std::vector<Agent*>& others) = 0;
 
   virtual AIType getType() const = 0;
+
+  virtual void onTriggerNotified(Agent* body, const std::string& triggerer_id) {}
 };
 #endif //IBRAIN_H
