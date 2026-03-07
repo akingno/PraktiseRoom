@@ -22,7 +22,6 @@ void InputController::handleEvents(bool &running,bool& is_paused, EditorUI &edit
       running = false;
     }
     if (e.type == SDL_EVENT_KEY_DOWN) {
-      if (e.key.key == SDLK_ESCAPE) running = false;
       if (e.key.key == SDLK_SPACE) {
         is_paused = !is_paused;
         if (is_paused) {
@@ -68,11 +67,12 @@ void InputController::handleEvents(bool &running,bool& is_paused, EditorUI &edit
 
       if (e.button.button == SDL_BUTTON_RIGHT) {
         current_mode = EditorMode::Observation;
-      } else if (e.button.button == SDL_BUTTON_LEFT && in_game_view) {
+      }
+      else if (e.button.button == SDL_BUTTON_LEFT && in_game_view) { //观察模式下得到信息
         int gx = static_cast<int>(mx) / Cfg::core::tile_px;
         int gy = static_cast<int>(my) / Cfg::core::tile_px;
 
-        if (current_mode == EditorMode::Observation) {
+        if (current_mode == EditorMode::Observation|| current_mode == EditorMode::Play) {
           Agent *clicked_agent = nullptr;
           for (auto &a : agents) {
             if (a->getCharacter().getLoc() == std::make_pair(gx, gy)) {
@@ -81,13 +81,13 @@ void InputController::handleEvents(bool &running,bool& is_paused, EditorUI &edit
             }
           }
           editorUI.setSelectedAgent(clicked_agent);
-        } else if (current_mode == EditorMode::Placement) {
+        } else if (current_mode == EditorMode::Placement) { //物品放置
           if (!selected_placement_item.empty() && room.isPassable(gx, gy)) {
             items.place(selected_placement_item, gx, gy);
             spdlog::info("InputCtrler: Placed {} at {},{}", selected_placement_item, gx, gy);
           }
         }
-        else if (current_mode == EditorMode::TerrainPaint) {
+        else if (current_mode == EditorMode::TerrainPaint) {//地形绘制
           room.setBlock(selected_terrain_id, gx, gy);
         }
       }
