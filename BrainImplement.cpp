@@ -3,6 +3,9 @@
 //
 #include "BrainImplement.h"
 #include "Agent.h"
+#include "actions/ModifyTargetStatAction.h"
+#include "actions/SequenceAction.h"
+#include "actions/TeleportAgentActions.h"
 #include "spdlog/spdlog.h"
 #include <SDL3/SDL.h>
 
@@ -10,8 +13,15 @@ void StaticBrain::think(Agent* body, double dt_sec, uint64_t tick_index, Room& r
   // 没事干就原地发呆
   body->applyDecision(Character::Act::Stop);
 }
-void StaticBrain::onTriggerNotified(Agent* body, const std::string& triggerer_id) {
-  spdlog::info("StaticBrain [{}] says: I was notified that [{}] stepped on my trigger!", body->getName(), triggerer_id);
+void StaticBrain::onTriggerNotified(Agent* body, Agent* triggerer) {
+  if (!triggerer) return;
+
+  spdlog::info("StaticBrain [{}] is casting sequence on [{}]!", body->getName(), triggerer->getName());
+  //TODO: 改为data化
+  auto seq = std::make_shared<SequenceAction>();
+  seq->add(std::make_shared<ModifyTargetStatAction>("hunger", 20.0f));
+  seq->add(std::make_shared<TeleportTargetAction>(0, 10, 10));
+  body->castSequenceOnTarget(triggerer, seq);
 }
 void UtilityBrain::think(Agent* body, double dt_sec, uint64_t tick_index, Room& room, ItemLayer& items, const std::vector<Agent*>& others) {
   // Decisionmaker处理

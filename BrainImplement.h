@@ -13,7 +13,7 @@ class StaticBrain : public IBrain {
 public:
     void think(Agent* body, double dt_sec, uint64_t tick_index, Room& room, ItemLayer& items, const std::vector<Agent*>& others) override;
     AIType getType() const override { return AIType::Static; }
-    void onTriggerNotified(Agent* body, const std::string& triggerer_id) override;
+    void onTriggerNotified(Agent* body, Agent* triggerer) override;
 };
 
 // utility 计算

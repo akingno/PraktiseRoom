@@ -75,14 +75,19 @@ void SystemBindings::bindAllUIEvents(Room &room, ItemLayer &items, std::vector<s
         auto it = all_triggers.find(trigger_id);
 
         if (it != all_triggers.end()) {
-            //拿到trigger信息和绑定信息
             const TriggerDef& def = it->second;
 
+            // 找到trigger执行的agent和triggerer
+            Agent* triggerer_ptr = nullptr;
+            Agent* target_ptr = nullptr;
+
             for (auto& agent : agents) {
-                if (agent->getId() == def.target_id) {
-                    agent->receiveTrigger(triggerer_id);
-                    break;
-                }
+                if (agent->getId() == triggerer_id) triggerer_ptr = agent.get();
+                if (agent->getId() == def.target_id) target_ptr = agent.get();
+            }
+
+            if (triggerer_ptr && target_ptr) {
+                target_ptr->receiveTrigger(triggerer_ptr);
             }
         }
     });

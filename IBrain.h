@@ -31,6 +31,6 @@ public:
 
   virtual AIType getType() const = 0;
 
-  virtual void onTriggerNotified(Agent* body, const std::string& triggerer_id) {}
+  virtual void onTriggerNotified(Agent* body, Agent* triggerer) {}
 };
 #endif //IBRAIN_H

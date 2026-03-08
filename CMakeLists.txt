@@ -98,6 +98,8 @@ set(IMGUI_BACKEND_SOURCES
         BrainImplement.h
         BrainImplement.cpp
         TriggerManager.h
+        actions/TeleportAgentActions.h
+        actions/ModifyTargetStatAction.h
 )
 
 add_executable(room_temp

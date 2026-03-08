@@ -72,6 +72,9 @@ class Agent {
 
   // 应用得到的决策
   void applyDecision(Character::Act act, const std::string &targetItemId = "", std::pair<int, int> targetPos = {-1, -1}) {
+    if (_brain->getType() == AIType::Static) {
+      spdlog::info("Thinking: {}", targetItemId);
+    }
 
     _bb.target_item_id = targetItemId;
     _bb.target = targetPos;
@@ -149,9 +152,9 @@ class Agent {
     _ch.setAct(Character::Act::Wander);
   }
 
-  void receiveTrigger(const std::string& triggerer_id) {
+  void receiveTrigger(Agent* triggerer) {
     if (_brain) {
-      _brain->onTriggerNotified(this, triggerer_id);
+      _brain->onTriggerNotified(this, triggerer);
     }
   }
 
@@ -161,6 +164,22 @@ class Agent {
 
   std::string getTargetItemId() const {
     return _bb.target_item_id;
+  }
+
+  void clearActionQueue() {
+    std::lock_guard<std::mutex> lk(_bb.queueMutex);
+    _bb.actionQueue.clear();
+    _bb.currentAction = nullptr;
+    _bb.is_thinking = false;
+  }
+
+  // 锁定一个目标，将整个动作序列推入自己的队列
+  void castSequenceOnTarget(Agent* target, std::shared_ptr<Action> sequence) {
+    clearActionQueue();
+    _bb.target_agent = target; // 黑板锁定施法目标
+    std::lock_guard<std::mutex> lk(_bb.queueMutex);
+    _bb.actionQueue.push_back(std::move(sequence));
+    _bb.actNow = Character::Act::WaitAlways;
   }
 
  private:
