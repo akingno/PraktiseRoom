@@ -35,6 +35,13 @@ struct EventBus {
   // args: name, growth, enter, exit, weight
   inline static Signal<std::string, float, float, float, float> onUI_ApplyNewNeed;
 
+  // signal 5: UI请求增加新动作序列
+  inline static Signal<std::string, std::vector<ActionDescriptor>> onStaticSequenceUpdated;
+
+  // signal 6 UI请求增加新trigger
+  // args: x, y, target id
+  inline static Signal<int, int, std::string> onUI_CreateTrigger;
+
 
 };
 

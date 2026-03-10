@@ -20,7 +20,7 @@ public:
   SDL3Render(int viewW, int viewH, int tilePx, const std::string& title = "Little Room");
   ~SDL3Render() override;
 
-  void render_frame(const ItemLayer& items_,const std::vector<std::unique_ptr<Agent>>& agents, const Room& room,const std::string& preview_item_id,int preview_x,int preview_y) override;
+  void render_frame(const ItemLayer& items_,const std::vector<std::unique_ptr<Agent>>& agents, const Room& room,const std::string& preview_item_id,int preview_x,int preview_y, bool show_triggers) override;
   SDL_Window* getWindow() override { return window_; }
   SDL_Renderer* getRenderer() override { return renderer_; }
   void loadDynamicTexture(const std::string& itemId, const std::string& textureName) override;
@@ -40,6 +40,7 @@ private:
   std::unordered_map<std::string, SDL_Texture*> itemTextures_;
   std::unordered_map<std::string, SDL_Texture*> agentTextures_;
   SDL_Texture* texCharacter_ = nullptr;
+  SDL_Texture* texTrigger_ = nullptr;
 
   // 字体（HUD）
   TTF_Font* font_ = nullptr;

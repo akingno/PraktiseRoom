@@ -5,6 +5,7 @@
 #include "EventBindings.h"
 #include "../GameContentInit.h"
 #include "EventBus.h"
+#include <chrono>
 #include <iostream>
 
 void SystemBindings::bindAllUIEvents(Room &room, ItemLayer &items, std::vector<std::unique_ptr<Agent>> &agents, IRender *render) {
@@ -94,4 +95,29 @@ void SystemBindings::bindAllUIEvents(Room &room, ItemLayer &items, std::vector<s
             }
         }
     });
+
+  EventBus::onStaticSequenceUpdated.connect([&agents](std::string agent_id, std::vector<ActionDescriptor> new_seq) {
+        for (auto& agent : agents) {
+            if (agent->getId() == agent_id && agent->getAIType() == AIType::Static) {
+                agent->setStaticAISequence(new_seq);
+                spdlog::info("EventBus: Successfully updated sequence for Static AI: {}", agent_id);
+                break;
+            }
+        }
+    });
+
+  EventBus::onUI_CreateTrigger.connect([](int x, int y, std::string target_id) {
+        TriggerDef def;
+        // 生成唯一ID，例如: trg_10_10_123456
+        def.id = "trg_" + std::to_string(x) + "_" + std::to_string(y) + "_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count());
+        def.level = 0;
+        def.x = x;
+        def.y = y;
+        def.type = TriggerType::NotifyBind;
+        def.target_id = target_id;
+
+        TriggerManager::inst().addTrigger(def);
+        spdlog::info("[EventBus] Created trigger [{}] at ({}, {}) targeting [{}]", def.id, x, y, target_id);
+    });
+
 }

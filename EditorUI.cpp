@@ -130,13 +130,108 @@ void EditorUI::renderRightPanel(bool is_paused, EditorMode& mode) {
       sprintf(buf, "%s: %.1f", stat_name.c_str(), value);
       ImGui::ProgressBar(ratio, ImVec2(-1.0f, 0.0f), buf);
     }
+
+    if (selected_agent_->getAIType() == AIType::Static && mode != EditorMode::Play) {
+
+      if (_editing_agent_id != selected_agent_->getId()) {
+        _editing_agent_id = selected_agent_->getId();
+        _editing_seq = selected_agent_->getStaticAISequence();
+      }
+
+      ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+
+      if (ImGui::CollapsingHeader(u8"静态AI的效果编辑", ImGuiTreeNodeFlags_DefaultOpen)) {
+
+        ImGui::TextColored(ImVec4(0.5f, 0.8f, 1.0f, 1.0f), u8"当前绑定的动作数量: %d", (int)_editing_seq.size());
+
+        for (size_t i = 0; i < _editing_seq.size(); ++i) {
+                  ImGui::PushID(static_cast<int>(i));
+
+                  ImGui::AlignTextToFramePadding();
+                  ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.0f, 1.0f), u8"动作 %d:", static_cast<int>(i + 1));
+                  ImGui::SameLine();
+
+          const char* available_actions[] = {
+            "Wait",
+            "MoveToTarget",
+            "TeleportTarget",
+            "ModifyTargetStat"
+        };
+          int num_actions = IM_ARRAYSIZE(available_actions);
+
+          int current_action_idx = 0;
+          for (int j = 0; j < num_actions; ++j) {
+            if (_editing_seq[i].name == available_actions[j]) {
+              current_action_idx = j;
+              break;
+            }
+          }
+
+          ImGui::SetNextItemWidth(140);
+          if (ImGui::Combo(u8"##ActionName", &current_action_idx, available_actions, num_actions)) {
+            _editing_seq[i].name = available_actions[current_action_idx];
+          }
+
+                  ImGui::SameLine();
+                  if (ImGui::Button(u8"删除")) {
+                      _editing_seq.erase(_editing_seq.begin() + i);
+                      ImGui::PopID();
+                      break;
+                  }
+
+                  // 参数输入
+                  ImGui::Indent();
+
+                  char strBuf[128];
+                  strncpy(strBuf, _editing_seq[i].strParam.c_str(), sizeof(strBuf));
+                  strBuf[sizeof(strBuf) - 1] = '\0';
+                  ImGui::SetNextItemWidth(120);
+                  if (ImGui::InputText(u8"字符串参数", strBuf, sizeof(strBuf))) {
+                      _editing_seq[i].strParam = strBuf;
+                  }
+
+                  ImGui::SetNextItemWidth(80);
+                  ImGui::InputInt(u8"整型参数1", &_editing_seq[i].intParam);
+                  ImGui::SameLine();
+                  ImGui::SetNextItemWidth(80);
+                  ImGui::InputInt(u8"整型参数2", &_editing_seq[i].intParam2);
+
+                  ImGui::SetNextItemWidth(80);
+                  ImGui::InputFloat(u8"浮点参数", &_editing_seq[i].floatParam);
+
+                  ImGui::Unindent();
+                  ImGui::Separator();
+
+                  ImGui::PopID();
+              }
+
+        ImGui::Spacing();
+
+        if (ImGui::Button(u8"添加新动作")) {
+          _editing_seq.push_back({"Wait", "", 60, 0, 0.0f});
+        }
+        ImGui::SameLine();
+        if (ImGui::Button(u8"清空序列")) {
+          _editing_seq.clear();
+        }
+
+        ImGui::Spacing();
+
+        if (ImGui::Button(u8"保存并应用到该 AI", ImVec2(-1.0f, 30))) {
+          EventBus::onStaticSequenceUpdated.emit(_editing_agent_id, _editing_seq);
+        }
+      }
+    } else {
+        _editing_agent_id = "";
+        _editing_seq.clear();
+      }
   } else {
     ImGui::TextDisabled(u8"点击地图上的小人以查看其属性");
   }
   // 需求自定义区
   if (mode != EditorMode::Play) {
   ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
-  ImGui::TextColored(ImVec4(0.5f, 0.8f, 1.0f, 1.0f), u8"【创造新需求】");
+  ImGui::TextColored(ImVec4(0.5f, 0.8f, 1.0f, 1.0f), u8"创造新需求");
   ImGui::InputText(u8"需求名(如:thirst)", new_need_name_, IM_ARRAYSIZE(new_need_name_));
   ImGui::InputFloat(u8"每秒增长率", &new_need_growth_, 0.1f, 1.0f, "%.1f");
   ImGui::InputFloat(u8"触发进入阈值", &new_need_enter_, 1.0f, 10.0f, "%.1f");
@@ -269,6 +364,21 @@ void EditorUI::renderBottomPanel(EditorMode& mode, std::string& selected_item_id
           EventBus::onUI_CreateAgent.emit(new_agent_name_, new_agent_id_, new_agent_x_, new_agent_y_, type, new_agent_tex_);
           memset(new_agent_name_, 0, sizeof(new_agent_name_));
           memset(new_agent_id_, 0, sizeof(new_agent_id_));
+        }
+      }
+      ImGui::EndTabItem();
+    }
+    if (ImGui::BeginTabItem(u8"创造触发器")) {
+      ImGui::Spacing();
+      ImGui::InputInt(u8"X ", &new_trg_x_);
+      ImGui::InputInt(u8"Y ", &new_trg_y_);
+      ImGui::InputText(u8"绑定的目标ID (如 static_ai)", new_trg_target_, IM_ARRAYSIZE(new_trg_target_));
+
+      ImGui::Spacing();
+      if (ImGui::Button(u8"在指定位置生成", ImVec2(200, 30))) {
+        if (new_trg_target_[0] != '\0') {
+          EventBus::onUI_CreateTrigger.emit(new_trg_x_, new_trg_y_, new_trg_target_);
+          memset(new_trg_target_, 0, sizeof(new_trg_target_));
         }
       }
       ImGui::EndTabItem();

@@ -75,6 +75,13 @@ private:
   int new_agent_type_idx_ = 1;
   char new_agent_tex_[64] = "";
 
+  std::vector<ActionDescriptor> _editing_seq;
+  std::string _editing_agent_id = "";
+
+  int new_trg_x_ = 0;
+  int new_trg_y_ = 0;
+  char new_trg_target_[128] = "";
+
 
   void renderMenuBar(EditorMode& mode);
   void renderRightPanel(bool is_paused, EditorMode& mode);

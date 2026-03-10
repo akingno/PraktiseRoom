@@ -23,7 +23,8 @@ class IRender {
     const Room&,
     const std::string& preview_item_id = "",
     int preview_x = -1,
-    int preview_y = -1
+    int preview_y = -1,
+    bool show_triggers = false
     ) = 0;
 
   virtual ~IRender() = default;

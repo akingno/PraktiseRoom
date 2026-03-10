@@ -140,8 +140,9 @@ int main() {
     }
 
     //渲染
+    bool show_triggers = input.current_mode != EditorMode::Play;
     std::string preview_id = (input.current_mode == EditorMode::Placement) ? input.selected_placement_item : "";
-    render->render_frame(items, agents, room, preview_id, input.mouse_gx, input.mouse_gy);
+    render->render_frame(items, agents, room, preview_id, input.mouse_gx, input.mouse_gy, show_triggers);
 
     editorUI.render(is_paused,
       render->getRenderer(),

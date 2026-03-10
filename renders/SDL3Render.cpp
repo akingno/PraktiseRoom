@@ -9,6 +9,8 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include "../ItemLayer.h"
 #include "spdlog/spdlog.h"
+#include "../EditorUI.h"
+#include "../TriggerManager.h"
 
 static std::string RES(const char* name) {
   return std::string("res/") + name;
@@ -38,6 +40,7 @@ SDL3Render::SDL3Render(int viewW, int viewH, int tilePx, const std::string& titl
   }
 
   texCharacter_ = loadTexture(RES("character.png"));
+  texTrigger_ = loadTexture(RES("trigger.png"));
 
   //载入物品纹理
   for (const auto& [id, itemPtr] : ItemRegistry::inst().getAllItems()) {
@@ -91,6 +94,7 @@ SDL3Render::~SDL3Render() {
   for (auto& kv : itemTextures_) if (kv.second) SDL_DestroyTexture(kv.second);
 
   if (texCharacter_)  SDL_DestroyTexture(texCharacter_);
+  if (texTrigger_)    SDL_DestroyTexture(texTrigger_);
   if (font_)          TTF_CloseFont(font_);
 
   if (renderer_) SDL_DestroyRenderer(renderer_);
@@ -149,7 +153,8 @@ void SDL3Render::render_frame(
   const Room& room,
   const std::string& preview_item_id,
   int preview_x,
-  int preview_y)
+  int preview_y,
+  bool show_triggers)
 {
 
   clear();
@@ -198,6 +203,16 @@ void SDL3Render::render_frame(
       // 画完后把透明度恢复
       SDL_SetTextureAlphaMod(tex, 255);
     }
+  }
+
+  if (show_triggers && texTrigger_) {
+    SDL_SetTextureAlphaMod(texTrigger_, 128);
+
+    for (const auto& [id, trg] : TriggerManager::inst().getAllTriggers()) {
+      drawTile(trg.x, trg.y, texTrigger_);
+    }
+
+    SDL_SetTextureAlphaMod(texTrigger_, 255);
   }
 
 }
