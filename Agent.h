@@ -72,8 +72,8 @@ class Agent {
 
   // 应用得到的决策
   void applyDecision(Character::Act act, const std::string &targetItemId = "", std::pair<int, int> targetPos = {-1, -1}) {
-    if (_brain->getType() == AIType::Static) {
-      spdlog::info("Thinking: {}", targetItemId);
+    if (getAIType() == AIType::Static) {
+      return;
     }
 
     _bb.target_item_id = targetItemId;
@@ -181,6 +181,24 @@ class Agent {
     _bb.actionQueue.push_back(std::move(sequence));
     _bb.actNow = Character::Act::WaitAlways;
   }
+
+  void setStaticAISequence(const std::vector<ActionDescriptor>& seq) {
+    if (getAIType() == AIType::Static) {
+      if (auto* sb = dynamic_cast<StaticBrain*>(_brain.get())) {
+        sb->setSequenceDef(seq);
+      }
+    }
+  }
+
+  std::vector<ActionDescriptor> getStaticAISequence() const {
+    if (getAIType() == AIType::Static) {
+      if (auto* sb = dynamic_cast<StaticBrain*>(_brain.get())) {
+        return sb->getSequenceDef();
+      }
+    }
+    return {};
+  }
+
 
  private:
   std::string _name;

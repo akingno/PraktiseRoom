@@ -7,10 +7,12 @@
 #include "../tools/Random.h"
 #include "ChangeToAction.h"
 #include "InteractAction.h"
+#include "ModifyTargetStatAction.h"
 #include "MoveToAction.h"
 #include "SelectAgentAction.h"
 #include "SequenceAction.h"
 #include "SignalChatAction.h"
+#include "TeleportAgentActions.h"
 #include "TransferMemoryAction.h"
 #include "WaitAction.h"
 #include "WaitForChatAction.h"
@@ -54,15 +56,26 @@ std::shared_ptr<Action> ActionFactory::createFromEnum(Character::Act act) {
   return seq;
 }
 std::shared_ptr<Action> ActionFactory::createFromSmartItem(const SmartItem *item) {
+  return createFromDescriptors(item->getSequence());
+}
+
+std::shared_ptr<Action> ActionFactory::createFromDescriptors(const std::vector<ActionDescriptor> &seqDef) {
   auto seq = std::make_shared<SequenceAction>();
 
-  for (const auto &desc : item->getSequence()) {
+  for (const auto &desc : seqDef) {
     if (desc.name == "Interact") {
       seq->add(std::make_shared<InteractAction>());
     } else if (desc.name == "Wait") {
       seq->add(std::make_shared<WaitAction>(desc.intParam));
     } else if (desc.name == "MoveToTarget") {
       seq->add(std::make_shared<MoveToAction>(TargetKind::Coordinate));
+    }
+    else if (desc.name == "TeleportTarget") {
+      // level: 0, X, Y
+      seq->add(std::make_shared<TeleportTargetAction>(0, desc.intParam, desc.intParam2));
+    } else if (desc.name == "ModifyTargetStat") {
+      // strParam: 属性名，floatParam: 数值
+      seq->add(std::make_shared<ModifyTargetStatAction>(desc.strParam, desc.floatParam));
     }
   }
   return seq;

@@ -5,8 +5,8 @@
 #ifndef SMARTITEM_H
 #define SMARTITEM_H
 #include "Item.h"
-#include <string>
 #include <vector>
+#include "actions/ActionDef.h"
 
 // 定义效果类型
 enum class EffectType {
@@ -19,14 +19,9 @@ enum class EffectType {
 struct ItemEffect {
   EffectType type;
   std::string target;// 比如hunger
-  double value;      // 比如 -80.0
+  double value; // 比如-80.0
 };
 
-struct ActionDescriptor {
-  std::string name;    // 动作名
-  int intParam = 0;    // 整型参数
-  std::string strParam;//字符串参数，如特定的物品ID
-};
 
 class SmartItem : public Item {
  public:

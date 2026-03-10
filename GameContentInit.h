@@ -65,13 +65,16 @@ inline void generateDefaultItems() {
   // 食物
   auto food = std::make_unique<SmartItem>("food", ItemProps{false, false, true, "food.png"});
   food->addEffect({EffectType::ModifyStat, "hunger", static_cast<double>(-Cfg::item::food_calories)});
-  food->setSequence({{"MoveToTarget", 0, ""}, {"Interact", 0, ""}});
+  food->setSequence({{"MoveToTarget", "", 0, 0, 0.0f},
+    {"Interact", "", 0, 0, 0.0f}});
   ItemRegistry::inst().register_item(std::move(food));
 
   // 床
   auto bed = std::make_unique<SmartItem>("bed", ItemProps{false, false, true, "bed.png"});
   bed->addEffect({EffectType::ModifyStat, "fatigue", -100.0});
-  bed->setSequence({{"MoveToTarget", 0, ""}, {"Interact", 0, ""}, {"Wait", 100, ""}});
+  bed->setSequence({{"MoveToTarget", "", 0, 0, 0.0f},
+    {"Interact", "", 0, 0, 0.0f},
+    {"Wait", "", 100, 0, 0.0f}});
   ItemRegistry::inst().register_item(std::move(bed));
 
   // 电脑
@@ -79,7 +82,9 @@ inline void generateDefaultItems() {
   computer->addEffect({EffectType::ModifyStat, "boredom", static_cast<double>(-Cfg::item::play_computer_entertain)});
   computer->addEffect({EffectType::AddMemory, "$RANDOM_COMPUTER$", 0.0});
   int useTicks = AkRandom::randint(Cfg::time::min_use_computer, Cfg::time::max_use_computer) * Cfg::core::ticks_per_sec;
-  computer->setSequence({{"MoveToTarget", 0, ""}, {"Interact", 0, ""}, {"Wait", useTicks, ""}});
+  computer->setSequence({{"MoveToTarget", "", 0, 0, 0.0f},
+    {"Interact", "", 0, 0, 0.0f},
+    {"Wait", "", useTicks, 0, 0.0f}});
   ItemRegistry::inst().register_item(std::move(computer));
 
   spdlog::info("GameInit:ItemLoader: Generated default items in memory.");
@@ -159,8 +164,10 @@ inline void saveItems(const std::string &filename = "items.json") {
     json jSeq = json::array();
     for (const auto &desc : smartItem->getSequence()) {
       jSeq.push_back({{"name", desc.name},
-                      {"intParam", desc.intParam},
-                      {"strParam", desc.strParam}});
+                          {"strParam", desc.strParam},
+                          {"intParam", desc.intParam},
+                          {"intParam2", desc.intParam2},
+                          {"floatParam", desc.floatParam}});
     }
     if (!jSeq.empty()) jItem["sequence"] = jSeq;
 
@@ -219,8 +226,10 @@ inline void loadItems(const std::string &filename = "items.json") {
         for (const auto &jSeq : item_json["sequence"]) {
           ActionDescriptor desc;
           desc.name = jSeq.value("name", "");
-          desc.intParam = jSeq.value("intParam", 0);
           desc.strParam = jSeq.value("strParam", "");
+          desc.intParam = jSeq.value("intParam", 0);
+          desc.intParam2 = jSeq.value("intParam2", 0);
+          desc.floatParam = jSeq.value("floatParam", 0.0f);
           seq.push_back(desc);
         }
         smart_item->setSequence(seq);
@@ -244,6 +253,19 @@ inline void saveAgents(const std::vector<std::unique_ptr<Agent>>& agents, const 
     j["y"] = a->getCharacter().getLoc().second;
     j["ai_type"] = static_cast<int>(a->getAIType());
     j["texture_name"] = a->getTextureName();
+    if (a->getAIType() == AIType::Static) {
+      json jSeq = json::array();
+      for (const auto& desc : a->getStaticAISequence()) {
+        jSeq.push_back({
+          {"name", desc.name},
+          {"strParam", desc.strParam},
+          {"intParam", desc.intParam},
+          {"intParam2", desc.intParam2},
+          {"floatParam", desc.floatParam}
+        });
+      }
+      if (!jSeq.empty()) j["sequence"] = jSeq;
+    }
     jArray.push_back(j);
   }
   std::ofstream out(filename);
@@ -269,8 +291,26 @@ inline void loadAgents(std::vector<std::unique_ptr<Agent>>& agents, IRender* ren
       AIType type = static_cast<AIType>(jItem.value("ai_type", 1));
       std::string tex = jItem.value("texture_name", "character.png");
 
-      agents.push_back(std::make_unique<Agent>(name, id, x, y, type, tex));
-      render->loadAgentTexture(tex); // 确保贴图被载入显存
+      auto new_agent = std::make_unique<Agent>(name, id, x, y, type, tex);
+
+      // 如果是Static ai，解析序列数据
+      if (type == AIType::Static && jItem.contains("sequence")) {
+        std::vector<ActionDescriptor> seq;
+        for (const auto& jSeq : jItem["sequence"]) {
+          ActionDescriptor desc;
+          desc.name = jSeq.value("name", "");
+          desc.strParam = jSeq.value("strParam", "");
+          desc.intParam = jSeq.value("intParam", 0);
+          desc.intParam2 = jSeq.value("intParam2", 0);
+          desc.floatParam = jSeq.value("floatParam", 0.0f);
+          spdlog::info("Load Agents: action name: {}", desc.name);
+          seq.push_back(desc);
+        }
+        new_agent->setStaticAISequence(seq);
+      }
+
+      agents.push_back(std::move(new_agent));
+      render->loadAgentTexture(tex);
     }
     spdlog::info("GameInit:AgentLoader: Loaded {} agents from {} successfully",agents.size(),filename);
   } catch (const std::exception& e) {

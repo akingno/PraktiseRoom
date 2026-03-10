@@ -48,7 +48,10 @@ void SystemBindings::bindAllUIEvents(Room &room, ItemLayer &items, std::vector<s
   EventBus::onUI_CreateItem.connect([render](std::string id, std::string tex, bool use, bool block, std::string tgt, float val) {
     auto smartItem = std::make_unique<SmartItem>(id, ItemProps{false, block, use, tex});
     if (!tgt.empty()) smartItem->addEffect({EffectType::ModifyStat, tgt, static_cast<double>(val)});
-    smartItem->setSequence({{"MoveToTarget", 0, ""}, {"Interact", 0, ""}});
+    smartItem->setSequence({
+      {"MoveToTarget", "", 0, 0, 0.0f},
+      {"Interact", "", 0, 0, 0.0f}
+    });
     ItemRegistry::inst().register_item(std::move(smartItem));
     render->loadDynamicTexture(id, tex);
     spdlog::info("EventBus: 热加载物品: {}", id);

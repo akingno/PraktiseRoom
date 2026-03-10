@@ -100,6 +100,7 @@ set(IMGUI_BACKEND_SOURCES
         TriggerManager.h
         actions/TeleportAgentActions.h
         actions/ModifyTargetStatAction.h
+        actions/ActionDef.h
 )
 
 add_executable(room_temp

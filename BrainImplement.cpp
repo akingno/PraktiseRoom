@@ -16,11 +16,13 @@ void StaticBrain::think(Agent* body, double dt_sec, uint64_t tick_index, Room& r
 void StaticBrain::onTriggerNotified(Agent* body, Agent* triggerer) {
   if (!triggerer) return;
 
-  spdlog::info("StaticBrain [{}] is casting sequence on [{}]!", body->getName(), triggerer->getName());
-  //TODO: 改为data化
-  auto seq = std::make_shared<SequenceAction>();
-  seq->add(std::make_shared<ModifyTargetStatAction>("hunger", 20.0f));
-  seq->add(std::make_shared<TeleportTargetAction>(0, 10, 10));
+  if (sequence_def_.empty()) {
+    spdlog::debug("StaticBrain [{}] was triggered, but has no sequence defined.", body->getName());
+    return;
+  }
+  spdlog::info("StaticBrain [{}] is casting dynamic sequence on [{}]!", body->getName(), triggerer->getName());
+
+  auto seq = ActionFactory::createFromDescriptors(sequence_def_);
   body->castSequenceOnTarget(triggerer, seq);
 }
 void UtilityBrain::think(Agent* body, double dt_sec, uint64_t tick_index, Room& room, ItemLayer& items, const std::vector<Agent*>& others) {

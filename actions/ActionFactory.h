@@ -18,7 +18,7 @@ public:
 
   static std::shared_ptr<Action> createFromSmartItem(const SmartItem* item);
 
-  // 预留：static std::shared_ptr<Action> createFromJson(const nlohmann::json& j);
+  static std::shared_ptr<Action> createFromDescriptors(const std::vector<ActionDescriptor> &seqDef);
 };
 
 
