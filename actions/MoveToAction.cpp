@@ -23,9 +23,6 @@ void MoveToAction::onEnter(ActExecutorCtx& ctx, Blackboard& bb){
         }
         break;
       case TargetKind::WanderPt: {
-        if (ctx.ch.isSleeping()) {
-          ctx.ch.setSleeping(false);
-      }
         auto startPos = ctx.ch.getLoc();
         int max_tries = 20;  // 尝试次数
 

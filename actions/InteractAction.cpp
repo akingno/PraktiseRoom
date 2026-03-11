@@ -17,10 +17,6 @@ bool try_use_item_at(ActExecutorCtx &ctx, int x, int y) {
       for (const auto &effect : smartItem->getEffects()) {
         if (effect.type == EffectType::ModifyStat) {
           ctx.ch.modifyStat(effect.target, effect.value);
-        } else if (effect.type == EffectType::SetState) {
-          if (effect.target == "sleeping") {
-            ctx.ch.setSleeping(effect.value > 0.0);
-          }
         } else if (effect.type == EffectType::AddMemory) {
           // 如果是特殊的标记，随机抽一条
           if (effect.target == "$RANDOM_COMPUTER$") {

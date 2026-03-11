@@ -42,6 +42,9 @@ struct EventBus {
   // args: x, y, target id
   inline static Signal<int, int, std::string> onUI_CreateTrigger;
 
+  // signal 7 UI请求创建新房间
+  inline static Signal<int, int, int> onUI_CreateLevel;
+
 
 };
 

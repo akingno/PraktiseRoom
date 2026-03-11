@@ -14,11 +14,6 @@ public:
       return Status::Failure;
     }
 
-    //check action of target agent, if it is sleeping, cancel this action
-    if (bb.target_agent->getCharacter().isSleeping()) {
-      return Status::Failure;
-    }
-
     bb.target_agent->receiveCall(ctx.parent_agent);
 
    return Status::Success;

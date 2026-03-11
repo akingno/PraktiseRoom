@@ -251,6 +251,7 @@ inline void saveAgents(const std::vector<std::unique_ptr<Agent>>& agents, const 
     j["id"] = a->getId();
     j["x"] = a->getCharacter().getLoc().first;
     j["y"] = a->getCharacter().getLoc().second;
+    j["level"] = a->getCharacter().getLevel();
     j["ai_type"] = static_cast<int>(a->getAIType());
     j["texture_name"] = a->getTextureName();
     if (a->getAIType() == AIType::Static) {
@@ -288,6 +289,7 @@ inline void loadAgents(std::vector<std::unique_ptr<Agent>>& agents, IRender* ren
       std::string id = jItem.value("id", "npc_unknown");
       int x = jItem.value("x", 0);
       int y = jItem.value("y", 0);
+      int level = jItem.value("level", 0);
       AIType type = static_cast<AIType>(jItem.value("ai_type", 1));
       std::string tex = jItem.value("texture_name", "character.png");
 
@@ -327,6 +329,7 @@ inline void saveTriggers(const std::string& filename = "triggers.json") {
     j["level"] = def.level;
     j["x"] = def.x;
     j["y"] = def.y;
+    j["level"] = def.level;
     j["type"] = static_cast<int>(def.type);
     j["target_id"] = def.target_id;
     jArray.push_back(j);
@@ -356,6 +359,7 @@ inline void loadTriggers(const std::string& filename = "triggers.json") {
       def.level = jItem.value("level", 0);
       def.x = jItem.value("x", 0);
       def.y = jItem.value("y", 0);
+      def.level = jItem.value("level", 0);
       def.type = static_cast<TriggerType>(jItem.value("type", 0));
       def.target_id = jItem.value("target_id", "");
 

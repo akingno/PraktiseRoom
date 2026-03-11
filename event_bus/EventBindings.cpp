@@ -4,18 +4,18 @@
 
 #include "EventBindings.h"
 #include "../GameContentInit.h"
+#include "../WorldManager.h"
 #include "EventBus.h"
 #include <chrono>
 #include <iostream>
 
-void SystemBindings::bindAllUIEvents(Room &room, ItemLayer &items, std::vector<std::unique_ptr<Agent>> &agents, IRender *render) {
+void SystemBindings::bindAllUIEvents(std::vector<std::unique_ptr<Agent>> &agents, IRender *render) {
 
-  EventBus::onUI_SaveAllRequested.connect([&room, &items, &agents]() {
+  EventBus::onUI_SaveAllRequested.connect([ &agents]() {
+    WorldManager::inst().saveAllWorlds();
     saveItems("items.json");
     Cfg::save("config.json");
-    items.saveToFile("world.json");
     saveTerrains("terrains.json");
-    room.saveToFile("room_map.json");
     saveAgents(agents, "agents.json");
     saveTriggers("triggers.json");
     spdlog::info("EventBus: 保存了所有更改");
@@ -23,9 +23,17 @@ void SystemBindings::bindAllUIEvents(Room &room, ItemLayer &items, std::vector<s
 
   EventBus::onUI_LoadItemsRequested.connect([]() { loadItems("items.json"); });
   EventBus::onUI_LoadConfigRequested.connect([]() { Cfg::load("config.json"); });
-  EventBus::onUI_LoadWorldRequested.connect([&items]() { items.loadFromFile("world.json"); });
+  EventBus::onUI_LoadWorldRequested.connect([]() {
+    if (auto* lvl = WorldManager::inst().getActiveLevel()) {
+          lvl->items->loadFromFile("world_items_" + std::to_string(lvl->level_id) + ".json");
+      }
+  });
   EventBus::onUI_LoadTerrainsRequested.connect([]() { loadTerrains("terrains.json"); });
-  EventBus::onUI_LoadRoomMapRequested.connect([&room]() { room.loadFromFile("room_map.json"); });
+  EventBus::onUI_LoadRoomMapRequested.connect([]() {
+    if (auto* lvl = WorldManager::inst().getActiveLevel()) {
+          lvl->room->loadFromFile("room_map_" + std::to_string(lvl->level_id) + ".json");
+      }
+  });
   EventBus::onUI_LoadAgentsRequested.connect([&agents, render]() {
     loadAgents(agents, render, "agents.json");
   });
@@ -65,12 +73,15 @@ void SystemBindings::bindAllUIEvents(Room &room, ItemLayer &items, std::vector<s
   });
 
   EventBus::onUI_CreateAgent.connect([&agents, render](std::string name, std::string id, int x, int y, AIType type, std::string tex) {
-    agents.push_back(std::make_unique<Agent>(name, id, x, y, type, tex));
+    auto new_agent = std::make_unique<Agent>(name, id, x, y, type, tex);
+    new_agent->getCharacter().setLevel(WorldManager::inst().current_active_level);
+
+    agents.push_back(std::move(new_agent));
     if (type == AIType::Utility) {
       for (const auto &r : Cfg::need_rules) agents.back()->getCharacter().registerNewStat(r.name, r.growth_rate);
     }
     render->loadAgentTexture(tex);
-    spdlog::info("EventBus: 创造新实体: {} at {}, {}.", name, x, y);
+    spdlog::info("EventBus: 创造新实体: {} at {}, {} in Level {}", name, x, y, WorldManager::inst().current_active_level);
   });
 
   EventBus::onTriggerStepped.connect([&agents](const std::string& trigger_id, const std::string& triggerer_id) {
@@ -97,27 +108,31 @@ void SystemBindings::bindAllUIEvents(Room &room, ItemLayer &items, std::vector<s
     });
 
   EventBus::onStaticSequenceUpdated.connect([&agents](std::string agent_id, std::vector<ActionDescriptor> new_seq) {
-        for (auto& agent : agents) {
-            if (agent->getId() == agent_id && agent->getAIType() == AIType::Static) {
-                agent->setStaticAISequence(new_seq);
-                spdlog::info("EventBus: Successfully updated sequence for Static AI: {}", agent_id);
-                break;
-            }
-        }
-    });
+    for (auto& agent : agents) {
+      if (agent->getId() == agent_id && agent->getAIType() == AIType::Static) {
+        agent->setStaticAISequence(new_seq);
+        spdlog::info("EventBus: Successfully updated sequence for Static AI: {}", agent_id);
+        break;
+      }
+    }
+  });
 
   EventBus::onUI_CreateTrigger.connect([](int x, int y, std::string target_id) {
-        TriggerDef def;
-        // 生成唯一ID，例如: trg_10_10_123456
-        def.id = "trg_" + std::to_string(x) + "_" + std::to_string(y) + "_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count());
-        def.level = 0;
-        def.x = x;
-        def.y = y;
-        def.type = TriggerType::NotifyBind;
-        def.target_id = target_id;
+    TriggerDef def;
+    def.id = "trg_" + std::to_string(x) + "_" + std::to_string(y) + "_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count());
+    def.level = WorldManager::inst().current_active_level;
+      def.x = x;
+      def.y = y;
+      def.type = TriggerType::NotifyBind;
+      def.target_id = target_id;
 
-        TriggerManager::inst().addTrigger(def);
-        spdlog::info("[EventBus] Created trigger [{}] at ({}, {}) targeting [{}]", def.id, x, y, target_id);
+      TriggerManager::inst().addTrigger(def);
+      spdlog::info("[EventBus] Created trigger [{}] at ({}, {}) targeting [{}]", def.id, x, y, target_id);
     });
 
+  EventBus::onUI_CreateLevel.connect([](int id, int w, int h) {
+      WorldManager::inst().createLevel(id, w, h);
+      WorldManager::inst().current_active_level = id;
+      spdlog::info("EventBus: Created and switched to Level {}", id);
+    });
 }

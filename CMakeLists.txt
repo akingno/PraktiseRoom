@@ -101,6 +101,7 @@ set(IMGUI_BACKEND_SOURCES
         actions/TeleportAgentActions.h
         actions/ModifyTargetStatAction.h
         actions/ActionDef.h
+        WorldManager.h
 )
 
 add_executable(room_temp

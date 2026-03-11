@@ -4,6 +4,7 @@
 
 #include "EditorUI.h"
 #include "Config.h"
+#include "WorldManager.h"
 #include "imgui.h"
 #include "imgui_impl_sdl3.h"
 #include "imgui_impl_sdlrenderer3.h"
@@ -50,6 +51,7 @@ bool EditorUI::processEvent(const SDL_Event *event) {
 void EditorUI::renderMenuBar(EditorMode& mode) {
   // 顶部菜单栏
   if (ImGui::BeginMainMenuBar()) {
+
     if (ImGui::BeginMenu(u8"文件 (File)")) {
       if (ImGui::MenuItem(u8"保存全部 (Save All World & Config)")) {
         EventBus::onUI_SaveAllRequested.emit();
@@ -84,6 +86,21 @@ void EditorUI::renderMenuBar(EditorMode& mode) {
       }
       if (ImGui::MenuItem(u8"游玩模式")) {
         mode = EditorMode::Play;
+      }
+      ImGui::EndMenu();
+    }
+
+    if (ImGui::BeginMenu(u8"Level切换")) {
+      for (const auto& [lvl_id, lvl_ptr] : WorldManager::inst().getAllLevels()) {
+        char buf[64];
+        sprintf(buf, "Level %d", lvl_id);
+
+        bool is_selected = (WorldManager::inst().current_active_level == lvl_id);
+
+        if (ImGui::MenuItem(buf, nullptr, is_selected)) {
+          WorldManager::inst().current_active_level = lvl_id;
+          spdlog::info("UI: God switched view to Level {}", lvl_id);
+        }
       }
       ImGui::EndMenu();
     }
@@ -368,7 +385,7 @@ void EditorUI::renderBottomPanel(EditorMode& mode, std::string& selected_item_id
       }
       ImGui::EndTabItem();
     }
-    if (ImGui::BeginTabItem(u8"创造触发器")) {
+    if (ImGui::BeginTabItem(u8"创建触发器")) {
       ImGui::Spacing();
       ImGui::InputInt(u8"X ", &new_trg_x_);
       ImGui::InputInt(u8"Y ", &new_trg_y_);
@@ -379,6 +396,29 @@ void EditorUI::renderBottomPanel(EditorMode& mode, std::string& selected_item_id
         if (new_trg_target_[0] != '\0') {
           EventBus::onUI_CreateTrigger.emit(new_trg_x_, new_trg_y_, new_trg_target_);
           memset(new_trg_target_, 0, sizeof(new_trg_target_));
+        }
+      }
+      ImGui::EndTabItem();
+    }
+
+    if (ImGui::BeginTabItem(u8"创建房间")) {
+      ImGui::Spacing();
+      ImGui::InputInt(u8"新房间id", &new_level_id_);
+      ImGui::InputInt(u8"宽度", &new_level_w_);
+      ImGui::InputInt(u8"高度", &new_level_h_);
+
+      ImGui::Spacing();
+      if (ImGui::Button(u8"创建并进入新房间", ImVec2(200, 30))) {
+        // 防止玩家输入负数或覆盖第 0 层
+        if (new_level_w_ > 0 && new_level_h_ > 0 && new_level_id_ > 0) {
+          if (WorldManager::inst().getLevel(new_level_id_) != nullptr) {
+            spdlog::warn("UI: Level {} 已经存在了！", new_level_id_);
+          } else {
+            EventBus::onUI_CreateLevel.emit(new_level_id_, new_level_w_, new_level_h_);
+            new_level_id_++;
+          }
+        } else {
+          spdlog::warn("UI: 参数不合法，房间大小和ID必须大于 0");
         }
       }
       ImGui::EndTabItem();

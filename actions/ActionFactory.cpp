@@ -71,8 +71,8 @@ std::shared_ptr<Action> ActionFactory::createFromDescriptors(const std::vector<A
       seq->add(std::make_shared<MoveToAction>(TargetKind::Coordinate));
     }
     else if (desc.name == "TeleportTarget") {
-      // level: 0, X, Y
-      seq->add(std::make_shared<TeleportTargetAction>(0, desc.intParam, desc.intParam2));
+      // level: l, X, Y
+      seq->add(std::make_shared<TeleportTargetAction>(static_cast<int>(desc.floatParam), desc.intParam, desc.intParam2, false));
     } else if (desc.name == "ModifyTargetStat") {
       // strParam: 属性名，floatParam: 数值
       seq->add(std::make_shared<ModifyTargetStatAction>(desc.strParam, desc.floatParam));

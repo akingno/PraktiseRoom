@@ -13,7 +13,7 @@
 #include <vector>
 
 namespace SystemBindings {
-void bindAllUIEvents(Room &room, ItemLayer &items, std::vector<std::unique_ptr<Agent>> &agents, IRender *render);
+void bindAllUIEvents(std::vector<std::unique_ptr<Agent>> &agents, IRender *render);
 }
 
 #endif//EVENTBINDINGS_H

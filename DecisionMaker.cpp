@@ -6,22 +6,25 @@
 #include "Agent.h"
 #include "Character.h"
 #include "tools/Utils.h"
+#include "WorldManager.h"
 
 DecisionMaker::~DecisionMaker() {
   if (_fut.valid()) _fut.wait();
 }
 
-void DecisionMaker::requestBatchDecision(const std::vector<Agent *> &agents, uint64_t nowTick, const ItemLayer &items) {
+void DecisionMaker::requestBatchDecision(const std::vector<Agent *> &agents, uint64_t nowTick) {
   if (_fut.valid()) return;
 
   // 扫描地图，收集所有可用的物品
   std::vector<ItemSnapshot> itemSnapshots;
-  for (const auto &[key, id] : items.items()) {
-    if (Item *baseItem = ItemRegistry::inst().get(id)) {
-      if (auto *smartItem = dynamic_cast<SmartItem *>(baseItem)) {
-        int x = key % Cfg::room::view_w;
-        int y = key / Cfg::room::view_w;
-        itemSnapshots.push_back({id, {x, y}, smartItem});
+  for (const auto& [lvl_id, lvl_ptr] : WorldManager::inst().getAllLevels()) {
+    for (const auto &[key, id] : lvl_ptr->items->items()) {
+      if (Item *baseItem = ItemRegistry::inst().get(id)) {
+        if (auto *smartItem = dynamic_cast<SmartItem *>(baseItem)) {
+          int x = key % lvl_ptr->items->getWidth();
+          int y = key / lvl_ptr->items->getWidth();
+          itemSnapshots.push_back({id, {x, y}, smartItem, lvl_id});
+        }
       }
     }
   }
@@ -37,6 +40,7 @@ void DecisionMaker::requestBatchDecision(const std::vector<Agent *> &agents, uin
     snap.isBeingCalled = agent->isBeingCalled();
     snap.currentAct = ch.act();
     snap.targetItemId = agent->getTargetItemId();
+    snap.level_id = ch.getLevel();
 
     for (const auto &mem : ch.get_short_memory().entries()) {
       snap.memories.push_back(mem.content);
@@ -173,6 +177,9 @@ std::map<std::string, DecisionResult> DecisionMaker::localUtilityBatch(
 
       // 在全地图扫描能满足该rule.name的物品
       for (const auto &itemSnap : availableItems) {
+        //如果物品和小人不在一层则返回
+        if (itemSnap.level_id != agent.level_id) continue;
+
         bool canSatisfy = false;
         // 检查物品的效果列表中，是否有降低该需求的设定
         for (const auto &eff : itemSnap.smartItemPtr->getEffects()) {

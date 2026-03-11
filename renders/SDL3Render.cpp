@@ -11,6 +11,7 @@
 #include "spdlog/spdlog.h"
 #include "../EditorUI.h"
 #include "../TriggerManager.h"
+#include "../WorldManager.h"
 
 static std::string RES(const char* name) {
   return std::string("res/") + name;
@@ -168,10 +169,10 @@ void SDL3Render::render_frame(
     }
   }
 
-  // 2) 画物品
+  // 2. 画物品
   for (auto& [key, iid] : items_.items()) {
-    int x = key % Cfg::room::view_w;
-    int y = key / Cfg::room::view_w;
+    int x = key % items_.getWidth();
+    int y = key / items_.getWidth();
 
     auto it = itemTextures_.find(iid);
     if (it != itemTextures_.end()) {
@@ -179,7 +180,9 @@ void SDL3Render::render_frame(
     }
   }
 
+  // 3. 画小人
   for (const auto& agent : agents) {
+    if (agent->getCharacter().getLevel() != WorldManager::inst().current_active_level) continue;
     const auto& c = agent->getCharacter();
     const int cx = c.getLoc().first;
     const int cy = c.getLoc().second;
@@ -193,6 +196,7 @@ void SDL3Render::render_frame(
     }
   }
 
+  // 放置模式的绘制
   if (!preview_item_id.empty() && preview_x >= 0 && preview_y >= 0) {
     auto it = itemTextures_.find(preview_item_id);
     if (it != itemTextures_.end()) {
@@ -205,10 +209,12 @@ void SDL3Render::render_frame(
     }
   }
 
+  // triggers绘制
   if (show_triggers && texTrigger_) {
     SDL_SetTextureAlphaMod(texTrigger_, 128);
 
     for (const auto& [id, trg] : TriggerManager::inst().getAllTriggers()) {
+      if (trg.level != WorldManager::inst().current_active_level) continue;
       drawTile(trg.x, trg.y, texTrigger_);
     }
 

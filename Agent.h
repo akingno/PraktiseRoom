@@ -116,10 +116,12 @@ class Agent {
     }
 
     auto pos = _ch.getLoc();
-    int current_level = 0; // 暂时硬编码为 0
-    const TriggerDef* trg = TriggerManager::inst().getTriggerAt(current_level, pos.first, pos.second);
+    int current_level = _ch.getLevel();
+
+    const TriggerDef* trg = TriggerManager::inst().getTriggerAt(current_level, pos.first, pos.second); //踩到trigger了吗
 
     if (trg) {
+      spdlog::debug("Player trigger le");
       // 当这次踩到的trigger和上一次记录的不同时，才发射信号
       if (_last_stepped_trigger != trg->id) {
         _last_stepped_trigger = trg->id;

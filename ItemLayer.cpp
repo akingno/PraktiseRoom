@@ -13,7 +13,7 @@
 using json = nlohmann::json;
 
 bool ItemLayer::place(const ItemId &id, int x, int y) {
-  if (x < 0 || x >= Cfg::room::view_w || y < 0 || y >= Cfg::room::view_h) return false;
+  if (x < 0 || x >= width_ || y < 0 || y >= height_) return false;
   items_[key(x, y)] = id;
   return true;
 }
@@ -28,21 +28,24 @@ std::optional<ItemId> ItemLayer::idAt(int x, int y) const {
 }
 
 void ItemLayer::initDefaultLayout() {
-  place("food", Cfg::room::food_x, Cfg::room::food_y);
-  place("bed", Cfg::room::bed_x, Cfg::room::bed_y);
-  place("computer", Cfg::room::computer_x, Cfg::room::computer_y);
+  if (level_id_ == 0) {
+    place("food", Cfg::room::food_x, Cfg::room::food_y);
+    place("bed", Cfg::room::bed_x, Cfg::room::bed_y);
+    place("computer", Cfg::room::computer_x, Cfg::room::computer_y);
+  }
 }
 
 void ItemLayer::clear() {
   items_.clear();
 }
+
 void ItemLayer::saveToFile(const std::string& filename) const {
   json jArray = json::array();
 
   // 遍历地图上所有的物品
   for (const auto& [k, id] : items_) {
-    int x = k % Cfg::room::view_w;
-    int y = k / Cfg::room::view_w;
+    int x = k % width_;
+    int y = k / width_;
     // 构造单个物品的json
     json jItem;
     jItem["id"] = id;

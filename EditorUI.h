@@ -75,6 +75,10 @@ private:
   int new_agent_type_idx_ = 1;
   char new_agent_tex_[64] = "";
 
+  int new_level_id_ = 1;
+  int new_level_w_ = 40;
+  int new_level_h_ = 30;
+
   std::vector<ActionDescriptor> _editing_seq;
   std::string _editing_agent_id = "";
 

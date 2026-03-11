@@ -68,13 +68,12 @@ class Character {
     _loc = {x, y};
   }
 
+  [[nodiscard]] int getLevel() const { return level_id_; }
+  void setLevel(int level) { level_id_ = level; }
+
   // 小人需求随时间增长：目前：饥饿和疲劳
   void tickNeeds(double dt_sec) {
     std::unordered_map<std::string, double> current_rates = _base_rates;
-
-    if (_sleeping) {
-      current_rates["fatigue"] = -Cfg::speed::sleep_recover;// 睡觉时疲劳下降
-    }
 
     // 3. 统一遍历应用
     for (const auto &[stat_name, rate] : current_rates) {
@@ -95,12 +94,6 @@ class Character {
     modifyStat("boredom", -board_decrease);
   }
 
-  /*
-   * 关于疲劳fatigue和睡眠
-   */
-  bool isSleeping() const { return _sleeping; }
-
-  void setSleeping(bool s) { _sleeping = s; }
 
   /*
    * 关于玩电脑和短期记忆
@@ -151,12 +144,11 @@ class Character {
   std::pair<int, int> _loc;
   Act act_ = Act::Wander;
 
-  // 疲劳/睡眠相关成员变量
-  bool _sleeping = false;// 是否正在睡
 
   ShortMemory short_memory_;
   std::unordered_map<std::string, double> _stats;
   std::unordered_map<std::string, double> _base_rates;
+  int level_id_ = 0;
 };
 
 #endif//ROOM_TEMP__CHARACTER_H_

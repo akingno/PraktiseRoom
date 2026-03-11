@@ -11,6 +11,9 @@
 
 void StaticBrain::think(Agent* body, double dt_sec, uint64_t tick_index, Room& room, ItemLayer& items, const std::vector<Agent*>& others) {
   // 没事干就原地发呆
+  if (!body->isReadyForAction()) {
+    return;
+  }
   body->applyDecision(Character::Act::Stop);
 }
 void StaticBrain::onTriggerNotified(Agent* body, Agent* triggerer) {

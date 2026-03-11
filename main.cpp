@@ -20,6 +20,7 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/basic_file_sink.h>
+#include "WorldManager.h"
 
 void initLogger() {
   try {
@@ -63,12 +64,7 @@ int main() {
   loadTriggers("triggers.json");
 
   //世界初始化
-  Room room(Cfg::room::view_w, Cfg::room::view_h);
-  room.loadFromFile("room_map.json");
-
-  //物品初始化
-  ItemLayer items;
-  items.loadFromFile("world.json");
+  WorldManager::inst().loadAllWorlds();
 
   //agents
   std::vector<std::unique_ptr<Agent>> agents;
@@ -101,10 +97,13 @@ int main() {
 
   // 输入处理
   InputController input;
-  SystemBindings::bindAllUIEvents(room, items, agents, render.get());
+  SystemBindings::bindAllUIEvents(agents, render.get());
 
   while (running) {
-    input.handleEvents(running, is_paused ,editorUI, room, items, agents);
+    Level* active_lvl = WorldManager::inst().getActiveLevel();
+    Room& active_room = *(active_lvl->room);
+    ItemLayer& active_items = *(active_lvl->items);
+    input.handleEvents(running, is_paused ,editorUI, active_room, active_items, agents);
 
     if (!running) break;
 
@@ -119,7 +118,10 @@ int main() {
 
       //更新+移动
       for (auto &agent : agents) {
-        agent->update(Cfg::core::tick_milli / 1000.0, tick_index, room, items, raw_agents_ptrs);
+        Level* agent_lvl = WorldManager::inst().getLevel(agent->getCharacter().getLevel());
+        if (agent_lvl) {
+          agent->update(Cfg::core::tick_milli / 1000.0, tick_index, *(agent_lvl->room), *(agent_lvl->items), raw_agents_ptrs);
+        }
       }
 
       if (!decisionMaker.isThinking()) {
@@ -131,7 +133,7 @@ int main() {
           }
         }
         if (!thinking_agents.empty()) {
-          decisionMaker.requestBatchDecision(thinking_agents, tick_index, items);
+          decisionMaker.requestBatchDecision(thinking_agents, tick_index);
         }
       }
       decisionMaker.poll(raw_agents_ptrs);
@@ -142,7 +144,7 @@ int main() {
     //渲染
     bool show_triggers = input.current_mode != EditorMode::Play;
     std::string preview_id = (input.current_mode == EditorMode::Placement) ? input.selected_placement_item : "";
-    render->render_frame(items, agents, room, preview_id, input.mouse_gx, input.mouse_gy, show_triggers);
+    render->render_frame(active_items, agents, active_room, preview_id, input.mouse_gx, input.mouse_gy, show_triggers);
 
     editorUI.render(is_paused,
       render->getRenderer(),

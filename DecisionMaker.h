@@ -38,6 +38,7 @@ struct ItemSnapshot {
   std::string id;
   std::pair<int, int> pos;
   const SmartItem *smartItemPtr;
+  int level_id;
 };
 
 // 线程安全的快照数据结构
@@ -48,6 +49,7 @@ struct AgentSnapshot {
   std::vector<std::string> memories;
   Character::Act currentAct;
   std::string targetItemId;
+  int level_id;
 
   [[nodiscard]] double getStat(const std::string &key) const {
     auto it = stats.find(key);
@@ -68,7 +70,7 @@ class DecisionMaker {
    * @param agents 所有需要参与决策的 Agent 指针
    * @param nowTick 当前时间 tick
    */
-  void requestBatchDecision(const std::vector<Agent *> &agents, uint64_t nowTick, const ItemLayer &items);
+  void requestBatchDecision(const std::vector<Agent *> &agents, uint64_t nowTick);
 
   /**
    * @brief 轮询结果 (主线程调用)
