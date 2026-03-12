@@ -38,6 +38,11 @@ void LLMBrain::think(Agent* body, double dt_sec, uint64_t tick_index, Room& room
 }
 
 void PlayerBrain::think(Agent* body, double dt_sec, uint64_t tick_index, Room& room, ItemLayer& items, const std::vector<Agent*>& others) {
+
+  if (!Cfg::core::is_play_mode) {
+    return;
+  }
+
   // 玩家输入
   if (!body->isReadyForAction()) {
     return;

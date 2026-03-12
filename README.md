@@ -1,98 +1,26 @@
-# 行为循环图 (Per-Tick Loop)
+# PraktiseRoom
 
-```text
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                                Per-Tick Loop                                │
-│                          (main.cpp while(running))                          │
-└─────────────────────────────────────────────────────────────────────────────┘
-        │
-        ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 1) Needs Update                                                             │
-│    character.tickNeeds(dt)                                                  │
-│    room.ensureFoodSpawned()                                                 │
-└─────────────────────────────────────────────────────────────────────────────┘
-        │
-        ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 2) Perception & Utility                                                     │
-│   - pos = character.getLoc()                                                │
-│   - fpos = room.foodPos()                                                   │
-│   - hasFood = room.hasFood()                                                │
-│   - scoreEat = CalcScoreEat(hunger, pos, hasFood, fpos,                     │
-│                             onCooldown=!eatAvailable,                       │
-│                             sticky=(act==Eat))                              │
-│   - scoreWander = BASE_WANDER                                               │
-└─────────────────────────────────────────────────────────────────────────────┘
-        │
-        ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 3) Action Selection                                                         │
-│   chosen = (scoreEat > scoreWander) ? Eat : Wander                          │
-│   character.setAct(chosen)                                                  │
-└─────────────────────────────────────────────────────────────────────────────┘
-        │
-        ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 4) ActionExecutor::tick(chosen, ctx, bb)                                    │
-│   ctx = { room, character, tick_index }                                     │
-│   bb  = Blackboard(跨帧共享：target / path / path_i / path_invalid /节流)     │
-└─────────────────────────────────────────────────────────────────────────────┘
-        │
-   ┌────┴─────────────────────────────────────────────────────────────────┐
-   │                                                                      │
-   ▼                                                                      ▼
-┌───────────────────────────────────────────────┐         ┌───────────────────────────────────────────────┐
-│ 4A) Wander                                   │         │ 4B) Eat                                      │
-│     ActionExecutor::tick_wander(ctx)         │         │     ActionExecutor::tick_eat(ctx, bb)        │
-│   • is_passable: 非墙即可                     │         │  ┌─ FindFood ──────────────────────────────┐│
-│   • character.tryMove(is_passable,           │         │  │ if !bb.target_valid:                     ││
-│     keep_prob=0.9) 随机带偏好                │         │  │   if !room.hasFood() → return            ││
-│                                               │        │  │   bb.target = foodPos;                   ││
-│   结果：                                      │        │  │   bb.target_valid = true;                ││
-│   • 迈一步或原地（堵住）                      │        │  │   bb.path_invalid = true;                 ││
-└───────────────────────────────────────────────┘         │  └──────────────────────────────────────────┘│
-                                                          │                                              │
-                                                          │  ┌─ Plan (A*) ─────────────────────────────┐│
-                                                          │  │ if need_replan(ctx, bb, cur, target):   ││
-                                                          │  │   bb.path.clear();                       ││
-                                                          │  │   bb.last_planned_for_tick = tick_index; ││
-                                                          │  │   if pf.plan(cur → target, bb.path):    ││
-                                                          │  │      bb.path_i = (size>=2?1:size);       ││
-                                                          │  │      bb.path_invalid = false;            ││
-                                                          │  │   else return (暂不可达)                 ││
-                                                          │  └──────────────────────────────────────────┘│
-                                                          │                                              │
-                                                          │  ┌─ FollowPath ────────────────────────────┐│
-                                                          │  │ if !bb.path_invalid:                     ││
-                                                          │  │   next = bb.path[bb.path_i];             ││
-                                                          │  │   if character.tryStepTo(next,passable): ││
-                                                          │  │       ++bb.path_i;                       ││
-                                                          │  │   else                                   ││
-                                                          │  │       bb.path_invalid = true; return     ││
-                                                          │  └──────────────────────────────────────────┘│
-                                                          │                                              │
-                                                          │  ┌─ EatNow ────────────────────────────────┐│
-                                                          │  │ if at foodPos && eatAvailable():         ││
-                                                          │  │   character.eat(FOOD_CALORIES);          ││
-                                                          │  │   room.consumeFood();                     ││
-                                                          │  │   // 清理 BlackBoard                     ││
-                                                          │  │   bb.target_valid = false;               ││
-                                                          │  │   bb.path.clear(); bb.path_i=0;          ││
-                                                          │  │   bb.path_invalid = true;                ││
-                                                          │  └──────────────────────────────────────────┘│
-                                                          └───────────────────────────────────────────────┘
-        │
-        ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 5) Render (IRender → ASCIIRender)                                           │
-│   - render_room(room)                                                       │
-│   - render_items(room)  // 门、食物覆盖                                      │
-│   - render_character(@)                                                     │
-│   - render_info(... scoreEat, scoreWander, Hunger, pos, dir, 诊断信息)       │
-└─────────────────────────────────────────────────────────────────────────────┘
-        │
-        ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 6) Sleep until next tick (≈33ms), ++tick_index → 回到步骤 1                 │
-└─────────────────────────────────────────────────────────────────────────────┘
+本项目是一个基于 C++17 , SDL3 和 DearImGui构建的纯数据驱动 2D 智能体模拟沙盒与关卡引擎。
+
+![Screenshot](screenshot.png)
+
+## ✨ 核心特性
+
+本引擎致力于提供高度解耦和完全可视化的运行时编辑体验，支持零 C++ 代码侵入的全面自定义：
+
+* **自定义关卡**
+  基于平行世界架构，支持在运行时创建无数个相互隔离的多维房间（Level）。配合空间触发器（Trigger），实现无缝的跨维传送。
+* **自定义地形**
+  在内置的可视化编辑器中一键注册新地形，动态分配贴图纹理与物理阻挡属性，并使用画笔工具自由绘制。
+* **自定义物品**
+  灵活定义场景中的交互道具，皆可热加载。
+* **自定义需求 (Custom Needs)**
+  摆脱硬编码的属性面板。在 UI 中随时增删实体的生存/娱乐需求，自由配置增长率、进入/退出阈值及权重，驱动 AI 产生全新的自发行为。
+* **多种 AI 模式**
+  内置强大的分层状态机与决策大脑，支持无缝切换：
+  * **Utility AI (效用 AI)**：基于需求驱动，全图异步扫描寻找局部最优解。
+  * **Static AI (静态 AI)**：基于触发器与数据流，精准执行编排的宏动作序列。
+  * **Player**：玩家随时夺舍接管。
+
+---
+*Developed by Akingno*

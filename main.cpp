@@ -106,6 +106,7 @@ int main() {
     input.handleEvents(running, is_paused ,editorUI, active_room, active_items, agents);
 
     if (!running) break;
+    Cfg::core::is_play_mode = (input.current_mode == EditorMode::Play);
 
     if (!is_paused) {
       //重新构造当前的小人指针（因为可能加了新的）

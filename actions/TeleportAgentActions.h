@@ -14,25 +14,19 @@ public:
   TeleportTargetAction(int level, int x, int y, bool has_triggered) : level_(level), x_(x), y_(y), _has_triggered(has_triggered) {}
 
   Status tick(ActExecutorCtx& ctx, Blackboard& bb) override {
-    spdlog::info("TeleportTarget: tick 启动！_has_triggered = {}", _has_triggered);
 
     if (_has_triggered) return Status::Success;
 
     if (!bb.target_agent) {
-      spdlog::error("TeleportTarget: 致命错误，bb.target_agent 为 NULL！");
       return Status::Failure;
     }
 
-    spdlog::info("TeleportTarget: 目标确认为 {}, 准备检测楼层 {}", bb.target_agent->getName(), level_);
-
     Level* dest_lvl = WorldManager::inst().getLevel(level_);
     if (!dest_lvl) {
-      spdlog::warn("Teleport failed: Level {} 不存在！", level_);
       return Status::Success;
     }
 
     if (!dest_lvl->room->isPassable(x_, y_)) {
-      spdlog::warn("Teleport failed: 目的地 ({}, {}) 被地形阻挡！", x_, y_);
       return Status::Success;
     }
 

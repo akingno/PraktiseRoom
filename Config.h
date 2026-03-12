@@ -33,6 +33,7 @@ inline int tile_px = 32;
 inline double tick_milli = 50.0;
 inline int tick_milli_int = 50;
 inline int ticks_per_sec = 20;
+inline bool is_play_mode = false;
 }// namespace core
 
 namespace room {
