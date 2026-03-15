@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\adler32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\compress.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\crc32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\deflate.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\gzclose.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\gzlib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\gzread.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\gzwrite.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\inflate.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\infback.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\inftrees.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\inffast.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\trees.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\uncompr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\zutil.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\build\_deps\SDL_image-build\external\zlib-build\zconf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\zlib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\crc32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\deflate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\gzguts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\inffast.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\inffixed.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\inflate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\inftrees.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\trees.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\zutil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\zlib\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{DAE38AB5-AAFA-3BA2-97BE-09692B23E3A5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{7524CCEB-03C6-3236-8CE0-A7EAA9D0586C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

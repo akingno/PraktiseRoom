@@ -1,0 +1,118 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"third_party/SDL_ttf/external/plutovg/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 80,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 85,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 92,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 98,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 141,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "include/plutovg",
+			"paths" : 
+			[
+				"third_party/SDL_ttf/external/plutovg/include/plutovg.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/SDL_ttf-build/external/plutovg-build/MinSizeRel/plutovg.lib"
+			],
+			"targetId" : "plutovg::@33d8039b0e58b80e116b",
+			"targetIndex" : 32,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/plutovg",
+			"exportName" : "plutovgTargets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "plutovg::@33d8039b0e58b80e116b",
+					"index" : 32
+				}
+			],
+			"paths" : 
+			[
+				"_deps/SDL_ttf-build/external/plutovg-build/CMakeFiles/Export/f6ef2f3f18222bc8084975f00f853305/plutovgTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/plutovg",
+			"paths" : 
+			[
+				"build/_deps/SDL_ttf-build/external/plutovg-build/plutovgConfig.cmake",
+				"build/_deps/SDL_ttf-build/external/plutovg-build/plutovgConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "lib/pkgconfig",
+			"paths" : 
+			[
+				"build/_deps/SDL_ttf-build/external/plutovg-build/plutovg.pc"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "_deps/SDL_ttf-build/external/plutovg-build",
+		"source" : "third_party/SDL_ttf/external/plutovg"
+	}
+}

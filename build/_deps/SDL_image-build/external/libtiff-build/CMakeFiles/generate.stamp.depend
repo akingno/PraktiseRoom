@@ -1,0 +1,54 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckCSourceCompiles.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckIncludeFile.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckIncludeFileCXX.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckLibraryExists.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckSymbolExists.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckTypeSize.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/FindGLUT.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/FindOpenGL.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/FindPackageMessage.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/FindPkgConfig.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/GNUInstallDirs.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/SelectLibraryConfigurations.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/TestBigEndian.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/build/CMakeFiles/cmake.verify_globs
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/cmake/Findwebp.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/CMakeLists.txt
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/AutotoolsCompat.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/AutotoolsVersion.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/CXXLibrary.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/CompilerChecks.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/DeflateCodec.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/FindCMath.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/FindDeflate.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/FindJBIG.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/FindJPEG.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/FindLERC.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/FindZSTD.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/Findliblzma.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/IncludeChecks.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/InternalCodecs.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/JBIGCodec.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/JPEGCodec.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/LERCCodec.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/LZMACodec.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/LargeFileSupport.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/LibraryFeatures.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/LinkerChecks.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/OpenGLChecks.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/PixarLogCodec.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/PkgConfig.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/ProcessorChecks.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/Release.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/SymbolChecks.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/TypeSizeChecks.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/WebPCodec.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/WindowsSupport.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/cmake/ZSTDCodec.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/configure.ac
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/libtiff-4.pc.in
+C:/Users/jacob/miniconda3/Library/lib/cmake/liblzma/liblzma-config-version.cmake
+C:/Users/jacob/miniconda3/Library/lib/cmake/zstd/zstdConfigVersion.cmake

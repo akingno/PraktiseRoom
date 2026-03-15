@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\extras\webp_quality.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{7524CCEB-03C6-3236-8CE0-A7EAA9D0586C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

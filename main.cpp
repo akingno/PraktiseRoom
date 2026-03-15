@@ -139,7 +139,7 @@ int main() {
       }
       decisionMaker.poll(raw_agents_ptrs);
 
-      ++tick_index; // tick 计数也放进不暂停的逻辑里
+      ++tick_index; // tick计数也放进不暂停的逻辑里
     }
 
     //渲染

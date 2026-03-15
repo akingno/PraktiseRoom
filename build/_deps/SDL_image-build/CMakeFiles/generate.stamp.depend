@@ -1,0 +1,17 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CMakeDependentOption.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CMakePackageConfigHelpers.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CMakeParseArguments.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CMakePushCheckState.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckCSourceCompiles.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckLinkerFlag.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/GNUInstallDirs.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/WriteBasicConfigVersionFile.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/build/CMakeFiles/cmake.verify_globs
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/CMakeLists.txt
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/cmake/GetGitRevisionDescription.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/cmake/PrivateSdlFunctions.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/cmake/sdlcpu.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/cmake/sdlmanpages.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/cmake/sdlplatform.cmake

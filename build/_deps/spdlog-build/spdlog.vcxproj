@@ -1,0 +1,461 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x86</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|win32">
+      <Configuration>Debug</Configuration>
+      <Platform>win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|win32">
+      <Configuration>Release</Configuration>
+      <Platform>win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|win32">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|win32">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{243D4935-5A3D-38AA-AB6D-94172F74DEED}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <Platform>win32</Platform>
+    <ProjectName>spdlog</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">C:\Users\jacob\Desktop\PraktiseRoom\build\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">spdlog.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">spdlogd</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|win32'">C:\Users\jacob\Desktop\PraktiseRoom\build\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|win32'">spdlog.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|win32'">spdlog</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|win32'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|win32'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">C:\Users\jacob\Desktop\PraktiseRoom\build\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">spdlog.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">spdlog</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">C:\Users\jacob\Desktop\PraktiseRoom\build\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">spdlog.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">spdlog</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">true</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /utf-8 /Zc:__cplusplus</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;SPDLOG_SHARED_LIB;FMT_LIB_EXPORT;FMT_SHARED;SPDLOG_COMPILED_LIB;SPDLOG_FWRITE_UNLOCKED;CMAKE_INTDIR="Debug";spdlog_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;SPDLOG_SHARED_LIB;FMT_LIB_EXPORT;FMT_SHARED;SPDLOG_COMPILED_LIB;SPDLOG_FWRITE_UNLOCKED;CMAKE_INTDIR=\"Debug\";spdlog_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/jacob/Desktop/PraktiseRoom/build/_deps/spdlog-build/Debug/spdlogd.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/jacob/Desktop/PraktiseRoom/build/Debug/spdlogd.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /utf-8 /Zc:__cplusplus</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;SPDLOG_SHARED_LIB;FMT_LIB_EXPORT;FMT_SHARED;SPDLOG_COMPILED_LIB;SPDLOG_FWRITE_UNLOCKED;CMAKE_INTDIR="Release";spdlog_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;SPDLOG_SHARED_LIB;FMT_LIB_EXPORT;FMT_SHARED;SPDLOG_COMPILED_LIB;SPDLOG_FWRITE_UNLOCKED;CMAKE_INTDIR=\"Release\";spdlog_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/jacob/Desktop/PraktiseRoom/build/_deps/spdlog-build/Release/spdlog.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/jacob/Desktop/PraktiseRoom/build/Release/spdlog.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /utf-8 /Zc:__cplusplus</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;SPDLOG_SHARED_LIB;FMT_LIB_EXPORT;FMT_SHARED;SPDLOG_COMPILED_LIB;SPDLOG_FWRITE_UNLOCKED;CMAKE_INTDIR="MinSizeRel";spdlog_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;SPDLOG_SHARED_LIB;FMT_LIB_EXPORT;FMT_SHARED;SPDLOG_COMPILED_LIB;SPDLOG_FWRITE_UNLOCKED;CMAKE_INTDIR=\"MinSizeRel\";spdlog_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/jacob/Desktop/PraktiseRoom/build/_deps/spdlog-build/MinSizeRel/spdlog.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/jacob/Desktop/PraktiseRoom/build/MinSizeRel/spdlog.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /utf-8 /Zc:__cplusplus</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;SPDLOG_SHARED_LIB;FMT_LIB_EXPORT;FMT_SHARED;SPDLOG_COMPILED_LIB;SPDLOG_FWRITE_UNLOCKED;CMAKE_INTDIR="RelWithDebInfo";spdlog_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;SPDLOG_SHARED_LIB;FMT_LIB_EXPORT;FMT_SHARED;SPDLOG_COMPILED_LIB;SPDLOG_FWRITE_UNLOCKED;CMAKE_INTDIR=\"RelWithDebInfo\";spdlog_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/jacob/Desktop/PraktiseRoom/build/_deps/spdlog-build/RelWithDebInfo/spdlog.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/jacob/Desktop/PraktiseRoom/build/RelWithDebInfo/spdlog.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">Building Custom Rule C:/Users/jacob/Desktop/PraktiseRoom/third_party/spd/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/jacob/Desktop/PraktiseRoom -BC:/Users/jacob/Desktop/PraktiseRoom/build --check-stamp-file C:/Users/jacob/Desktop/PraktiseRoom/build/_deps/spdlog-build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckCSourceCompiles.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckIncludeFile.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckLibraryExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckSymbolExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindPackageMessage.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindThreads.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\GNUInstallDirs.cmake;C:\Users\jacob\Desktop\PraktiseRoom\build\CMakeFiles\cmake.verify_globs;C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\cmake\ide.cmake;C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\cmake\utils.cmake;C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\cmake\version.rc.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">C:\Users\jacob\Desktop\PraktiseRoom\build\_deps\spdlog-build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|win32'">Building Custom Rule C:/Users/jacob/Desktop/PraktiseRoom/third_party/spd/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|win32'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/jacob/Desktop/PraktiseRoom -BC:/Users/jacob/Desktop/PraktiseRoom/build --check-stamp-file C:/Users/jacob/Desktop/PraktiseRoom/build/_deps/spdlog-build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|win32'">C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckCSourceCompiles.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckIncludeFile.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckLibraryExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckSymbolExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindPackageMessage.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindThreads.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\GNUInstallDirs.cmake;C:\Users\jacob\Desktop\PraktiseRoom\build\CMakeFiles\cmake.verify_globs;C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\cmake\ide.cmake;C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\cmake\utils.cmake;C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\cmake\version.rc.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|win32'">C:\Users\jacob\Desktop\PraktiseRoom\build\_deps\spdlog-build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">Building Custom Rule C:/Users/jacob/Desktop/PraktiseRoom/third_party/spd/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/jacob/Desktop/PraktiseRoom -BC:/Users/jacob/Desktop/PraktiseRoom/build --check-stamp-file C:/Users/jacob/Desktop/PraktiseRoom/build/_deps/spdlog-build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckCSourceCompiles.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckIncludeFile.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckLibraryExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckSymbolExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindPackageMessage.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindThreads.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\GNUInstallDirs.cmake;C:\Users\jacob\Desktop\PraktiseRoom\build\CMakeFiles\cmake.verify_globs;C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\cmake\ide.cmake;C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\cmake\utils.cmake;C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\cmake\version.rc.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">C:\Users\jacob\Desktop\PraktiseRoom\build\_deps\spdlog-build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">Building Custom Rule C:/Users/jacob/Desktop/PraktiseRoom/third_party/spd/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/jacob/Desktop/PraktiseRoom -BC:/Users/jacob/Desktop/PraktiseRoom/build --check-stamp-file C:/Users/jacob/Desktop/PraktiseRoom/build/_deps/spdlog-build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckCSourceCompiles.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckIncludeFile.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckLibraryExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckSymbolExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindPackageMessage.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindThreads.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\GNUInstallDirs.cmake;C:\Users\jacob\Desktop\PraktiseRoom\build\CMakeFiles\cmake.verify_globs;C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\cmake\ide.cmake;C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\cmake\utils.cmake;C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\cmake\version.rc.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">C:\Users\jacob\Desktop\PraktiseRoom\build\_deps\spdlog-build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\src\spdlog.cpp" />
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\src\stdout_sinks.cpp" />
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\src\color_sinks.cpp" />
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\src\file_sinks.cpp" />
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\src\async.cpp" />
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\src\cfg.cpp" />
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\src\bundled_fmtlib_format.cpp" />
+    <ResourceCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\build\_deps\spdlog-build\version.rc" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\async.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\async_logger-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\async_logger.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\common-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\common.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\formatter.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fwd.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\logger-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\logger.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\mdc.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\pattern_formatter-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\pattern_formatter.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\spdlog-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\spdlog.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\stopwatch.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\tweakme.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\version.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\backtracer-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\backtracer.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\circular_q.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\console_globals.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\file_helper-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\file_helper.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\fmt_helper.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\log_msg-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\log_msg.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\log_msg_buffer-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\log_msg_buffer.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\mpmc_blocking_q.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\null_mutex.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\os-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\os.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\periodic_worker-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\periodic_worker.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\registry-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\registry.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\synchronous_factory.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\tcp_client-windows.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\tcp_client.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\thread_pool-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\thread_pool.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\udp_client-windows.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\udp_client.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\details\windows_include.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\android_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\ansicolor_sink-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\ansicolor_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\base_sink-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\base_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\basic_file_sink-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\basic_file_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\callback_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\daily_file_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\dist_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\dup_filter_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\hourly_file_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\kafka_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\mongo_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\msvc_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\null_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\ostream_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\qt_sinks.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\ringbuffer_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\rotating_file_sink-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\rotating_file_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\sink-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\stdout_color_sinks-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\stdout_color_sinks.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\stdout_sinks-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\stdout_sinks.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\syslog_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\systemd_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\tcp_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\udp_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\win_eventlog_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\wincolor_sink-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\sinks\wincolor_sink.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\bin_to_hex.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\chrono.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\compile.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\fmt.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\ostr.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\ranges.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\std.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\xchar.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\bundled\args.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\bundled\base.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\bundled\chrono.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\bundled\color.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\bundled\compile.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\bundled\core.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\bundled\format-inl.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\bundled\format.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\bundled\os.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\bundled\ostream.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\bundled\printf.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\bundled\ranges.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\bundled\std.h" />
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\spd\include\spdlog\fmt\bundled\xchar.h" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\jacob\Desktop\PraktiseRoom\build\ZERO_CHECK.vcxproj">
+      <Project>{EFB5E338-E93B-3163-8AD1-F6607888768B}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

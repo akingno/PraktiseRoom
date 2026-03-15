@@ -1,0 +1,6 @@
+# CMake generation dependency list for this directory.
+C:/Users/jacob/Desktop/PraktiseRoom/build/CMakeFiles/cmake.verify_globs
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/libtiff/CMakeLists.txt
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/libtiff/tif_config.h.cmake.in
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/libtiff/tiffconf.h.cmake.in
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/libtiff/libtiff/tiffvers.h.cmake.in

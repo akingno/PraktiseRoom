@@ -37,7 +37,7 @@ public:
 
     if (s == Status::Success) {
       curr->onExit(ctx, bb); // 结束当前子动作
-      _currentIdx++;         // 进下一个
+      _currentIdx++; // 进下一个
 
       if (_currentIdx < _actions.size()) {
         _actions[_currentIdx]->onEnter(ctx, bb); // 启动下一个

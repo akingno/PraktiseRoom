@@ -1,0 +1,49 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"third_party/SDL_image/external/libpng/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "pngfix::@763705ce39f2fb4ec273"
+		},
+		{
+			"id" : "png_static::@763705ce39f2fb4ec273"
+		},
+		{
+			"id" : "png-fix-itxt::@763705ce39f2fb4ec273"
+		},
+		{
+			"id" : "png_shared::@763705ce39f2fb4ec273"
+		},
+		{
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+		}
+	],
+	"folder" : 
+	{
+		"name" : "CMakePredefinedTargets"
+	},
+	"id" : "ALL_BUILD::@763705ce39f2fb4ec273",
+	"isGeneratorProvided" : true,
+	"name" : "ALL_BUILD",
+	"paths" : 
+	{
+		"build" : "_deps/SDL_image-build/external/libpng-build",
+		"source" : "third_party/SDL_image/external/libpng"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

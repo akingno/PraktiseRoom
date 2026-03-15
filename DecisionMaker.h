@@ -26,7 +26,7 @@ class Agent;
 #include <httplib/httplib.h>
 #endif
 
-// 单个 Agent 的决策结果
+// 单个Agent的决策结果
 struct DecisionResult {
   Character::Act act;
   std::string thought;
@@ -81,10 +81,10 @@ class DecisionMaker {
   bool isThinking() const;
 
  private:
-  // 返回值是一个 Map: Key=AgentName, Value=DecisionResult
+  // 返回值是一个Map: Key=AgentName, Value=DecisionResult
   std::future<std::map<std::string, DecisionResult>> _fut;
 
-  // 本地逻辑 (Fallback)
+  // 本地逻辑
   std::map<std::string, DecisionResult> localUtilityBatch(
       const std::vector<AgentSnapshot> &snapshots,
       const std::vector<ItemSnapshot> &availableItems);

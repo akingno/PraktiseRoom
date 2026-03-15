@@ -1,0 +1,10 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckCSourceCompiles.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckFunctionExists.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckIncludeFile.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckIncludeFileCXX.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckTypeSize.cmake
+C:/Users/jacob/Desktop/PraktiseRoom/build/CMakeFiles/cmake.verify_globs
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/zlib/CMakeLists.txt
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/zlib/zconf.h.cmakein
+C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_image/external/zlib/zlib.pc.cmakein

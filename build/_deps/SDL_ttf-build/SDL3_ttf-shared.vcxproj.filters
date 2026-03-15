@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_ttf\src\SDL_hashtable.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_ttf\src\SDL_hashtable_ttf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_ttf\src\SDL_gpu_textengine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_ttf\src\SDL_renderer_textengine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_ttf\src\SDL_surface_textengine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_ttf\src\SDL_ttf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_ttf\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_ttf\src\version.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{7524CCEB-03C6-3236-8CE0-A7EAA9D0586C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,126 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"third_party/SDL_image/external/libpng/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1088,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1090,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1103,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1109,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1111,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "include",
+			"paths" : 
+			[
+				"third_party/SDL_image/external/libpng/png.h",
+				"third_party/SDL_image/external/libpng/pngconf.h",
+				"build/_deps/SDL_image-build/external/libpng-build/pnglibconf.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "include/libpng16",
+			"paths" : 
+			[
+				"third_party/SDL_image/external/libpng/png.h",
+				"third_party/SDL_image/external/libpng/pngconf.h",
+				"build/_deps/SDL_image-build/external/libpng-build/pnglibconf.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"Release/pngfix.exe"
+			],
+			"targetId" : "pngfix::@763705ce39f2fb4ec273",
+			"targetIndex" : 37,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"Release/png-fix-itxt.exe"
+			],
+			"targetId" : "png-fix-itxt::@763705ce39f2fb4ec273",
+			"targetIndex" : 33,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "share/man/man3",
+			"paths" : 
+			[
+				"third_party/SDL_image/external/libpng/libpng.3",
+				"third_party/SDL_image/external/libpng/libpngpf.3"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "share/man/man5",
+			"paths" : 
+			[
+				"third_party/SDL_image/external/libpng/png.5"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "_deps/SDL_image-build/external/libpng-build",
+		"source" : "third_party/SDL_image/external/libpng"
+	}
+}

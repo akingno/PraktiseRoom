@@ -1,0 +1,235 @@
+{
+	"archive" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "/machine:X86",
+				"role" : "flags"
+			}
+		]
+	},
+	"artifacts" : 
+	[
+		{
+			"path" : "_deps/SDL_ttf-build/external/plutosvg-guild/Release/plutosvg.lib"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"target_link_libraries",
+			"add_compile_options",
+			"target_compile_definitions",
+			"target_include_directories",
+			"set_target_properties"
+		],
+		"files" : 
+		[
+			"third_party/SDL_ttf/external/plutosvg/CMakeLists.txt",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 56,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 38,
+				"parent" : 0
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 8,
+				"parent" : 4
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 45,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 55,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 29,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 57,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 22,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "/DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -MD"
+				},
+				{
+					"backtrace" : 5,
+					"fragment" : "/MP"
+				},
+				{
+					"backtrace" : 5,
+					"fragment" : "/utf-8"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 6,
+					"define" : "PLUTOSVG_BUILD"
+				},
+				{
+					"backtrace" : 7,
+					"define" : "PLUTOSVG_BUILD_STATIC"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "PLUTOSVG_HAS_FREETYPE"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "PLUTOVG_BUILD_STATIC"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 9,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_ttf/external/plutosvg/source"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/build/_deps/SDL_ttf-build/external/freetype-build/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_ttf/external/freetype/include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_ttf/external/plutovg/include"
+				}
+			],
+			"language" : "C",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					11
+				],
+				"standard" : "99"
+			},
+			"sourceIndexes" : 
+			[
+				2
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "harfbuzz::@e0842eb4f1dec4561250"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "plutovg::@33d8039b0e58b80e116b"
+		},
+		{
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+		}
+	],
+	"id" : "plutosvg::@94961be6a59e213c101a",
+	"name" : "plutosvg",
+	"nameOnDisk" : "plutosvg.lib",
+	"paths" : 
+	{
+		"build" : "_deps/SDL_ttf-build/external/plutosvg-guild",
+		"source" : "third_party/SDL_ttf/external/plutosvg"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1
+			]
+		},
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				2
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"path" : "third_party/SDL_ttf/external/plutosvg/source/plutosvg.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "third_party/SDL_ttf/external/plutosvg/source/plutosvg-ft.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "third_party/SDL_ttf/external/plutosvg/source/plutosvg.c",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

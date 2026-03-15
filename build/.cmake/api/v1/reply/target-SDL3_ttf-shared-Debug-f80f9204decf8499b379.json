@@ -1,0 +1,510 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "Debug/SDL3_ttf.dll"
+		},
+		{
+			"path" : "_deps/SDL_ttf-build/Debug/SDL3_ttf.lib"
+		},
+		{
+			"path" : "Debug/SDL3_ttf.pdb"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"target_link_libraries",
+			"add_compile_options",
+			"target_compile_options",
+			"sdl_add_warning_options",
+			"target_compile_definitions",
+			"target_include_directories",
+			"target_compile_features",
+			"target_sources"
+		],
+		"files" : 
+		[
+			"third_party/SDL_ttf/CMakeLists.txt",
+			"third_party/SDL_ttf/external/harfbuzz/CMakeLists.txt",
+			"third_party/SDL_ttf/external/plutosvg/CMakeLists.txt",
+			"CMakeLists.txt",
+			"third_party/SDL_ttf/cmake/PrivateSdlFunctions.cmake"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 140,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 167,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 322,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 358,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 417,
+				"parent" : 0
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 476,
+				"parent" : 6
+			},
+			{
+				"file" : 2
+			},
+			{
+				"command" : 1,
+				"file" : 2,
+				"line" : 38,
+				"parent" : 8
+			},
+			{
+				"file" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 3,
+				"line" : 8,
+				"parent" : 10
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 169,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 4,
+				"line" : 316,
+				"parent" : 12
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 157,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 319,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 413,
+				"parent" : 0
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 152,
+				"parent" : 0
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 164,
+				"parent" : 0
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 171,
+				"parent" : 0
+			},
+			{
+				"command" : 8,
+				"file" : 0,
+				"line" : 176,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "/DWIN32 /D_WINDOWS /Ob0 /Od /RTC1 -MDd -Zi"
+				},
+				{
+					"backtrace" : 11,
+					"fragment" : "/MP"
+				},
+				{
+					"backtrace" : 11,
+					"fragment" : "/utf-8"
+				},
+				{
+					"backtrace" : 13,
+					"fragment" : "/W2"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 14,
+					"define" : "BUILD_SDL"
+				},
+				{
+					"define" : "DLL_EXPORT"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "PLUTOSVG_BUILD_STATIC"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "PLUTOSVG_HAS_FREETYPE"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "PLUTOVG_BUILD_STATIC"
+				},
+				{
+					"backtrace" : 14,
+					"define" : "SDL_BUILD_MAJOR_VERSION=3"
+				},
+				{
+					"backtrace" : 14,
+					"define" : "SDL_BUILD_MICRO_VERSION=0"
+				},
+				{
+					"backtrace" : 14,
+					"define" : "SDL_BUILD_MINOR_VERSION=3"
+				},
+				{
+					"backtrace" : 15,
+					"define" : "TTF_USE_HARFBUZZ=1"
+				},
+				{
+					"backtrace" : 16,
+					"define" : "TTF_USE_PLUTOSVG=1"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 17,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_ttf/include"
+				},
+				{
+					"backtrace" : 18,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/build/_deps/SDL-build/include-revision"
+				},
+				{
+					"backtrace" : 18,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL/include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_ttf/external/harfbuzz/src"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/build/_deps/SDL_ttf-build/external/freetype-build/include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_ttf/external/freetype/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_ttf/external/plutosvg/source"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_ttf/external/plutovg/include"
+				}
+			],
+			"language" : "C",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					19
+				],
+				"standard" : "99"
+			},
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			]
+		},
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-DWIN32 -D_DEBUG"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 14,
+					"define" : "BUILD_SDL"
+				},
+				{
+					"define" : "DLL_EXPORT"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "PLUTOSVG_BUILD_STATIC"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "PLUTOSVG_HAS_FREETYPE"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "PLUTOVG_BUILD_STATIC"
+				},
+				{
+					"backtrace" : 14,
+					"define" : "SDL_BUILD_MAJOR_VERSION=3"
+				},
+				{
+					"backtrace" : 14,
+					"define" : "SDL_BUILD_MICRO_VERSION=0"
+				},
+				{
+					"backtrace" : 14,
+					"define" : "SDL_BUILD_MINOR_VERSION=3"
+				},
+				{
+					"backtrace" : 15,
+					"define" : "TTF_USE_HARFBUZZ=1"
+				},
+				{
+					"backtrace" : 16,
+					"define" : "TTF_USE_PLUTOSVG=1"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 17,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_ttf/include"
+				},
+				{
+					"backtrace" : 18,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/build/_deps/SDL-build/include-revision"
+				},
+				{
+					"backtrace" : 18,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL/include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_ttf/external/harfbuzz/src"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/build/_deps/SDL_ttf-build/external/freetype-build/include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_ttf/external/freetype/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_ttf/external/plutosvg/source"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "C:/Users/jacob/Desktop/PraktiseRoom/third_party/SDL_ttf/external/plutovg/include"
+				}
+			],
+			"language" : "RC",
+			"sourceIndexes" : 
+			[
+				6
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "SDL3-shared::@30063b431f370e599d62"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "harfbuzz::@e0842eb4f1dec4561250"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "plutovg::@33d8039b0e58b80e116b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "plutosvg::@94961be6a59e213c101a"
+		},
+		{
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+		}
+	],
+	"id" : "SDL3_ttf-shared::@186fe9730c4e2fa16c85",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "/machine:X86 /debug /INCREMENTAL",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "..\\SDL-build\\Debug\\SDL3.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "external\\harfbuzz-build\\Debug\\harfbuzz.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "external\\freetype-build\\Debug\\freetyped.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "external\\plutosvg-guild\\Debug\\plutosvg.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "gdi32.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "usp10.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "rpcrt4.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 9,
+				"fragment" : "external\\plutovg-build\\Debug\\plutovg.lib",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "SDL3_ttf-shared",
+	"nameOnDisk" : "SDL3_ttf.dll",
+	"paths" : 
+	{
+		"build" : "_deps/SDL_ttf-build",
+		"source" : "third_party/SDL_ttf"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "third_party/SDL_ttf/src/SDL_hashtable.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "third_party/SDL_ttf/src/SDL_hashtable_ttf.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "third_party/SDL_ttf/src/SDL_gpu_textengine.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "third_party/SDL_ttf/src/SDL_renderer_textengine.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "third_party/SDL_ttf/src/SDL_surface_textengine.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "third_party/SDL_ttf/src/SDL_ttf.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 20,
+			"compileGroupIndex" : 1,
+			"path" : "third_party/SDL_ttf/src/version.rc",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "SHARED_LIBRARY"
+}

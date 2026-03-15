@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\jacob\Desktop\PraktiseRoom\build\CMakeFiles\fcb47e2e38e75927945c407a20887d49\tiff_release.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libtiff\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\jacob\Desktop\PraktiseRoom\build\_deps\SDL_image-build\external\libtiff-build\CMakeFiles\tiff_release" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{CA949588-529B-36E6-B518-D6509C1EBAC9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

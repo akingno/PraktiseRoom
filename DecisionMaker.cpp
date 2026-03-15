@@ -54,8 +54,7 @@ void DecisionMaker::requestBatchDecision(const std::vector<Agent *> &agents, uin
     std::map<std::string, DecisionResult> results;
     using nlohmann::json;
     try {
-      // A. 构建 Batch Request JSON
-      json jBatch = json::array();// 这是一个数组
+      json jBatch = json::array();
 
       for (const auto &snap : snapshots) {
         json j;

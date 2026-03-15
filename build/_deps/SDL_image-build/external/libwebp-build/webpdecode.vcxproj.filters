@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\src\dec\alpha_dec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\src\dec\buffer_dec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\src\dec\frame_dec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\src\dec\idec_dec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\src\dec\io_dec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\src\dec\quant_dec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\src\dec\tree_dec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\src\dec\vp8_dec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\src\dec\vp8l_dec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\src\dec\webp_dec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\src\dec\alphai_dec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\src\dec\common_dec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\src\dec\vp8_dec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\src\dec\vp8i_dec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\src\dec\vp8li_dec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\src\dec\webpi_dec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{DAE38AB5-AAFA-3BA2-97BE-09692B23E3A5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{7524CCEB-03C6-3236-8CE0-A7EAA9D0586C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

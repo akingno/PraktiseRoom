@@ -124,6 +124,10 @@ void EditorUI::renderRightPanel(bool is_paused, EditorMode& mode) {
   }
   ImGui::Separator();
 
+  ImGuiIO& io = ImGui::GetIO();
+  ImGui::Text(u8"当前 TPS: %.1f", io.Framerate);
+  ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+
   // 系统控制区
   if (is_paused) {
     ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.0f, 1.0f), u8" ⏸已暂停 (按空格恢复)");

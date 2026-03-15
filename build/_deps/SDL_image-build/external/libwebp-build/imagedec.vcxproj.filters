@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\imageio\image_dec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\imageio\jpegdec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\imageio\metadata.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\imageio\pngdec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\imageio\pnmdec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\imageio\tiffdec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\imageio\webpdec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\imageio\wicdec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\imageio\image_dec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\imageio\jpegdec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\imageio\metadata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\imageio\pngdec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\imageio\pnmdec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\imageio\tiffdec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\imageio\webpdec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\imageio\wicdec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\jacob\Desktop\PraktiseRoom\third_party\SDL_image\external\libwebp\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{DAE38AB5-AAFA-3BA2-97BE-09692B23E3A5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{7524CCEB-03C6-3236-8CE0-A7EAA9D0586C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

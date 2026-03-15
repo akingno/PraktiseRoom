@@ -38,15 +38,15 @@ struct Blackboard {
 
   // 路径：从起点到终点（含自己与终点）
   std::vector<std::pair<int, int>> path;
-  int path_i = 0;          // 下一步要走到的下标（一般从 1 开始）
+  int path_i = 0;          // 下一步要走到的下标
   bool path_invalid = true;// 需要重算
   bool _using_computer = false;
 
-  // action 生产消费相关
+  // action生产消费相关
   std::deque<std::shared_ptr<Action>> actionQueue;
   std::mutex queueMutex;
   std::shared_ptr<Action> currentAction = nullptr;// 正在执行的action
-  std::atomic<bool> is_thinking{false};           // Brain 是否在正在决策
+  std::atomic<bool> is_thinking{false}; // 是否在正在决策
   Character::Act lastActEnum = Character::Act::Wander;
 
   // 辅助工具，用于路径操作
@@ -54,15 +54,15 @@ struct Blackboard {
     return _using_computer;
   }
 
-  // 仅清路径（保持 target 不变）
+  // 仅清路径
   void clear_path() {
     path.clear();
     path_i = 0;
     path_invalid = true;
   }
-  // 规划后初始化 path_i，并把路径标记为合法
+  // 规划后初始化path_i，并把路径标记为合法
   void init_path_after_planned() {
-    // path[0] = 当前格；若有下一格，从 1 走起；否则 size==0/1 已在终点
+    // path[0] = 当前格；若有下一格，从1走起；否则size==0/1 已在终点
     path_i = (path.size() > 1) ? 1 : static_cast<int>(path.size());
     path_invalid = false;
   }
