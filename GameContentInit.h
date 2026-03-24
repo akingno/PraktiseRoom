@@ -294,6 +294,7 @@ inline void loadAgents(std::vector<std::unique_ptr<Agent>>& agents, IRender* ren
       std::string tex = jItem.value("texture_name", "character.png");
 
       auto new_agent = std::make_unique<Agent>(name, id, x, y, type, tex);
+      new_agent->getCharacter().setLevel(level);
 
       // 如果是Static ai，解析序列数据
       if (type == AIType::Static && jItem.contains("sequence")) {
